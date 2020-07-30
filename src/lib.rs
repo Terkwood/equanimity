@@ -36,6 +36,15 @@ impl Component for Model {
             <div>
                 <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
                 <p>{ self.value }</p>
+                <div id="grid">
+                    <div class="hot3"></div>
+                    <div class="hot2"></div>
+                    <div class="hot1"></div>
+                    <div class="neutral"></div>
+                    <div class="cold1"></div>
+                    <div class="cold2"></div>
+                    <div class="cold3"></div>
+                </div>
             </div>
         }
     }

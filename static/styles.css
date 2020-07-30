@@ -12,24 +12,30 @@ body {
   grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
 }
 
-#item1 {
-  background-color: lime;
-  grid-row-start: 3;
+.neutral {
+  background-color: white;
 }
 
-#item2 {
-  background-color: yellow;
+.hot1 {
+  background-color: pink;
 }
 
-#item3 {
-  background-color: blue;
+.hot2 {
+  background-color: lightcoral;
 }
 
-#item4 {
-  grid-column-start: 2;
+.hot3 {
   background-color: red;
 }
 
-#item5 {
-  background-color: aqua;
+.cold1 {
+  background-color: #94c5ff;
+}
+
+.cold2 {
+  background-color: #0092ff;
+}
+
+.cold3 {
+  background-color: #1a32af;
 }
