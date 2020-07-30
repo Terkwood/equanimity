@@ -1,3 +1,4 @@
+#![recursion_limit = "1024"]
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
@@ -37,9 +38,58 @@ impl Component for Model {
                 <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
                 <p>{ self.value }</p>
                 <div id="grid">
+                    // day 1
                     <div class="hot3"></div>
                     <div class="hot2"></div>
                     <div class="hot1"></div>
+                    <div class="neutral"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    // day 2
+                    <div class="nocolor"></div>
+                    <div class="hot2"></div>
+                    <div class="hot1"></div>
+                    <div class="neutral"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    // day 3
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="hot1"></div>
+                    <div class="neutral"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    // day 4
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="neutral"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    // day 5
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="neutral"></div>
+                    <div class="cold1"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    // day 6
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="neutral"></div>
+                    <div class="cold1"></div>
+                    <div class="cold2"></div>
+                    <div class="nocolor"></div>
+                    // day 7
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
+                    <div class="nocolor"></div>
                     <div class="neutral"></div>
                     <div class="cold1"></div>
                     <div class="cold2"></div>
