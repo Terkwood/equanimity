@@ -35,6 +35,7 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
+                <input type="number" id="moodinput" name="mood" step="1" min="-3" max="3" value="0" />
                 <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
                 <p>{ self.value }</p>
                 <div id="grid">
