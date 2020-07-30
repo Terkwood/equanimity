@@ -1,4 +1,41 @@
 body {
-    background-color: black;
-    color: lightgrey;
+  background-color: black;
+  color: lightgrey;
+}
+
+#grid {
+  height: 200px;
+  width: 200px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template: repeat(4, 1fr) / repeat(2, 1fr);
+  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
+}
+
+.neutral {
+  background-color: white;
+}
+
+.hot1 {
+  background-color: pink;
+}
+
+.hot2 {
+  background-color: lightcoral;
+}
+
+.hot3 {
+  background-color: red;
+}
+
+.cold1 {
+  background-color: #94c5ff;
+}
+
+.cold2 {
+  background-color: #0092ff;
+}
+
+.cold3 {
+  background-color: #1a32af;
 }
