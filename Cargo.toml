@@ -2,12 +2,12 @@
 authors = ["Terkwood <38859656+Terkwood@users.noreply.github.com>"]
 edition = "2018"
 name = "equanimity"
-version = "0.1.0"
+version = "0.0.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-yew = "0.17.2"
 wasm-bindgen = "0.2.65"
 wee_alloc = "0.4.5"
+yew = "0.17.2"
