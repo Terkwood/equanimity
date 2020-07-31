@@ -99,13 +99,7 @@ impl Component for Model {
                 <p>{ self.readings.iter().map(|r| r.get()).collect::<Html>() }</p>
 
                 <div id="grid">
-                    {render_bar(3)}
-                    {render_bar(2)}
-                    {render_bar(1)}
-                    {render_bar(0)}
-                    {render_bar(-1)}
-                    {render_bar(-2)}
-                    {render_bar(-3)}
+                   { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
                 </div>
             </div>
         }
