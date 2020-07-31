@@ -1,5 +1,4 @@
 #![recursion_limit = "1024"]
-use chrono::prelude::*;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
@@ -30,16 +29,16 @@ impl Reading {
     }
 }
 
-fn render_value(value: i8) -> Html {
+fn render_bar(value: i8) -> Html {
     html! {
         <>
-            <div class="hot3"></div>
-            <div class="hot2"></div>
-            <div class="hot1"></div>
-            <div class="neutral"></div>
-            <div class="nocolor"></div>
-            <div class="nocolor"></div>
-            <div class="nocolor"></div>
+            <div class={class_from(value, 3)}></div>
+            <div class={class_from(value, 2)}></div>
+            <div class={class_from(value, 1)}></div>
+            <div class={class_from(value, 0)}></div>
+            <div class={class_from(value, -1)}></div>
+            <div class={class_from(value, -2)}></div>
+            <div class={class_from(value, -3)}></div>
         </>
     }
 }
@@ -50,7 +49,7 @@ fn class_from(value: i8, position: i8) -> String {
     } else if position > 0 && value >= position {
         format!("hot{}", position)
     } else if position < 0 && value <= position {
-        format!("cold{}", position)
+        format!("cold{}", position.abs())
     } else {
         "nocolor".to_string()
     }
@@ -100,62 +99,13 @@ impl Component for Model {
                 <p>{ self.readings.iter().map(|r| r.get()).collect::<Html>() }</p>
 
                 <div id="grid">
-                    // day 1
-                    <div class="hot3"></div>
-                    <div class="hot2"></div>
-                    <div class="hot1"></div>
-                    <div class="neutral"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    // day 2
-                    <div class="nocolor"></div>
-                    <div class="hot2"></div>
-                    <div class="hot1"></div>
-                    <div class="neutral"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    // day 3
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="hot1"></div>
-                    <div class="neutral"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    // day 4
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="neutral"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    // day 5
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="neutral"></div>
-                    <div class="cold1"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    // day 6
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="neutral"></div>
-                    <div class="cold1"></div>
-                    <div class="cold2"></div>
-                    <div class="nocolor"></div>
-                    // day 7
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="nocolor"></div>
-                    <div class="neutral"></div>
-                    <div class="cold1"></div>
-                    <div class="cold2"></div>
-                    <div class="cold3"></div>
+                    {render_bar(3)}
+                    {render_bar(2)}
+                    {render_bar(1)}
+                    {render_bar(0)}
+                    {render_bar(-1)}
+                    {render_bar(-2)}
+                    {render_bar(-3)}
                 </div>
             </div>
         }
