@@ -6,6 +6,7 @@ use yew::prelude::*;
 struct Model {
     link: ComponentLink<Self>,
     readings: Vec<Reading>,
+    funk: u64,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -45,12 +46,16 @@ impl Component for Model {
         Self {
             link,
             readings: vec![],
+            funk: 0,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => self.readings.push(r),
+            Msg::AddReading(r) => {
+                //self.readings.push(r);
+                self.funk = self.funk + 1
+            }
         }
         true
     }
@@ -74,6 +79,8 @@ impl Component for Model {
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3).unwrap()))>{ "+3" }</button>
 
                 <p>{"There are "} { self.readings.len() } {" readings"}</p>
+
+                <p>{"Funk at "} { self.funk }</p>
 
                 <div id="grid">
                     // day 1
