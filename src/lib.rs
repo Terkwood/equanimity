@@ -6,28 +6,24 @@ use yew::prelude::*;
 struct Model {
     link: ComponentLink<Self>,
     readings: Vec<Reading>,
-    funk: u64,
+    funk: i64,
 }
 
 #[derive(Copy, Clone, Debug)]
 struct Reading {
     value: i8,
-    pub datetime: DateTime<Utc>,
 }
 
-#[derive(Debug)]
-struct Invalid;
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl Reading {
-    pub fn new(unchecked: i8) -> Result<Reading, Invalid> {
-        if unchecked >= MIN_READING && unchecked <= MAX_READING {
-            Ok(Reading {
-                value: unchecked,
-                datetime: Utc::now(),
-            })
+    pub fn new(value: i8) -> Reading {
+        if value < MIN_READING {
+            Reading { value: MIN_READING }
+        } else if value > MAX_READING {
+            Reading { value: MAX_READING }
         } else {
-            Err(Invalid)
+            Reading { value }
         }
     }
     pub fn get(self) -> i8 {
@@ -52,10 +48,7 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => {
-                //self.readings.push(r);
-                self.funk = self.funk + 1
-            }
+            Msg::AddReading(r) => self.readings.push(r),
         }
         true
     }
@@ -70,13 +63,13 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3).unwrap()))>{ "-3" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2).unwrap()))>{ "-2" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1).unwrap()))>{ "-1" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0).unwrap()))>{ "0" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1).unwrap()))>{ "+1" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2).unwrap()))>{ "+2" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3).unwrap()))>{ "+3" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "-3" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "-2" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "-1" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "0" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
 
                 <p>{"There are "} { self.readings.len() } {" readings"}</p>
 
