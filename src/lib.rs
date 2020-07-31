@@ -94,10 +94,6 @@ impl Component for Model {
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
 
-                <p>{"There are "} { self.readings.len() } {" readings"}</p>
-
-                <p>{ self.readings.iter().map(|r| r.get()).collect::<Html>() }</p>
-
                 <div id="grid">
                    { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
                 </div>
