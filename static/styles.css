@@ -42,10 +42,3 @@ body {
 .cold3 {
   background-color: #1a32af;
 }
-
-/** reported to only work in chrome
-  * forces showing the spinner */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
-   opacity: 1;
-}

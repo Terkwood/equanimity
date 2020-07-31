@@ -1,26 +1,56 @@
 #![recursion_limit = "1024"]
+use chrono::prelude::*;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
 struct Model {
     link: ComponentLink<Self>,
-    value: i64,
+    readings: Vec<Reading>,
+}
+
+#[derive(Copy, Clone, Debug)]
+struct Reading {
+    value: i8,
+    pub datetime: DateTime<Utc>,
+}
+
+#[derive(Debug)]
+struct Invalid;
+const MIN_READING: i8 = -3;
+const MAX_READING: i8 = 3;
+impl Reading {
+    pub fn new(unchecked: i8) -> Result<Reading, Invalid> {
+        if unchecked >= MIN_READING && unchecked <= MAX_READING {
+            Ok(Reading {
+                value: unchecked,
+                datetime: Utc::now(),
+            })
+        } else {
+            Err(Invalid)
+        }
+    }
+    pub fn get(self) -> i8 {
+        self.value
+    }
 }
 
 enum Msg {
-    AddOne,
+    AddReading(Reading),
 }
 
 impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self { link, value: 0 }
+        Self {
+            link,
+            readings: vec![],
+        }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddOne => self.value += 1,
+            Msg::AddReading(r) => self.readings.push(r),
         }
         true
     }
@@ -35,9 +65,16 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
-                <input type="number" id="moodinput" name="mood" step="1" min="-3" max="3" value="0" />
-                <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
-                <p>{ self.value }</p>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3).unwrap()))>{ "-3" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2).unwrap()))>{ "-2" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1).unwrap()))>{ "-1" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0).unwrap()))>{ "0" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1).unwrap()))>{ "+1" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2).unwrap()))>{ "+2" }</button>
+                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3).unwrap()))>{ "+3" }</button>
+
+                { self.readings.iter().map(|r|r.get()).collect::<Html>() }
+
                 <div id="grid">
                     // day 1
                     <div class="hot3"></div>
