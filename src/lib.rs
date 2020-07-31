@@ -73,7 +73,7 @@ impl Component for Model {
 
                 <p>{"There are "} { self.readings.len() } {" readings"}</p>
 
-                <p>{"Funk at "} { self.funk }</p>
+                <p>{ self.readings.iter().map(|r| r.get()).collect::<Html>() }</p>
 
                 <div id="grid">
                     // day 1
