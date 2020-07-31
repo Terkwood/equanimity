@@ -6,7 +6,6 @@ use yew::prelude::*;
 struct Model {
     link: ComponentLink<Self>,
     readings: Vec<Reading>,
-    funk: i64,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -31,6 +30,32 @@ impl Reading {
     }
 }
 
+fn render_value(value: i8) -> Html {
+    html! {
+        <>
+            <div class="hot3"></div>
+            <div class="hot2"></div>
+            <div class="hot1"></div>
+            <div class="neutral"></div>
+            <div class="nocolor"></div>
+            <div class="nocolor"></div>
+            <div class="nocolor"></div>
+        </>
+    }
+}
+
+fn class_from(value: i8, position: i8) -> String {
+    if position == 0 {
+        "neutral".to_string()
+    } else if position > 0 && value >= position {
+        format!("hot{}", position)
+    } else if position < 0 && value <= position {
+        format!("cold{}", position)
+    } else {
+        "nocolor".to_string()
+    }
+}
+
 enum Msg {
     AddReading(Reading),
 }
@@ -42,7 +67,6 @@ impl Component for Model {
         Self {
             link,
             readings: vec![],
-            funk: 0,
         }
     }
 
