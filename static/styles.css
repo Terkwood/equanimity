@@ -1,20 +1,21 @@
 body {
   background-color: black;
   color: lightgrey;
-  font-size: 24px;
+  font-size: 50px;
 }
 
 button {
-  font-size: 32px;
+  font-size: 36px;
 }
 
 .moodbutton {
-  font-size: 76px;
+  font-size: 66px;
 }
 
 textarea {
+  width: 100%;
   height: auto;
-  font-size: 24px;
+  font-size: 36px;
 }
 
 #controlgrid {

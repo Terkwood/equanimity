@@ -156,27 +156,29 @@ impl Component for Model {
                     </div>
 
                     <div>
-                        <textarea rows=2
+                        <textarea
+                            rows=6
                             value=&self.sleep_text_area
                             oninput=self.link.callback(|e: InputData| Msg::SleepTextAreaUpdated(e.value))
                             placeholder="how you slept">
                         </textarea>
                         <br/>
-                        <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit Sleep" }</button>
+                        <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit" }</button>
 
-                        <p> { "Sleep entries submitted: " } { &self.sleep_entries.len() } </p>
+                        <p> { "Records: " } { &self.sleep_entries.len() } </p>
                     </div>
 
                     <div>
-                        <textarea rows=2
+                        <textarea
+                            rows=6
                             value=&self.notes_text_area
                             oninput=self.link.callback(|e: InputData| Msg::NotesTextAreaUpdated(e.value))
                             placeholder="notes">
                         </textarea>
                         <br/>
-                        <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit Notes" }</button>
+                        <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit" }</button>
 
-                        <p> { "Notes submitted: " } { &self.notes.len() } </p>
+                        <p> { "Records: " } { &self.notes.len() } </p>
                     </div>
                 </div>
 
