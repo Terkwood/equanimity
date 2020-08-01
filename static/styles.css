@@ -3,8 +3,16 @@ body {
   color: lightgrey;
 }
 
-#grid {
-  height: 60vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+#controlgrid {
+  height: 30vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(3, 1fr);
+  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
+}
+
+#moodgrid {
+  height: 55vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(7, 1fr) / repeat(31, 1fr);

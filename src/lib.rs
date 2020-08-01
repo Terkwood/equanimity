@@ -142,40 +142,43 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "-3" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "-2" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "-1" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "0" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
-                <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
+                <div id="controlgrid">
+                    <div>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "-3" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "-2" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "-1" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "0" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
+                        <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
+                    </div>
 
-                <div>
-                    <textarea rows=2
-                        value=&self.sleep_text_area
-                        oninput=self.link.callback(|e: InputData| Msg::SleepTextAreaUpdated(e.value))
-                        placeholder="how you slept">
-                    </textarea>
-                    <br/>
-                    <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit Sleep" }</button>
+                    <div>
+                        <textarea rows=2
+                            value=&self.sleep_text_area
+                            oninput=self.link.callback(|e: InputData| Msg::SleepTextAreaUpdated(e.value))
+                            placeholder="how you slept">
+                        </textarea>
+                        <br/>
+                        <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit Sleep" }</button>
 
-                    <p> { "Sleep entries submitted: " } { &self.sleep_entries.len() } </p>
+                        <p> { "Sleep entries submitted: " } { &self.sleep_entries.len() } </p>
+                    </div>
+
+                    <div>
+                        <textarea rows=2
+                            value=&self.notes_text_area
+                            oninput=self.link.callback(|e: InputData| Msg::NotesTextAreaUpdated(e.value))
+                            placeholder="notes">
+                        </textarea>
+                        <br/>
+                        <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit Notes" }</button>
+
+                        <p> { "Notes submitted: " } { &self.notes.len() } </p>
+                    </div>
                 </div>
 
-                <div>
-                    <textarea rows=2
-                        value=&self.notes_text_area
-                        oninput=self.link.callback(|e: InputData| Msg::NotesTextAreaUpdated(e.value))
-                        placeholder="notes">
-                    </textarea>
-                    <br/>
-                    <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit Notes" }</button>
-
-                    <p> { "Notes submitted: " } { &self.notes.len() } </p>
-                </div>
-
-
-                <div id="grid">
+                <div id="moodgrid">
                    { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
                 </div>
             </div>
