@@ -150,7 +150,7 @@ impl Component for Model {
                         <br/>
                         <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "⚡ 1 ⚡" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "☯ nil ☯" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "☯ 🧘 ☯" }</button>
                         <br/>
                         <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "😢 1 😢" }</button>
                         <br/>
