@@ -9,19 +9,30 @@ struct Model {
 
 #[derive(Copy, Clone, Debug)]
 struct Reading {
-    value: i8,
+    pub value: i8,
+    pub _epoch_millis: u64,
 }
 
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl Reading {
     pub fn new(value: i8) -> Reading {
+        let _epoch_millis = js_sys::Date::now() as u64;
         if value < MIN_READING {
-            Reading { value: MIN_READING }
+            Reading {
+                value: MIN_READING,
+                _epoch_millis,
+            }
         } else if value > MAX_READING {
-            Reading { value: MAX_READING }
+            Reading {
+                value: MAX_READING,
+                _epoch_millis,
+            }
         } else {
-            Reading { value }
+            Reading {
+                value,
+                _epoch_millis,
+            }
         }
     }
     pub fn get(self) -> i8 {
