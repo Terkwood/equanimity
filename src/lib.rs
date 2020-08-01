@@ -5,6 +5,7 @@ use yew::prelude::*;
 struct Model {
     link: ComponentLink<Self>,
     readings: Vec<Reading>,
+    fake_text: String,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -68,6 +69,7 @@ fn class_from(value: i8, position: i8) -> String {
 
 enum Msg {
     AddReading(Reading),
+    UpdateFakeText(String),
 }
 
 impl Component for Model {
@@ -77,12 +79,14 @@ impl Component for Model {
         Self {
             link,
             readings: vec![],
+            fake_text: "".to_string(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::AddReading(r) => self.readings.push(r),
+            Msg::UpdateFakeText(s) => self.fake_text = s,
         }
         true
     }
@@ -104,6 +108,16 @@ impl Component for Model {
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
+
+                <div>
+                    <textarea rows=5
+                        value=&self.fake_text
+                        oninput=self.link.callback(|e: InputData| Msg::UpdateFakeText(e.value))
+                        placeholder="placeholder">
+                    </textarea>
+                    <p> { "Fake text: " } { &self.fake_text } </p>
+                </div>
+
 
                 <div id="grid">
                    { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
