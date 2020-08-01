@@ -144,15 +144,21 @@ impl Component for Model {
             <div>
                 <div id="controlgrid">
                     <div>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "-3" }</button>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "-2" }</button>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "-1" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "🤯 3 🤯" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "0" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "🔥 2 🔥" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "⚡ 1 ⚡" }</button>
+                        <br/>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "☯ nil ☯" }</button>
+                        <br/>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "😢 1 😢" }</button>
+                        <br/>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "😭 2 😭" }</button>
+                        <br/>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "🏥 3 🏥" }</button>
+
+
                     </div>
 
                     <div>
