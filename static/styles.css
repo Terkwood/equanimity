@@ -4,7 +4,7 @@ body {
 }
 
 #grid {
-  height: 80vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+  height: 60vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(7, 1fr) / repeat(31, 1fr);

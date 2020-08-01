@@ -5,19 +5,40 @@ use yew::prelude::*;
 struct Model {
     link: ComponentLink<Self>,
     readings: Vec<Reading>,
+    sleep_entries: Vec<TextSubmission>,
+    sleep_text_area: String,
+    notes: Vec<TextSubmission>,
+    notes_text_area: String,
 }
 
+#[derive(Clone, Debug)]
+struct TextSubmission {
+    pub value: String,
+    pub _epoch_millis: u64,
+}
+
+impl TextSubmission {
+    pub fn new(value: String) -> Self {
+        TextSubmission {
+            value,
+            _epoch_millis: now(),
+        }
+    }
+}
 #[derive(Copy, Clone, Debug)]
 struct Reading {
     pub value: i8,
     pub _epoch_millis: u64,
 }
 
+fn now() -> u64 {
+    js_sys::Date::now() as u64
+}
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl Reading {
     pub fn new(value: i8) -> Reading {
-        let _epoch_millis = js_sys::Date::now() as u64;
+        let _epoch_millis = now();
         if value < MIN_READING {
             Reading {
                 value: MIN_READING,
@@ -68,6 +89,10 @@ fn class_from(value: i8, position: i8) -> String {
 
 enum Msg {
     AddReading(Reading),
+    SleepTextAreaUpdated(String),
+    SubmitSleep,
+    NotesTextAreaUpdated(String),
+    SubmitNotes,
 }
 
 impl Component for Model {
@@ -77,12 +102,32 @@ impl Component for Model {
         Self {
             link,
             readings: vec![],
+            sleep_entries: vec![],
+            sleep_text_area: "".to_string(),
+            notes: vec![],
+            notes_text_area: "".to_string(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::AddReading(r) => self.readings.push(r),
+            Msg::SleepTextAreaUpdated(s) => self.sleep_text_area = s,
+            Msg::SubmitSleep => {
+                if !self.sleep_text_area.is_empty() {
+                    self.sleep_entries
+                        .push(TextSubmission::new(self.sleep_text_area.clone()));
+                    self.sleep_text_area = "".to_string()
+                }
+            }
+            Msg::NotesTextAreaUpdated(s) => self.notes_text_area = s,
+            Msg::SubmitNotes => {
+                if !self.notes_text_area.is_empty() {
+                    self.notes
+                        .push(TextSubmission::new(self.notes_text_area.clone()));
+                    self.notes_text_area = "".to_string()
+                }
+            }
         }
         true
     }
@@ -104,6 +149,31 @@ impl Component for Model {
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "+1" }</button>
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "+2" }</button>
                 <button onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "+3" }</button>
+
+                <div>
+                    <textarea rows=2
+                        value=&self.sleep_text_area
+                        oninput=self.link.callback(|e: InputData| Msg::SleepTextAreaUpdated(e.value))
+                        placeholder="how you slept">
+                    </textarea>
+                    <br/>
+                    <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit Sleep" }</button>
+
+                    <p> { "Sleep entries submitted: " } { &self.sleep_entries.len() } </p>
+                </div>
+
+                <div>
+                    <textarea rows=2
+                        value=&self.notes_text_area
+                        oninput=self.link.callback(|e: InputData| Msg::NotesTextAreaUpdated(e.value))
+                        placeholder="notes">
+                    </textarea>
+                    <br/>
+                    <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit Notes" }</button>
+
+                    <p> { "Notes submitted: " } { &self.notes.len() } </p>
+                </div>
+
 
                 <div id="grid">
                    { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
