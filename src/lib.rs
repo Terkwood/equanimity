@@ -28,7 +28,7 @@ impl TextSubmission {
 #[derive(Copy, Clone, Debug)]
 struct MoodReading {
     pub value: i8,
-    pub _epoch_millis: u64,
+    pub epoch_millis: u64,
 }
 
 fn now() -> u64 {
@@ -38,30 +38,28 @@ const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl MoodReading {
     pub fn new(value: i8) -> MoodReading {
-        let _epoch_millis = now();
+        let epoch_millis = now();
         if value < MIN_READING {
             MoodReading {
                 value: MIN_READING,
-                _epoch_millis,
+                epoch_millis,
             }
         } else if value > MAX_READING {
             MoodReading {
                 value: MAX_READING,
-                _epoch_millis,
+                epoch_millis,
             }
         } else {
             MoodReading {
                 value,
-                _epoch_millis,
+                epoch_millis,
             }
         }
     }
-    pub fn get(self) -> i8 {
-        self.value
-    }
 }
 
-fn render_mood_bar(value: i8) -> Html {
+fn render_mood_bar(r: &MoodReading) -> Html {
+    let value = r.value;
     html! {
         <>
             <div class={class_from(value, 3)}></div>
@@ -71,6 +69,14 @@ fn render_mood_bar(value: i8) -> Html {
             <div class={class_from(value, -1)}></div>
             <div class={class_from(value, -2)}></div>
             <div class={class_from(value, -3)}></div>
+        </>
+    }
+}
+
+fn render_mood_date(r: &MoodReading) -> Html {
+    html! {
+        <>
+            <div class="date">{ r.epoch_millis }</div>
         </>
     }
 }
@@ -189,24 +195,11 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                   { self.mood_readings.iter().map(|r| render_mood_bar(r.get())).collect::<Html>() }
+                    { self.mood_readings.iter().map(render_mood_bar).collect::<Html>() }
                 </div>
 
                 <div id="dategrid">
-                    <div class="date">{ "7/31" }</div>
-                    <div class="date">{ "8/1" }</div>
-                    <div class="date">{ "8/2" }</div>
-                    <div class="date">{ "8/3" }</div>
-                    <div class="date">{ "8/4" }</div>
-                    <div class="date">{ "12/1" }</div>
-                    <div class="date">{ "12/25" }</div>
-                    <div class="date">{ "7/31" }</div>
-                    <div class="date">{ "8/1" }</div>
-                    <div class="date">{ "8/2" }</div>
-                    <div class="date">{ "8/3" }</div>
-                    <div class="date">{ "8/4" }</div>
-                    <div class="date">{ "12/1" }</div>
-                    <div class="date">{ "12/25" }</div>
+                    { self.mood_readings.iter().map(render_mood_date).collect::<Html>() }
                 </div>
             </div>
         }
