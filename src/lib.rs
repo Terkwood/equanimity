@@ -191,6 +191,16 @@ impl Component for Model {
                 <div id="moodgrid">
                    { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
                 </div>
+
+                <div id="dategrid">
+                    <div class="date">{ "7/31" }</div>
+                    <div class="date">{ "8/1" }</div>
+                    <div class="date">{ "8/2" }</div>
+                    <div class="date">{ "8/3" }</div>
+                    <div class="date">{ "8/4" }</div>
+                    <div class="date">{ "12/1" }</div>
+                    <div class="date">{ "12/25" }</div>
+                </div>
             </div>
         }
     }
