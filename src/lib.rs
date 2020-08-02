@@ -1,4 +1,5 @@
 #![recursion_limit = "1024"]
+use chrono::{TimeZone, Utc};
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
@@ -74,9 +75,11 @@ fn render_mood_bar(r: &MoodReading) -> Html {
 }
 
 fn render_mood_date(r: &MoodReading) -> Html {
+    let dt = Utc.timestamp_millis(r.epoch_millis as i64);
+    let date_string = dt.format("%m/%d").to_string();
     html! {
         <>
-            <div class="date">{ r.epoch_millis }</div>
+            <div class="date">{ date_string }</div>
         </>
     }
 }
