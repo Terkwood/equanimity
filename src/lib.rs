@@ -4,7 +4,7 @@ use yew::prelude::*;
 
 struct Model {
     link: ComponentLink<Self>,
-    readings: Vec<Reading>,
+    readings: Vec<MoodReading>,
     sleep_entries: Vec<TextSubmission>,
     sleep_text_area: String,
     notes: Vec<TextSubmission>,
@@ -26,7 +26,7 @@ impl TextSubmission {
     }
 }
 #[derive(Copy, Clone, Debug)]
-struct Reading {
+struct MoodReading {
     pub value: i8,
     pub _epoch_millis: u64,
 }
@@ -36,21 +36,21 @@ fn now() -> u64 {
 }
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
-impl Reading {
-    pub fn new(value: i8) -> Reading {
+impl MoodReading {
+    pub fn new(value: i8) -> MoodReading {
         let _epoch_millis = now();
         if value < MIN_READING {
-            Reading {
+            MoodReading {
                 value: MIN_READING,
                 _epoch_millis,
             }
         } else if value > MAX_READING {
-            Reading {
+            MoodReading {
                 value: MAX_READING,
                 _epoch_millis,
             }
         } else {
-            Reading {
+            MoodReading {
                 value,
                 _epoch_millis,
             }
@@ -88,7 +88,7 @@ fn class_from(value: i8, position: i8) -> String {
 }
 
 enum Msg {
-    AddReading(Reading),
+    AddReading(MoodReading),
     SleepTextAreaUpdated(String),
     SubmitSleep,
     NotesTextAreaUpdated(String),
@@ -144,19 +144,19 @@ impl Component for Model {
             <div>
                 <div id="controlgrid">
                     <div>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(3)))>{ "🤯 3 🤯" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(2)))>{ "🔥 2 🔥" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(1)))>{ "⚡ 1 ⚡" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(1)))>{ "⚡ 1 ⚡" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(0)))>{ "☯ 🧘 ☯" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(0)))>{ "☯ 🧘 ☯" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-1)))>{ "😢 1 😢" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-1)))>{ "😢 1 😢" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-2)))>{ "😭 2 😭" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-2)))>{ "😭 2 😭" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(Reading::new(-3)))>{ "🏥 3 🏥" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
 
 
                     </div>
