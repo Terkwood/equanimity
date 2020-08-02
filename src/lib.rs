@@ -4,7 +4,7 @@ use yew::prelude::*;
 
 struct Model {
     link: ComponentLink<Self>,
-    readings: Vec<MoodReading>,
+    mood_readings: Vec<MoodReading>,
     sleep_entries: Vec<TextSubmission>,
     sleep_text_area: String,
     notes: Vec<TextSubmission>,
@@ -101,7 +101,7 @@ impl Component for Model {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            readings: vec![],
+            mood_readings: vec![],
             sleep_entries: vec![],
             sleep_text_area: "".to_string(),
             notes: vec![],
@@ -111,7 +111,7 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => self.readings.push(r),
+            Msg::AddReading(r) => self.mood_readings.push(r),
             Msg::SleepTextAreaUpdated(s) => self.sleep_text_area = s,
             Msg::SubmitSleep => {
                 if !self.sleep_text_area.is_empty() {
@@ -189,7 +189,7 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                   { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
+                   { self.mood_readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
                 </div>
 
                 <div id="dategrid">
