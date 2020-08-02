@@ -61,7 +61,7 @@ impl MoodReading {
     }
 }
 
-fn render_bar(value: i8) -> Html {
+fn render_mood_bar(value: i8) -> Html {
     html! {
         <>
             <div class={class_from(value, 3)}></div>
@@ -189,7 +189,7 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                   { self.mood_readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
+                   { self.mood_readings.iter().map(|r| render_mood_bar(r.get())).collect::<Html>() }
                 </div>
 
                 <div id="dategrid">
