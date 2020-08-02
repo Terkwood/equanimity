@@ -1,10 +1,11 @@
 #![recursion_limit = "1024"]
+use chrono::{TimeZone, Utc};
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
 struct Model {
     link: ComponentLink<Self>,
-    readings: Vec<MoodReading>,
+    mood_readings: Vec<MoodReading>,
     sleep_entries: Vec<TextSubmission>,
     sleep_text_area: String,
     notes: Vec<TextSubmission>,
@@ -28,7 +29,7 @@ impl TextSubmission {
 #[derive(Copy, Clone, Debug)]
 struct MoodReading {
     pub value: i8,
-    pub _epoch_millis: u64,
+    pub epoch_millis: u64,
 }
 
 fn now() -> u64 {
@@ -38,30 +39,28 @@ const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl MoodReading {
     pub fn new(value: i8) -> MoodReading {
-        let _epoch_millis = now();
+        let epoch_millis = now();
         if value < MIN_READING {
             MoodReading {
                 value: MIN_READING,
-                _epoch_millis,
+                epoch_millis,
             }
         } else if value > MAX_READING {
             MoodReading {
                 value: MAX_READING,
-                _epoch_millis,
+                epoch_millis,
             }
         } else {
             MoodReading {
                 value,
-                _epoch_millis,
+                epoch_millis,
             }
         }
     }
-    pub fn get(self) -> i8 {
-        self.value
-    }
 }
 
-fn render_bar(value: i8) -> Html {
+fn render_mood_bar(r: &MoodReading) -> Html {
+    let value = r.value;
     html! {
         <>
             <div class={class_from(value, 3)}></div>
@@ -71,6 +70,16 @@ fn render_bar(value: i8) -> Html {
             <div class={class_from(value, -1)}></div>
             <div class={class_from(value, -2)}></div>
             <div class={class_from(value, -3)}></div>
+        </>
+    }
+}
+
+fn render_mood_date(r: &MoodReading) -> Html {
+    let dt = Utc.timestamp_millis(r.epoch_millis as i64);
+    let date_string = dt.format("%m/%d").to_string();
+    html! {
+        <>
+            <div class="date">{ date_string }</div>
         </>
     }
 }
@@ -101,7 +110,7 @@ impl Component for Model {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            readings: vec![],
+            mood_readings: vec![],
             sleep_entries: vec![],
             sleep_text_area: "".to_string(),
             notes: vec![],
@@ -111,7 +120,7 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => self.readings.push(r),
+            Msg::AddReading(r) => self.mood_readings.push(r),
             Msg::SleepTextAreaUpdated(s) => self.sleep_text_area = s,
             Msg::SubmitSleep => {
                 if !self.sleep_text_area.is_empty() {
@@ -189,7 +198,11 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                   { self.readings.iter().map(|r| render_bar(r.get())).collect::<Html>() }
+                    { self.mood_readings.iter().map(render_mood_bar).collect::<Html>() }
+                </div>
+
+                <div id="dategrid">
+                    { self.mood_readings.iter().map(render_mood_date).collect::<Html>() }
                 </div>
             </div>
         }

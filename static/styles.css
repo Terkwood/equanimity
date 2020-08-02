@@ -34,6 +34,19 @@ textarea {
   grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
 }
 
+#dategrid {
+  height: 10vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(14, 1fr);
+  grid-auto-flow: column;
+}
+
+.date {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
 .nocolor {
   background-color: transparent;
 }
