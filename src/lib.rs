@@ -3,6 +3,8 @@ use chrono::{TimeZone, Utc};
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
+mod repo;
+
 struct Model {
     link: ComponentLink<Self>,
     mood_readings: Vec<MoodReading>,
@@ -13,7 +15,7 @@ struct Model {
 }
 
 #[derive(Clone, Debug)]
-struct TextSubmission {
+pub struct TextSubmission {
     pub value: String,
     pub _epoch_millis: u64,
 }
@@ -27,7 +29,7 @@ impl TextSubmission {
     }
 }
 #[derive(Copy, Clone, Debug)]
-struct MoodReading {
+pub struct MoodReading {
     pub value: i8,
     pub epoch_millis: u64,
 }
