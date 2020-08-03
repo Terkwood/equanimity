@@ -68,10 +68,6 @@ impl Component for Model {
 
     fn view(&self) -> Html {
         let rms = recent_moods(now(), &self.mood_readings);
-        let mood_dates: Vec<chrono::Date<chrono::Utc>> = rms
-            .iter()
-            .map(|rm| Utc.timestamp_millis(rm.epoch_millis as i64).date())
-            .collect();
         html! {
             <div>
                 <div id="controlgrid">
