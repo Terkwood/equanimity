@@ -277,7 +277,7 @@ mod test {
 
         let exp02_b = MoodReading {
             value: -3,
-            epoch_millis: right_now - 2 * ONE_DAY_MS,
+            epoch_millis: right_now - 2 * ONE_DAY_MS - 1,
         };
 
         let exp03_a = MoodReading {
@@ -287,10 +287,10 @@ mod test {
 
         let exp03_b = MoodReading {
             value: 2,
-            epoch_millis: right_now - 3 * ONE_DAY_MS,
+            epoch_millis: right_now - 3 * ONE_DAY_MS - 1,
         };
 
-        let simple = vec![
+        let convoluted = vec![
             MoodReading {
                 value: 0,
                 epoch_millis: right_now,
@@ -323,12 +323,18 @@ mod test {
             exp03_b,
         ];
 
-        let actual = recent_moods(right_now, &simple);
+        let actual = recent_moods(right_now, &convoluted);
         println!("{:?}", actual);
 
-        assert_eq!(
-            actual,
-            vec![exp00, exp01, exp02_a, exp02_b, exp03_a, exp03_b]
-        )
+        let mut last_timestamp = 0;
+        for a in &actual {
+            assert!(a.epoch_millis > last_timestamp);
+            last_timestamp = a.epoch_millis;
+        }
+
+        let mut expected = vec![exp00, exp01, exp02_a, exp02_b, exp03_a, exp03_b];
+        expected.reverse();
+
+        assert_eq!(actual, expected)
     }
 }
