@@ -68,6 +68,10 @@ impl Component for Model {
 
     fn view(&self) -> Html {
         let rms = recent_moods(now(), &self.mood_readings);
+        let mood_dates: Vec<chrono::Date<chrono::Utc>> = rms
+            .iter()
+            .map(|rm| Utc.timestamp_millis(rm.epoch_millis as i64).date())
+            .collect();
         html! {
             <div>
                 <div id="controlgrid">
@@ -100,6 +104,7 @@ impl Component for Model {
                         <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit" }</button>
 
                         <p> { "Records: " } { &self.sleep_entries.len() } </p>
+                        <p> { format!("Mood dates: {:?}",mood_dates) } </p>
                     </div>
 
                     <div>
@@ -344,6 +349,18 @@ mod test {
 
         let mut many_dup_vals = vec![];
         for i in 0..10 {
+            many_dup_vals.push(MoodReading {
+                value: 0,
+                epoch_millis: right_now - i * ONE_DAY_MS,
+            });
+            many_dup_vals.push(MoodReading {
+                value: 0,
+                epoch_millis: right_now - i * ONE_DAY_MS,
+            });
+            many_dup_vals.push(MoodReading {
+                value: 0,
+                epoch_millis: right_now - i * ONE_DAY_MS,
+            });
             many_dup_vals.push(MoodReading {
                 value: 0,
                 epoch_millis: right_now - i * ONE_DAY_MS,

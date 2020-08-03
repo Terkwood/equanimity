@@ -37,7 +37,7 @@ const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl MoodReading {
     pub fn new(value: i8) -> MoodReading {
-        let epoch_millis = now_rand();
+        let epoch_millis = now();
         if value < MIN_READING {
             MoodReading {
                 value: MIN_READING,
@@ -55,13 +55,6 @@ impl MoodReading {
             }
         }
     }
-}
-
-// TODO REMOVE THIS HACK
-fn now_rand() -> u64 {
-    let rn = now();
-    let rrr = rn % 20;
-    now() - rrr * 86400000
 }
 
 #[wasm_bindgen(start)]
