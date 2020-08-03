@@ -24,10 +24,10 @@ impl TextSubmission {
         }
     }
 }
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub struct MoodReading {
-    pub value: i8,
     pub epoch_millis: u64,
+    pub value: i8,
 }
 
 fn now() -> u64 {
@@ -37,7 +37,7 @@ const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl MoodReading {
     pub fn new(value: i8) -> MoodReading {
-        let epoch_millis = now();
+        let epoch_millis = now_rand();
         if value < MIN_READING {
             MoodReading {
                 value: MIN_READING,
@@ -55,6 +55,13 @@ impl MoodReading {
             }
         }
     }
+}
+
+// TODO REMOVE THIS HACK
+fn now_rand() -> u64 {
+    let rn = now();
+    let rrr = rn % 20;
+    now() - rrr * 86400000
 }
 
 #[wasm_bindgen(start)]

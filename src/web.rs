@@ -180,7 +180,7 @@ fn recent_moods(mrs: &[MoodReading]) -> Vec<MoodReading> {
 
     let max_in_each = recent_grouped.map(|(_date, mood_readings)| wildest(mood_readings));
 
-    let maybe_more_entries_than_allowed: Vec<MoodReading> = max_in_each
+    let mut maybe_more_entries_than_allowed: Vec<MoodReading> = max_in_each
         .map(|at_most_two| match at_most_two {
             HighLowMoods::Nothing => vec![],
             HighLowMoods::One(mr) => vec![mr],
@@ -188,6 +188,8 @@ fn recent_moods(mrs: &[MoodReading]) -> Vec<MoodReading> {
         })
         .flatten()
         .collect();
+
+    maybe_more_entries_than_allowed.sort();
 
     if maybe_more_entries_than_allowed.len() > DAYS_TO_DISPLAY as usize {
         maybe_more_entries_than_allowed
