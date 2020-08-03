@@ -24,9 +24,6 @@ pub fn save_mood_readings(all: &[MoodReading]) -> Result<(), SaveErr> {
         Err(SaveErr)
     }
 }
-pub fn load_mood_readings() -> Result<Vec<MoodReading>, LoadErr> {
-    todo!()
-}
 
 pub fn save_notes(all: &[TextSubmission]) -> Result<(), SaveErr> {
     if let Ok(data) = serde_json::to_string(all) {
@@ -34,9 +31,6 @@ pub fn save_notes(all: &[TextSubmission]) -> Result<(), SaveErr> {
     } else {
         Err(SaveErr)
     }
-}
-pub fn load_notes() -> Result<Vec<TextSubmission>, LoadErr> {
-    todo!()
 }
 
 pub fn save_sleep(all: &[TextSubmission]) -> Result<(), SaveErr> {
@@ -46,11 +40,5 @@ pub fn save_sleep(all: &[TextSubmission]) -> Result<(), SaveErr> {
         Err(SaveErr)
     }
 }
-fn load_sleep() -> Result<Vec<TextSubmission>, LoadErr> {
-    todo!()
-}
-
 #[derive(Debug)]
 pub struct SaveErr;
-#[derive(Debug)]
-pub struct LoadErr;
