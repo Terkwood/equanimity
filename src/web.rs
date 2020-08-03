@@ -116,7 +116,7 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                    { self.mood_readings.iter().map(render_mood_bar).collect::<Html>() }
+                    { recent_moods(&self.mood_readings).iter().map(render_mood_bar).collect::<Html>() }
                 </div>
 
                 <div id="dategrid">
@@ -166,13 +166,14 @@ fn class_from(value: i8, position: i8) -> String {
 
 const DAYS_TO_DISPLAY: u8 = 14;
 
-fn recent_moods(mrs: Vec<MoodReading>) -> Vec<MoodReading> {
+fn recent_moods(mrs: &[MoodReading]) -> Vec<MoodReading> {
     use chrono::prelude::*;
     let grouped = group_by(mrs, |mr| {
         Utc.timestamp_millis(mr.epoch_millis as i64).date()
     });
 
-    let cutoff = Utc::now().date() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
+    let cutoff =
+        Utc.timestamp_millis(now() as i64).date() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
 
     let recent_grouped = grouped.iter().filter(|(date, _)| date > &cutoff);
 
@@ -194,17 +195,17 @@ enum HighLowMoods {
     MaxMin(MoodReading, MoodReading),
 }
 
-fn wildest(readings: &Vec<MoodReading>) -> HighLowMoods {
+fn wildest(readings: &Vec<&MoodReading>) -> HighLowMoods {
     let mut lowest: Option<MoodReading> = None;
     let mut nil: Option<MoodReading> = None;
     let mut highest: Option<MoodReading> = None;
     for mr in readings {
         if mr.value < 0 && mr.value < lowest.map(|l| l.value).unwrap_or(0) {
-            lowest = Some(*mr)
+            lowest = Some(**mr)
         } else if mr.value == 0 && nil.is_none() {
-            nil = Some(*mr)
+            nil = Some(**mr)
         } else if mr.value > 0 && mr.value > highest.map(|h| h.value).unwrap_or(0) {
-            highest = Some(*mr)
+            highest = Some(**mr)
         }
     }
 
