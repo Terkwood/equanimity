@@ -337,4 +337,20 @@ mod test {
 
         assert_eq!(actual, expected)
     }
+
+    #[test]
+    fn test_dedup_recent_mood_vals() {
+        let right_now = Utc::now().timestamp_millis() as u64;
+
+        let mut many_dup_vals = vec![];
+        for i in 0..10 {
+            many_dup_vals.push(MoodReading {
+                value: 0,
+                epoch_millis: right_now - i * ONE_DAY_MS,
+            });
+        }
+
+        let result = recent_moods(right_now, &many_dup_vals);
+        assert_eq!(10, result.len());
+    }
 }
