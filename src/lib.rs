@@ -24,10 +24,10 @@ impl TextSubmission {
         }
     }
 }
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub struct MoodReading {
-    pub value: i8,
     pub epoch_millis: u64,
+    pub value: i8,
 }
 
 fn now() -> u64 {
