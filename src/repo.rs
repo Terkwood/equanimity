@@ -8,9 +8,7 @@ const SLEEP_KEY: &str = "sleep";
 pub fn save(key: &str, data: &str) -> Result<(), SaveErr> {
     if let Some(w) = window() {
         if let Ok(Some(storage)) = w.local_storage() {
-            storage
-                .set_item(MOOD_READINGS_KEY, data)
-                .map_err(|_| SaveErr)
+            storage.set_item(key, data).map_err(|_| SaveErr)
         } else {
             Err(SaveErr)
         }
@@ -31,14 +29,22 @@ pub fn load_mood_readings() -> Result<Vec<MoodReading>, LoadErr> {
 }
 
 pub fn save_notes(all: &[TextSubmission]) -> Result<(), SaveErr> {
-    save(NOTES_KEY, todo!())
+    if let Ok(data) = serde_json::to_string(all) {
+        save(NOTES_KEY, &data)
+    } else {
+        Err(SaveErr)
+    }
 }
 pub fn load_notes() -> Result<Vec<TextSubmission>, LoadErr> {
     todo!()
 }
 
-fn save_sleep(all: &[TextSubmission]) -> Result<(), SaveErr> {
-    save(SLEEP_KEY, todo!())
+pub fn save_sleep(all: &[TextSubmission]) -> Result<(), SaveErr> {
+    if let Ok(data) = serde_json::to_string(all) {
+        save(SLEEP_KEY, &data)
+    } else {
+        Err(SaveErr)
+    }
 }
 fn load_sleep() -> Result<Vec<TextSubmission>, LoadErr> {
     todo!()
