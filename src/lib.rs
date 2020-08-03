@@ -7,6 +7,7 @@ use serde_derive::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
+mod moods;
 mod repo;
 mod web;
 
