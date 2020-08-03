@@ -262,7 +262,7 @@ mod test {
 
         let exp00 = MoodReading {
             value: -2,
-            epoch_millis: right_now - 4000,
+            epoch_millis: right_now,
         };
 
         let exp01 = MoodReading {
@@ -277,7 +277,7 @@ mod test {
 
         let exp02_b = MoodReading {
             value: -3,
-            epoch_millis: right_now - 2 * ONE_DAY_MS + 50000,
+            epoch_millis: right_now - 2 * ONE_DAY_MS,
         };
 
         let exp03_a = MoodReading {
@@ -287,38 +287,38 @@ mod test {
 
         let exp03_b = MoodReading {
             value: 2,
-            epoch_millis: right_now - 3 * ONE_DAY_MS + 4000,
+            epoch_millis: right_now - 3 * ONE_DAY_MS,
         };
 
         let simple = vec![
             MoodReading {
                 value: 0,
-                epoch_millis: right_now - 0,
+                epoch_millis: right_now,
             },
             MoodReading {
                 value: -1,
-                epoch_millis: right_now - 3000,
+                epoch_millis: right_now,
             },
             exp00,
             exp01,
             MoodReading {
                 value: 2,
-                epoch_millis: right_now - ONE_DAY_MS + 1000,
+                epoch_millis: right_now - ONE_DAY_MS,
             },
             MoodReading {
                 value: 1,
-                epoch_millis: right_now - ONE_DAY_MS + 2000,
+                epoch_millis: right_now - ONE_DAY_MS,
             },
             exp02_a,
             exp02_b,
             MoodReading {
                 value: 0,
-                epoch_millis: right_now - 2 * ONE_DAY_MS + 100000,
+                epoch_millis: right_now - 2 * ONE_DAY_MS,
             },
             exp03_a,
             MoodReading {
                 value: 0,
-                epoch_millis: right_now - 3 * ONE_DAY_MS + 3000,
+                epoch_millis: right_now - 3 * ONE_DAY_MS,
             },
             exp03_b,
         ];
