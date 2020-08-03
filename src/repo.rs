@@ -21,7 +21,7 @@ pub fn save(key: &str, data: &str) -> Result<(), SaveErr> {
 
 pub fn save_mood_readings(all: &[MoodReading]) -> Result<(), SaveErr> {
     if let Ok(data) = serde_json::to_string(all) {
-        save(MOOD_READINGS_KEY, todo!())
+        save(MOOD_READINGS_KEY, &data)
     } else {
         Err(SaveErr)
     }
