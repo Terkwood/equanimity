@@ -67,6 +67,7 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
+        let rms = recent_moods(&self.mood_readings);
         html! {
             <div>
                 <div id="controlgrid">
@@ -116,11 +117,11 @@ impl Component for Model {
                 </div>
 
                 <div id="moodgrid">
-                    { recent_moods(&self.mood_readings).iter().map(render_mood_bar).collect::<Html>() }
+                    { rms.iter().map(render_mood_bar).collect::<Html>() }
                 </div>
 
                 <div id="dategrid">
-                    { self.mood_readings.iter().map(render_mood_date).collect::<Html>() }
+                    { rms.iter().map(render_mood_date).collect::<Html>() }
                 </div>
             </div>
         }
@@ -179,14 +180,24 @@ fn recent_moods(mrs: &[MoodReading]) -> Vec<MoodReading> {
 
     let max_in_each = recent_grouped.map(|(_date, mood_readings)| wildest(mood_readings));
 
-    max_in_each
+    let maybe_more_entries_than_allowed: Vec<MoodReading> = max_in_each
         .map(|at_most_two| match at_most_two {
             HighLowMoods::Nothing => vec![],
             HighLowMoods::One(mr) => vec![mr],
             HighLowMoods::MaxMin(h, l) => vec![h, l],
         })
         .flatten()
-        .collect()
+        .collect();
+
+    if maybe_more_entries_than_allowed.len() > DAYS_TO_DISPLAY as usize {
+        maybe_more_entries_than_allowed
+            .iter()
+            .skip(maybe_more_entries_than_allowed.len() - DAYS_TO_DISPLAY as usize)
+            .cloned()
+            .collect()
+    } else {
+        maybe_more_entries_than_allowed
+    }
 }
 
 enum HighLowMoods {
