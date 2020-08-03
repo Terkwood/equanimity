@@ -67,7 +67,7 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
-        let rms = recent_moods(&self.mood_readings);
+        let rms = recent_moods(now(), &self.mood_readings);
         html! {
             <div>
                 <div id="controlgrid">
@@ -167,14 +167,14 @@ fn class_from(value: i8, position: i8) -> String {
 
 const DAYS_TO_DISPLAY: u8 = 14;
 
-fn recent_moods(mrs: &[MoodReading]) -> Vec<MoodReading> {
+fn recent_moods(right_now_ms: u64, mrs: &[MoodReading]) -> Vec<MoodReading> {
     use chrono::prelude::*;
     let grouped = group_by(mrs, |mr| {
         Utc.timestamp_millis(mr.epoch_millis as i64).date()
     });
 
-    let cutoff =
-        Utc.timestamp_millis(now() as i64).date() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
+    let cutoff = Utc.timestamp_millis(right_now_ms as i64).date()
+        - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
 
     let recent_grouped = grouped.iter().filter(|(date, _)| date > &cutoff);
 
@@ -248,4 +248,87 @@ where
         }
     }
     groups
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    const ONE_DAY_MS: u64 = 86_400_000;
+
+    #[test]
+    fn test_recent_moods_dedup() {
+        let right_now = Utc::now().timestamp_millis() as u64;
+
+        let exp00 = MoodReading {
+            value: -2,
+            epoch_millis: right_now - 4000,
+        };
+
+        let exp01 = MoodReading {
+            value: 3,
+            epoch_millis: right_now - ONE_DAY_MS,
+        };
+
+        let exp02_a = MoodReading {
+            value: 3,
+            epoch_millis: right_now - 2 * ONE_DAY_MS,
+        };
+
+        let exp02_b = MoodReading {
+            value: -3,
+            epoch_millis: right_now - 2 * ONE_DAY_MS + 50000,
+        };
+
+        let exp03_a = MoodReading {
+            value: -1,
+            epoch_millis: right_now - 3 * ONE_DAY_MS,
+        };
+
+        let exp03_b = MoodReading {
+            value: 2,
+            epoch_millis: right_now - 3 * ONE_DAY_MS + 4000,
+        };
+
+        let simple = vec![
+            MoodReading {
+                value: 0,
+                epoch_millis: right_now - 0,
+            },
+            MoodReading {
+                value: -1,
+                epoch_millis: right_now - 3000,
+            },
+            exp00,
+            exp01,
+            MoodReading {
+                value: 2,
+                epoch_millis: right_now - ONE_DAY_MS + 1000,
+            },
+            MoodReading {
+                value: 1,
+                epoch_millis: right_now - ONE_DAY_MS + 2000,
+            },
+            exp02_a,
+            exp02_b,
+            MoodReading {
+                value: 0,
+                epoch_millis: right_now - 2 * ONE_DAY_MS + 100000,
+            },
+            exp03_a,
+            MoodReading {
+                value: 0,
+                epoch_millis: right_now - 3 * ONE_DAY_MS + 3000,
+            },
+            exp03_b,
+        ];
+
+        let actual = recent_moods(right_now, &simple);
+        println!("{:?}", actual);
+
+        assert_eq!(
+            actual,
+            vec![exp00, exp01, exp02_a, exp02_b, exp03_a, exp03_b]
+        )
+    }
 }
