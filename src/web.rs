@@ -176,20 +176,25 @@ fn recent_moods(mrs: Vec<MoodReading>) -> Vec<MoodReading> {
 
     let recent_grouped = grouped.iter().filter(|(date, _)| date > &cutoff);
 
-    let max_in_each: Vec<(&Date<Utc>, AtMostTwo)> = recent_grouped
-        .map(|(date, mood_readings)| (date, wildest(mood_readings)))
-        .collect();
+    let max_in_each = recent_grouped.map(|(_date, mood_readings)| wildest(mood_readings));
 
-    todo!()
+    max_in_each
+        .map(|at_most_two| match at_most_two {
+            HighLowMoods::Nothing => vec![],
+            HighLowMoods::One(mr) => vec![mr],
+            HighLowMoods::MaxMin(h, l) => vec![h, l],
+        })
+        .flatten()
+        .collect()
 }
 
-enum AtMostTwo {
+enum HighLowMoods {
     Nothing,
     One(MoodReading),
-    MinMax(MoodReading, MoodReading),
+    MaxMin(MoodReading, MoodReading),
 }
 
-fn wildest(mr: &Vec<MoodReading>) -> AtMostTwo {
+fn wildest(mr: &Vec<MoodReading>) -> HighLowMoods {
     todo!()
 }
 
