@@ -104,7 +104,6 @@ impl Component for Model {
                         <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit" }</button>
 
                         <p> { "Records: " } { &self.sleep_entries.len() } </p>
-                        <p> { format!("Mood dates: {:?}",mood_dates) } </p>
                     </div>
 
                     <div>
