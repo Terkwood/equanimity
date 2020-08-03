@@ -324,7 +324,6 @@ mod test {
         ];
 
         let actual = recent_moods(right_now, &convoluted);
-        println!("{:?}", actual);
 
         let mut last_timestamp = 0;
         for a in &actual {
