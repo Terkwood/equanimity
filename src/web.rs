@@ -194,8 +194,27 @@ enum HighLowMoods {
     MaxMin(MoodReading, MoodReading),
 }
 
-fn wildest(mr: &Vec<MoodReading>) -> HighLowMoods {
-    todo!()
+fn wildest(readings: &Vec<MoodReading>) -> HighLowMoods {
+    let mut lowest: Option<MoodReading> = None;
+    let mut nil: Option<MoodReading> = None;
+    let mut highest: Option<MoodReading> = None;
+    for mr in readings {
+        if mr.value < 0 && mr.value < lowest.map(|l| l.value).unwrap_or(0) {
+            lowest = Some(*mr)
+        } else if mr.value == 0 && nil.is_none() {
+            nil = Some(*mr)
+        } else if mr.value > 0 && mr.value > highest.map(|h| h.value).unwrap_or(0) {
+            highest = Some(*mr)
+        }
+    }
+
+    match (lowest, nil, highest) {
+        (None, None, None) => HighLowMoods::Nothing,
+        (None, Some(mr), None) => HighLowMoods::One(mr),
+        (Some(l), _, None) => HighLowMoods::One(l),
+        (None, _, Some(h)) => HighLowMoods::One(h),
+        (Some(l), _, Some(h)) => HighLowMoods::MaxMin(h, l),
+    }
 }
 
 fn group_by<I, F, K, T>(xs: I, mut key_fn: F) -> Vec<(K, Vec<T>)>
