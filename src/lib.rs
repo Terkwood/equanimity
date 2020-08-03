@@ -1,7 +1,13 @@
 #![recursion_limit = "1024"]
+extern crate serde_derive;
+extern crate serde_json;
+
 use chrono::{TimeZone, Utc};
+use serde_derive::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
+
+mod repo;
 
 struct Model {
     link: ComponentLink<Self>,
@@ -12,8 +18,8 @@ struct Model {
     notes_text_area: String,
 }
 
-#[derive(Clone, Debug)]
-struct TextSubmission {
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct TextSubmission {
     pub value: String,
     pub _epoch_millis: u64,
 }
@@ -26,8 +32,8 @@ impl TextSubmission {
         }
     }
 }
-#[derive(Copy, Clone, Debug)]
-struct MoodReading {
+#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+pub struct MoodReading {
     pub value: i8,
     pub epoch_millis: u64,
 }
@@ -120,13 +126,17 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => self.mood_readings.push(r),
+            Msg::AddReading(r) => {
+                self.mood_readings.push(r);
+                repo::save_mood_readings(&self.mood_readings).expect("save mood readings")
+            }
             Msg::SleepTextAreaUpdated(s) => self.sleep_text_area = s,
             Msg::SubmitSleep => {
                 if !self.sleep_text_area.is_empty() {
                     self.sleep_entries
                         .push(TextSubmission::new(self.sleep_text_area.clone()));
-                    self.sleep_text_area = "".to_string()
+                    self.sleep_text_area = "".to_string();
+                    repo::save_sleep(&self.sleep_entries).expect("save sleep")
                 }
             }
             Msg::NotesTextAreaUpdated(s) => self.notes_text_area = s,
@@ -134,7 +144,8 @@ impl Component for Model {
                 if !self.notes_text_area.is_empty() {
                     self.notes
                         .push(TextSubmission::new(self.notes_text_area.clone()));
-                    self.notes_text_area = "".to_string()
+                    self.notes_text_area = "".to_string();
+                    repo::save_notes(&self.notes).expect("save notes")
                 }
             }
         }
