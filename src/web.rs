@@ -1,5 +1,5 @@
 use crate::*;
-use repo::{Repo, WebSysRepo};
+use repo::{Repo, YewRepo};
 
 pub struct State {
     mood_readings: Vec<MoodReading>,
@@ -27,7 +27,7 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let repo = Box::new(WebSysRepo);
+        let repo = Box::new(YewRepo::new());
 
         let state = State {
             mood_readings: vec![],

@@ -1,6 +1,6 @@
 use crate::{MoodReading, TextSubmission};
 use web_sys::window;
-use yew::services::storage::StorageService;
+use yew::services::storage::{Area, StorageService};
 
 const MOOD_READINGS_KEY: &str = "mood_readings";
 const NOTES_KEY: &str = "notes";
@@ -12,8 +12,28 @@ pub trait Repo {
     fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr>;
 }
 
-pub struct _YewRepo {
+pub struct YewRepo {
     storage: StorageService,
+}
+
+impl Repo for YewRepo {
+    fn save_mood_readings(&self, all: &[MoodReading]) -> Result<(), SaveErr> {
+        todo!()
+    }
+    fn save_notes(&self, all: &[TextSubmission]) -> Result<(), SaveErr> {
+        todo!()
+    }
+    fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr> {
+        todo!()
+    }
+}
+
+impl YewRepo {
+    pub fn new() -> Self {
+        let storage = StorageService::new(Area::Local).expect("storage was disabled by the user");
+
+        Self { storage }
+    }
 }
 
 pub struct WebSysRepo;
