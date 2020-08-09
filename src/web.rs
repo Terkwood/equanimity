@@ -30,10 +30,10 @@ impl Component for Model {
         let repo = Box::new(YewRepo::new());
 
         let state = State {
-            mood_readings: vec![],
-            sleep_entries: vec![],
+            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
+            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
             sleep_text_area: "".to_string(),
-            notes: vec![],
+            notes: repo.load_notes().unwrap_or(vec![]),
             notes_text_area: "".to_string(),
         };
 

@@ -1,5 +1,6 @@
 use crate::{MoodReading, TextSubmission};
 use web_sys::window;
+use yew::format::Json;
 use yew::services::storage::{Area, StorageService};
 
 const MOOD_READINGS_KEY: &str = "mood_readings";
@@ -8,10 +9,15 @@ const SLEEP_KEY: &str = "sleep";
 
 pub trait Repo {
     fn save_mood_readings(&self, all: &[MoodReading]) -> Result<(), SaveErr>;
+    fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr>;
     fn save_notes(&self, all: &[TextSubmission]) -> Result<(), SaveErr>;
+    fn load_notes(&self) -> Result<Vec<TextSubmission>, LoadErr>;
     fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr>;
+    fn load_sleep(&self) -> Result<Vec<TextSubmission>, LoadErr>;
 }
 
+/// Yew wrapper around (in our case, local) storage.
+/// See https://github.com/yewstack/yew/issues/1287#issuecomment-671043231
 pub struct YewRepo {
     storage: StorageService,
 }
@@ -26,6 +32,33 @@ impl Repo for YewRepo {
     fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr> {
         todo!()
     }
+    fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
+        Ok(
+            if let Json(Ok(restored_model)) = self.storage.restore(MOOD_READINGS_KEY) {
+                restored_model
+            } else {
+                Vec::new()
+            },
+        )
+    }
+    fn load_notes(&self) -> Result<Vec<TextSubmission>, LoadErr> {
+        Ok(
+            if let Json(Ok(restored_model)) = self.storage.restore(NOTES_KEY) {
+                restored_model
+            } else {
+                Vec::new()
+            },
+        )
+    }
+    fn load_sleep(&self) -> Result<Vec<TextSubmission>, LoadErr> {
+        Ok(
+            if let Json(Ok(restored_model)) = self.storage.restore(SLEEP_KEY) {
+                restored_model
+            } else {
+                Vec::new()
+            },
+        )
+    }
 }
 
 impl YewRepo {
@@ -35,7 +68,8 @@ impl YewRepo {
         Self { storage }
     }
 }
-
+// TODO DELETE
+/*
 pub struct WebSysRepo;
 impl Repo for WebSysRepo {
     fn save_mood_readings(&self, all: &[MoodReading]) -> Result<(), SaveErr> {
@@ -59,6 +93,15 @@ impl Repo for WebSysRepo {
             Err(SaveErr)
         }
     }
+    fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
+        todo!()
+    }
+    fn load_notes(&self) -> Result<Vec<TextSubmission>, LoadErr> {
+        todo!()
+    }
+    fn load_sleep(&self) -> Result<Vec<TextSubmission>, LoadErr> {
+        todo!()
+    }
 }
 
 impl WebSysRepo {
@@ -73,7 +116,9 @@ impl WebSysRepo {
             Err(SaveErr)
         }
     }
-}
+}*/
 
 #[derive(Debug)]
 pub struct SaveErr;
+#[derive(Debug)]
+pub struct LoadErr;
