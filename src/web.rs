@@ -1,5 +1,5 @@
 use crate::*;
-use yew::services::storage::{Area, StorageService};
+use repo::{Repo, WebSysRepo};
 
 pub struct State {
     mood_readings: Vec<MoodReading>,
@@ -11,7 +11,7 @@ pub struct State {
 
 pub struct Model {
     link: ComponentLink<Self>,
-    _storage: StorageService,
+    repo: Box<dyn Repo>,
     state: State,
 }
 
@@ -27,7 +27,7 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let _storage = StorageService::new(Area::Local).expect("storage was disabled by the user");
+        let repo = Box::new(WebSysRepo);
 
         let state = State {
             mood_readings: vec![],
@@ -37,18 +37,16 @@ impl Component for Model {
             notes_text_area: "".to_string(),
         };
 
-        Self {
-            link,
-            _storage,
-            state,
-        }
+        Self { link, repo, state }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::AddReading(r) => {
                 self.state.mood_readings.push(r);
-                repo::save_mood_readings(&self.state.mood_readings).expect("save mood readings")
+                self.repo
+                    .save_mood_readings(&self.state.mood_readings)
+                    .expect("save mood readings")
             }
             Msg::SleepTextAreaUpdated(s) => self.state.sleep_text_area = s,
             Msg::SubmitSleep => {
@@ -57,7 +55,9 @@ impl Component for Model {
                         .sleep_entries
                         .push(TextSubmission::new(self.state.sleep_text_area.clone()));
                     self.state.sleep_text_area = "".to_string();
-                    repo::save_sleep(&self.state.sleep_entries).expect("save sleep")
+                    self.repo
+                        .save_sleep(&self.state.sleep_entries)
+                        .expect("save sleep")
                 }
             }
             Msg::NotesTextAreaUpdated(s) => self.state.notes_text_area = s,
@@ -67,7 +67,7 @@ impl Component for Model {
                         .notes
                         .push(TextSubmission::new(self.state.notes_text_area.clone()));
                     self.state.notes_text_area = "".to_string();
-                    repo::save_notes(&self.state.notes).expect("save notes")
+                    self.repo.save_notes(&self.state.notes).expect("save notes")
                 }
             }
         }
