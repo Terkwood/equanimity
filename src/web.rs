@@ -1,5 +1,5 @@
 use crate::*;
-use repo::{Repo, YewRepo};
+use repo::YewRepo;
 
 pub struct State {
     mood_readings: Vec<MoodReading>,
@@ -11,7 +11,7 @@ pub struct State {
 
 pub struct Model {
     link: ComponentLink<Self>,
-    repo: Box<dyn Repo>,
+    repo: YewRepo,
     state: State,
 }
 
@@ -27,7 +27,7 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let repo = Box::new(YewRepo::new());
+        let repo = YewRepo::new();
 
         let state = State {
             mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
