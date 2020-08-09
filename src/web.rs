@@ -1,5 +1,5 @@
 use crate::*;
-use repo::{Repo, WebSysRepo};
+use repo::YewRepo;
 
 pub struct State {
     mood_readings: Vec<MoodReading>,
@@ -11,7 +11,7 @@ pub struct State {
 
 pub struct Model {
     link: ComponentLink<Self>,
-    repo: Box<dyn Repo>,
+    repo: YewRepo,
     state: State,
 }
 
@@ -27,13 +27,13 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let repo = Box::new(WebSysRepo);
+        let repo = YewRepo::new();
 
         let state = State {
-            mood_readings: vec![],
-            sleep_entries: vec![],
+            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
+            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
             sleep_text_area: "".to_string(),
-            notes: vec![],
+            notes: repo.load_notes().unwrap_or(vec![]),
             notes_text_area: "".to_string(),
         };
 
