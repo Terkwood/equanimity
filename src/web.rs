@@ -1,12 +1,18 @@
 use crate::*;
+use yew::services::storage::{Area, StorageService};
 
-pub struct Model {
-    link: ComponentLink<Self>,
+pub struct State {
     mood_readings: Vec<MoodReading>,
     sleep_entries: Vec<TextSubmission>,
     sleep_text_area: String,
     notes: Vec<TextSubmission>,
     notes_text_area: String,
+}
+
+pub struct Model {
+    link: ComponentLink<Self>,
+    _storage: StorageService,
+    state: State,
 }
 
 pub enum Msg {
@@ -21,38 +27,47 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self {
-            link,
+        let _storage = StorageService::new(Area::Local).expect("storage was disabled by the user");
+
+        let state = State {
             mood_readings: vec![],
             sleep_entries: vec![],
             sleep_text_area: "".to_string(),
             notes: vec![],
             notes_text_area: "".to_string(),
+        };
+
+        Self {
+            link,
+            _storage,
+            state,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::AddReading(r) => {
-                self.mood_readings.push(r);
-                repo::save_mood_readings(&self.mood_readings).expect("save mood readings")
+                self.state.mood_readings.push(r);
+                repo::save_mood_readings(&self.state.mood_readings).expect("save mood readings")
             }
-            Msg::SleepTextAreaUpdated(s) => self.sleep_text_area = s,
+            Msg::SleepTextAreaUpdated(s) => self.state.sleep_text_area = s,
             Msg::SubmitSleep => {
-                if !self.sleep_text_area.is_empty() {
-                    self.sleep_entries
-                        .push(TextSubmission::new(self.sleep_text_area.clone()));
-                    self.sleep_text_area = "".to_string();
-                    repo::save_sleep(&self.sleep_entries).expect("save sleep")
+                if !self.state.sleep_text_area.is_empty() {
+                    self.state
+                        .sleep_entries
+                        .push(TextSubmission::new(self.state.sleep_text_area.clone()));
+                    self.state.sleep_text_area = "".to_string();
+                    repo::save_sleep(&self.state.sleep_entries).expect("save sleep")
                 }
             }
-            Msg::NotesTextAreaUpdated(s) => self.notes_text_area = s,
+            Msg::NotesTextAreaUpdated(s) => self.state.notes_text_area = s,
             Msg::SubmitNotes => {
-                if !self.notes_text_area.is_empty() {
-                    self.notes
-                        .push(TextSubmission::new(self.notes_text_area.clone()));
-                    self.notes_text_area = "".to_string();
-                    repo::save_notes(&self.notes).expect("save notes")
+                if !self.state.notes_text_area.is_empty() {
+                    self.state
+                        .notes
+                        .push(TextSubmission::new(self.state.notes_text_area.clone()));
+                    self.state.notes_text_area = "".to_string();
+                    repo::save_notes(&self.state.notes).expect("save notes")
                 }
             }
         }
@@ -67,7 +82,7 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(now(), &self.mood_readings);
+        let rms = moods::recent(now(), &self.state.mood_readings);
         html! {
             <div>
                 <div id="controlgrid">
@@ -92,27 +107,27 @@ impl Component for Model {
                     <div>
                         <textarea
                             rows=6
-                            value=&self.sleep_text_area
+                            value=&self.state.sleep_text_area
                             oninput=self.link.callback(|e: InputData| Msg::SleepTextAreaUpdated(e.value))
                             placeholder="how you slept">
                         </textarea>
                         <br/>
                         <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit" }</button>
 
-                        <p> { "Records: " } { &self.sleep_entries.len() } </p>
+                        <p> { "Records: " } { &self.state.sleep_entries.len() } </p>
                     </div>
 
                     <div>
                         <textarea
                             rows=6
-                            value=&self.notes_text_area
+                            value=&self.state.notes_text_area
                             oninput=self.link.callback(|e: InputData| Msg::NotesTextAreaUpdated(e.value))
                             placeholder="notes">
                         </textarea>
                         <br/>
                         <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit" }</button>
 
-                        <p> { "Records: " } { &self.notes.len() } </p>
+                        <p> { "Records: " } { &self.state.notes.len() } </p>
                     </div>
                 </div>
 
