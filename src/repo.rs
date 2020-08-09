@@ -8,11 +8,11 @@ const NOTES_KEY: &str = "notes";
 const SLEEP_KEY: &str = "sleep";
 
 pub trait Repo {
-    fn save_mood_readings(&self, all: &[MoodReading]) -> Result<(), SaveErr>;
+    fn save_mood_readings(&mut self, all: &Vec<MoodReading>) -> Result<(), SaveErr>;
     fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr>;
-    fn save_notes(&self, all: &[TextSubmission]) -> Result<(), SaveErr>;
+    fn save_notes(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr>;
     fn load_notes(&self) -> Result<Vec<TextSubmission>, LoadErr>;
-    fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr>;
+    fn save_sleep(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr>;
     fn load_sleep(&self) -> Result<Vec<TextSubmission>, LoadErr>;
 }
 
@@ -23,13 +23,15 @@ pub struct YewRepo {
 }
 
 impl Repo for YewRepo {
-    fn save_mood_readings(&self, all: &[MoodReading]) -> Result<(), SaveErr> {
+    fn save_mood_readings(&mut self, all: &Vec<MoodReading>) -> Result<(), SaveErr> {
+        let value = Json(all);
+        Ok(self.storage.store(MOOD_READINGS_KEY, value))
+    }
+
+    fn save_notes(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr> {
         todo!()
     }
-    fn save_notes(&self, all: &[TextSubmission]) -> Result<(), SaveErr> {
-        todo!()
-    }
-    fn save_sleep(&self, all: &[TextSubmission]) -> Result<(), SaveErr> {
+    fn save_sleep(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr> {
         todo!()
     }
     fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
