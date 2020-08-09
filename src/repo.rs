@@ -18,12 +18,16 @@ impl YewRepo {
         Ok(self.storage.store(MOOD_READINGS_KEY, value))
     }
 
-    pub fn save_notes(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr> {
-        todo!()
+    pub fn save_notes(&mut self, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
+        let value = Json(all);
+        Ok(self.storage.store(NOTES_KEY, value))
     }
-    pub fn save_sleep(&mut self, all: &[TextSubmission]) -> Result<(), SaveErr> {
-        todo!()
+
+    pub fn save_sleep(&mut self, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
+        let value = Json(all);
+        Ok(self.storage.store(SLEEP_KEY, value))
     }
+
     pub fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
         Ok(
             if let Json(Ok(restored_model)) = self.storage.restore(MOOD_READINGS_KEY) {
