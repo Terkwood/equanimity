@@ -26,6 +26,10 @@ textarea {
   grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
 }
 
+#bigtext {
+  grid-column: 2 / span 2;
+}
+
 #moodgrid {
   height: 55vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
