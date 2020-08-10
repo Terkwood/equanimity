@@ -2,12 +2,12 @@ use super::State;
 use crate::*;
 use repo::YewRepo;
 
-pub struct BarsModel {
+pub struct Bars {
     link: ComponentLink<Self>,
     repo: YewRepo,
     state: State,
     text_area: String,
-    show_logs_cb: Callback<()>,
+    show_logs: Callback<()>,
 }
 
 pub enum BarsMsg {
@@ -20,15 +20,14 @@ pub enum BarsMsg {
 
 #[derive(Properties, Clone)]
 pub struct BarsProps {
-    pub show_logs_cb: Callback<()>,
+    pub show_logs: Callback<()>,
 }
 
-impl Component for BarsModel {
+impl Component for Bars {
     type Message = BarsMsg;
     type Properties = BarsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
-
         let state = State {
             mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
             sleep_entries: repo.load_sleep().unwrap_or(vec![]),
@@ -40,7 +39,7 @@ impl Component for BarsModel {
             repo,
             state,
             text_area: "".to_string(),
-            show_logs_cb: props.show_logs_cb,
+            show_logs: props.show_logs,
         }
     }
 
@@ -80,7 +79,7 @@ impl Component for BarsModel {
                 true
             }
             BarsMsg::ShowLogs => {
-                self.show_logs_cb.emit(());
+                self.show_logs.emit(());
                 false
             }
         }

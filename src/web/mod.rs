@@ -1,13 +1,16 @@
 use crate::*;
-use repo::YewRepo;
 
 pub mod bars;
 pub mod logs;
 
-pub struct RootModel {
+use bars::Bars;
+use logs::Logs;
+use repo::YewRepo;
+
+pub struct Root {
     mode: Mode,
-    show_bars_cb: Option<Callback<()>>,
-    show_logs_cb: Option<Callback<()>>,
+    show_bars: Option<Callback<()>>,
+    show_logs: Option<Callback<()>>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -18,16 +21,16 @@ pub enum Mode {
 
 pub struct SwitchModeMsg(Mode);
 
-impl Component for RootModel {
+impl Component for Root {
     type Message = SwitchModeMsg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let show_bars_cb = link.callback(|()| SwitchModeMsg(Mode::Bars));
-        let show_logs_cb = link.callback(|()| SwitchModeMsg(Mode::Logs));
+        let show_bars = link.callback(|()| SwitchModeMsg(Mode::Bars));
+        let show_logs = link.callback(|()| SwitchModeMsg(Mode::Logs));
         Self {
             mode: Mode::Bars,
-            show_bars_cb: Some(show_bars_cb),
-            show_logs_cb: Some(show_logs_cb),
+            show_bars: Some(show_bars),
+            show_logs: Some(show_logs),
         }
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
@@ -44,7 +47,7 @@ impl Component for RootModel {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <bars::BarsModel show_logs_cb={self.show_logs_cb.as_ref().expect("logcb")}/>
+                <Bars show_logs={self.show_logs.as_ref().expect("logcb")}/>
             },
             Mode::Logs => todo!(),
         }

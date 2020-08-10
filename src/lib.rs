@@ -60,5 +60,5 @@ impl MoodReading {
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    App::<web::RootModel>::new().mount_to_body();
+    App::<web::Root>::new().mount_to_body();
 }
