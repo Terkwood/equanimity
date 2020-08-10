@@ -19,13 +19,12 @@ pub struct LogsProps {
     pub show_bars: Callback<()>,
 }
 
-#[derive(Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Eq, PartialEq, Clone, Debug)]
 enum Entries {
     Mood(MoodReading),
     Sleep(TextSubmission),
     Note(TextSubmission),
 }
-
 impl Entries {
     pub fn timestamp(&self) -> u64 {
         match self {
@@ -35,12 +34,17 @@ impl Entries {
         }
     }
 }
-
-/*impl PartialEq for Entries {
-    fn eq(&self, other: &Self) -> bool {
-        self.timestamp() == other.timestamp()
+impl PartialOrd for Entries {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
-}*/
+}
+
+impl Ord for Entries {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.timestamp().cmp(&other.timestamp())
+    }
+}
 
 impl Component for Logs {
     type Message = LogsMsg;
@@ -81,6 +85,7 @@ impl Component for Logs {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
     fn test_sort_entries() {
         let should_be_first = Entries::Sleep(TextSubmission {
             value: "hello".to_string(),
@@ -97,8 +102,17 @@ mod tests {
             epoch_millis: 100,
         });
 
-        let mut entries = vec![should_be_last, should_be_first, should_be_middle];
+        let mut entries = vec![
+            should_be_last.clone(),
+            should_be_first.clone(),
+            should_be_middle.clone(),
+        ];
 
         entries.sort();
+
+        assert_eq!(
+            entries,
+            vec![should_be_first, should_be_middle, should_be_last]
+        )
     }
 }
