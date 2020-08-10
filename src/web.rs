@@ -100,7 +100,7 @@ impl Component for Model {
 
                     </div>
 
-                    <div>
+                    <div id="bigtext">
                         <textarea
                             rows=6
                             value=&self.state.text_area
@@ -111,8 +111,7 @@ impl Component for Model {
                         <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit 😴" }</button>
                         <br/>
                         <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit 🖊" }</button>
-                        <p> { "Sleep: " } { &self.state.sleep_entries.len() } </p>
-                        <p> { "Notes: " } { &self.state.notes.len() } </p>
+                        <p> { "Sleep: " } { &self.state.sleep_entries.len() } { " Notes: " } { &self.state.notes.len() }</p>
                     </div>
                 </div>
 
