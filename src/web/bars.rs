@@ -127,8 +127,8 @@ impl Component for BarsModel {
                         <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Submit 😴" }</button>
                         <br/>
                         <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Submit 🖊" }</button>
-                        <p> { "Sleep: " } { &self.state.sleep_entries.len() } { " Notes: " } { &self.state.notes.len() }</p>
-                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Show Logs 📃"}</button>
+                        <br/>
+                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Show Logs 📚"}</button>
                     </div>
                 </div>
 
