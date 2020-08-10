@@ -5,8 +5,7 @@ use std::rc::Rc;
 
 pub struct Logs {
     link: ComponentLink<Self>,
-    repo: YewRepo,
-    state: State,
+    entries: Vec<Entry>,
     show_bars: Callback<()>,
 }
 
@@ -54,10 +53,11 @@ impl Component for Logs {
 
         let state = State::load(&repo);
 
+        let entries = todo!();
+
         Self {
             link,
-            state,
-            repo,
+            entries,
             show_bars: props.show_bars,
         }
     }
@@ -77,13 +77,40 @@ impl Component for Logs {
     }
     fn view(&self) -> Html {
         html! {
-            <button onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
+            <>
+                <button onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
+                <br/>
+                <ul>
+                    { self.entries.iter().map(render_entry).collect::<Html>() }
+                </ul>
+            </>
         }
     }
 }
 
-fn view_entry(e: Entry) -> Html {
-    todo!()
+fn render_entry(e: &Entry) -> Html {
+    let dt = Utc.timestamp_millis(e.timestamp() as i64);
+    let date_string = dt.format("%m/%d %R").to_string();
+    match e {
+        Entry::Mood(MoodReading {
+            value,
+            epoch_millis: _,
+        }) => html! {
+            <li>{ format!("[{} mood] {}", date_string, value) }</li>
+        },
+        Entry::Sleep(TextSubmission {
+            value,
+            epoch_millis: _,
+        }) => html! {
+            <li>{ format!("[{} sleep] sleep {}", date_string, value) }</li>
+        },
+        Entry::Note(TextSubmission {
+            value,
+            epoch_millis: _,
+        }) => html! {
+            <li>{ format!("[{} note] {}", date_string, value) }</li>
+        },
+    }
 }
 
 #[cfg(test)]
