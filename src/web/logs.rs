@@ -111,7 +111,7 @@ fn render_entry(e: &Entry) -> Html {
             value,
             epoch_millis: _,
         }) => html! {
-            <li>{ format!("[{} sleep] sleep {}", date_string, value) }</li>
+            <li>{ format!("[{} sleep] {}", date_string, value) }</li>
         },
         Entry::Note(TextSubmission {
             value,
