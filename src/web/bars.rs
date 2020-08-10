@@ -28,11 +28,7 @@ impl Component for Bars {
     type Properties = BarsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
-        let state = State {
-            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
-            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
-            notes: repo.load_notes().unwrap_or(vec![]),
-        };
+        let state = State::load(&repo);
 
         Self {
             link,

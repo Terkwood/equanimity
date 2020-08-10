@@ -47,9 +47,11 @@ impl Component for Root {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <Bars show_logs={self.show_logs.as_ref().expect("logcb")}/>
+                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")}/>
             },
-            Mode::Logs => todo!(),
+            Mode::Logs => html! {
+                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")}/>
+            },
         }
     }
 }
@@ -58,4 +60,14 @@ pub struct State {
     mood_readings: Vec<MoodReading>,
     sleep_entries: Vec<TextSubmission>,
     notes: Vec<TextSubmission>,
+}
+
+impl State {
+    pub fn load(repo: &YewRepo) -> Self {
+        Self {
+            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
+            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
+            notes: repo.load_notes().unwrap_or(vec![]),
+        }
+    }
 }

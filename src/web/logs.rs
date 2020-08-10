@@ -17,7 +17,6 @@ pub enum LogsMsg {
 #[derive(Properties, Clone)]
 pub struct LogsProps {
     pub show_bars: Callback<()>,
-    pub repo: Rc<YewRepo>,
 }
 
 impl Component for Logs {
@@ -26,11 +25,7 @@ impl Component for Logs {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
 
-        let state = State {
-            mood_readings: props.repo.load_mood_readings().unwrap_or(vec![]),
-            sleep_entries: props.repo.load_sleep().unwrap_or(vec![]),
-            notes: props.repo.load_notes().unwrap_or(vec![]),
-        };
+        let state = State::load(&repo);
 
         Self {
             link,
