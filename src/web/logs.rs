@@ -41,7 +41,10 @@ impl Component for Logs {
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            LogsMsg::ShowBars => todo!(),
+            LogsMsg::ShowBars => {
+                self.show_bars.emit(());
+                false
+            }
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -51,6 +54,8 @@ impl Component for Logs {
         false
     }
     fn view(&self) -> Html {
-        todo!()
+        html! {
+            <button onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
+        }
     }
 }
