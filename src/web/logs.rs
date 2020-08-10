@@ -1,7 +1,6 @@
 use super::State;
 use crate::*;
 use repo::YewRepo;
-use std::rc::Rc;
 
 pub struct Logs {
     link: ComponentLink<Self>,
@@ -53,7 +52,17 @@ impl Component for Logs {
 
         let state = State::load(&repo);
 
-        let entries = todo!();
+        let mut entries = vec![];
+        for m in state.mood_readings {
+            entries.push(Entry::Mood(m))
+        }
+        for s in state.sleep_entries {
+            entries.push(Entry::Sleep(s))
+        }
+        for n in state.notes {
+            entries.push(Entry::Note(n))
+        }
+        entries.sort();
 
         Self {
             link,
