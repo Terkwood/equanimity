@@ -1,73 +1,84 @@
+use super::State;
 use crate::*;
 use repo::YewRepo;
 
-pub struct State {
-    mood_readings: Vec<MoodReading>,
-    sleep_entries: Vec<TextSubmission>,
-    notes: Vec<TextSubmission>,
-    text_area: String,
-}
-
-pub struct Model {
+pub struct Bars {
     link: ComponentLink<Self>,
     repo: YewRepo,
     state: State,
+    text_area: String,
+    show_logs: Callback<()>,
 }
 
-pub enum Msg {
+pub enum BarsMsg {
     AddReading(MoodReading),
     TextAreaUpdated(String),
     SubmitSleep,
     SubmitNotes,
+    ShowLogs,
 }
 
-impl Component for Model {
-    type Message = Msg;
-    type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+#[derive(Properties, Clone)]
+pub struct BarsProps {
+    pub show_logs: Callback<()>,
+}
+
+impl Component for Bars {
+    type Message = BarsMsg;
+    type Properties = BarsProps;
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
+        let state = State::load(&repo);
 
-        let state = State {
-            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
-            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
-            notes: repo.load_notes().unwrap_or(vec![]),
+        Self {
+            link,
+            repo,
+            state,
             text_area: "".to_string(),
-        };
-
-        Self { link, repo, state }
+            show_logs: props.show_logs,
+        }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddReading(r) => {
+            BarsMsg::AddReading(r) => {
                 self.state.mood_readings.push(r);
                 self.repo
                     .save_mood_readings(&self.state.mood_readings)
-                    .expect("save mood readings")
+                    .expect("save mood readings");
+                true
             }
-            Msg::TextAreaUpdated(s) => self.state.text_area = s,
-            Msg::SubmitSleep => {
-                if !self.state.text_area.is_empty() {
+            BarsMsg::TextAreaUpdated(s) => {
+                self.text_area = s;
+                true
+            }
+            BarsMsg::SubmitSleep => {
+                if !self.text_area.is_empty() {
                     self.state
                         .sleep_entries
-                        .push(TextSubmission::new(self.state.text_area.clone()));
-                    self.state.text_area = "".to_string();
+                        .push(TextSubmission::new(self.text_area.clone()));
+                    self.text_area = "".to_string();
                     self.repo
                         .save_sleep(&self.state.sleep_entries)
                         .expect("save sleep")
                 }
+                true
             }
-            Msg::SubmitNotes => {
-                if !self.state.text_area.is_empty() {
+            BarsMsg::SubmitNotes => {
+                if !self.text_area.is_empty() {
                     self.state
                         .notes
-                        .push(TextSubmission::new(self.state.text_area.clone()));
-                    self.state.text_area = "".to_string();
+                        .push(TextSubmission::new(self.text_area.clone()));
+                    self.text_area = "".to_string();
                     self.repo.save_notes(&self.state.notes).expect("save notes")
                 }
+                true
+            }
+            BarsMsg::ShowLogs => {
+                self.show_logs.emit(());
+                false
             }
         }
-        true
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -83,19 +94,19 @@ impl Component for Model {
             <div>
                 <div id="controlgrid">
                     <div>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(1)))>{ "⚡ 1 ⚡" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1 ⚡" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(0)))>{ "☯ 🧘 ☯" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(0)))>{ "☯ 🧘 ☯" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-1)))>{ "😢 1 😢" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-1)))>{ "😢 1 😢" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-2)))>{ "😭 2 😭" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-2)))>{ "😭 2 😭" }</button>
                         <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| Msg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
+                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
 
 
                     </div>
@@ -103,15 +114,16 @@ impl Component for Model {
                     <div id="bigtext">
                         <textarea
                             rows=6
-                            value=&self.state.text_area
-                            oninput=self.link.callback(|e: InputData| Msg::TextAreaUpdated(e.value))
+                            value=&self.text_area
+                            oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
                             placeholder="Greetings.">
                         </textarea>
                         <br/>
-                        <button onclick=self.link.callback(|_| Msg::SubmitSleep)>{ "Submit 😴" }</button>
+                        <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Submit 😴" }</button>
                         <br/>
-                        <button onclick=self.link.callback(|_| Msg::SubmitNotes)>{ "Submit 🖊" }</button>
-                        <p> { "Sleep: " } { &self.state.sleep_entries.len() } { " Notes: " } { &self.state.notes.len() }</p>
+                        <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Submit 🖊" }</button>
+                        <br/>
+                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Show Logs 📚"}</button>
                     </div>
                 </div>
 

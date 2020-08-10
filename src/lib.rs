@@ -11,17 +11,17 @@ mod moods;
 mod repo;
 mod web;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct TextSubmission {
+    pub epoch_millis: u64,
     pub value: String,
-    pub _epoch_millis: u64,
 }
 
 impl TextSubmission {
     pub fn new(value: String) -> Self {
         TextSubmission {
             value,
-            _epoch_millis: now(),
+            epoch_millis: now(),
         }
     }
 }
@@ -60,5 +60,5 @@ impl MoodReading {
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    App::<web::Model>::new().mount_to_body();
+    App::<web::Root>::new().mount_to_body();
 }
