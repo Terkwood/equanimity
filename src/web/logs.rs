@@ -19,6 +19,29 @@ pub struct LogsProps {
     pub show_bars: Callback<()>,
 }
 
+#[derive(Ord, PartialOrd, Eq, PartialEq)]
+enum Entries {
+    Mood(MoodReading),
+    Sleep(TextSubmission),
+    Note(TextSubmission),
+}
+
+impl Entries {
+    pub fn timestamp(&self) -> u64 {
+        match self {
+            Entries::Mood(m) => m.epoch_millis,
+            Entries::Sleep(t) => t.epoch_millis,
+            Entries::Note(t) => t.epoch_millis,
+        }
+    }
+}
+
+/*impl PartialEq for Entries {
+    fn eq(&self, other: &Self) -> bool {
+        self.timestamp() == other.timestamp()
+    }
+}*/
+
 impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
@@ -52,5 +75,30 @@ impl Component for Logs {
         html! {
             <button onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn test_sort_entries() {
+        let should_be_first = Entries::Sleep(TextSubmission {
+            value: "hello".to_string(),
+            epoch_millis: 0,
+        });
+
+        let should_be_middle = Entries::Note(TextSubmission {
+            value: "yes".to_string(),
+            epoch_millis: 50,
+        });
+
+        let should_be_last = Entries::Mood(MoodReading {
+            value: 0,
+            epoch_millis: 100,
+        });
+
+        let mut entries = vec![should_be_last, should_be_first, should_be_middle];
+
+        entries.sort();
     }
 }
