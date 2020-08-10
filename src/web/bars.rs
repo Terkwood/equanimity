@@ -7,6 +7,7 @@ pub struct BarsModel {
     repo: YewRepo,
     state: State,
     text_area: String,
+    show_logs_cb: Callback<()>,
 }
 
 pub enum BarsMsg {
@@ -14,12 +15,18 @@ pub enum BarsMsg {
     TextAreaUpdated(String),
     SubmitSleep,
     SubmitNotes,
+    ShowLogs,
+}
+
+#[derive(Properties, Clone)]
+pub struct BarsProps {
+    pub show_logs_cb: Callback<()>,
 }
 
 impl Component for BarsModel {
     type Message = BarsMsg;
-    type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+    type Properties = BarsProps;
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
 
         let state = State {
@@ -33,6 +40,7 @@ impl Component for BarsModel {
             repo,
             state,
             text_area: "".to_string(),
+            show_logs_cb: props.show_logs_cb,
         }
     }
 
@@ -42,9 +50,13 @@ impl Component for BarsModel {
                 self.state.mood_readings.push(r);
                 self.repo
                     .save_mood_readings(&self.state.mood_readings)
-                    .expect("save mood readings")
+                    .expect("save mood readings");
+                true
             }
-            BarsMsg::TextAreaUpdated(s) => self.text_area = s,
+            BarsMsg::TextAreaUpdated(s) => {
+                self.text_area = s;
+                true
+            }
             BarsMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
                     self.state
@@ -55,6 +67,7 @@ impl Component for BarsModel {
                         .save_sleep(&self.state.sleep_entries)
                         .expect("save sleep")
                 }
+                true
             }
             BarsMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
@@ -64,9 +77,13 @@ impl Component for BarsModel {
                     self.text_area = "".to_string();
                     self.repo.save_notes(&self.state.notes).expect("save notes")
                 }
+                true
+            }
+            BarsMsg::ShowLogs => {
+                self.show_logs_cb.emit(());
+                false
             }
         }
-        true
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -111,6 +128,7 @@ impl Component for BarsModel {
                         <br/>
                         <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Submit 🖊" }</button>
                         <p> { "Sleep: " } { &self.state.sleep_entries.len() } { " Notes: " } { &self.state.notes.len() }</p>
+                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Show Logs 📃"}</button>
                     </div>
                 </div>
 
