@@ -20,27 +20,27 @@ pub struct LogsProps {
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
-enum Entries {
+enum Entry {
     Mood(MoodReading),
     Sleep(TextSubmission),
     Note(TextSubmission),
 }
-impl Entries {
+impl Entry {
     pub fn timestamp(&self) -> u64 {
         match self {
-            Entries::Mood(m) => m.epoch_millis,
-            Entries::Sleep(t) => t.epoch_millis,
-            Entries::Note(t) => t.epoch_millis,
+            Entry::Mood(m) => m.epoch_millis,
+            Entry::Sleep(t) => t.epoch_millis,
+            Entry::Note(t) => t.epoch_millis,
         }
     }
 }
-impl PartialOrd for Entries {
+impl PartialOrd for Entry {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl Ord for Entries {
+impl Ord for Entry {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.timestamp().cmp(&other.timestamp())
     }
@@ -82,22 +82,26 @@ impl Component for Logs {
     }
 }
 
+fn view_entry(e: Entry) -> Html {
+    todo!()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
     fn test_sort_entries() {
-        let should_be_first = Entries::Sleep(TextSubmission {
+        let should_be_first = Entry::Sleep(TextSubmission {
             value: "hello".to_string(),
             epoch_millis: 0,
         });
 
-        let should_be_middle = Entries::Note(TextSubmission {
+        let should_be_middle = Entry::Note(TextSubmission {
             value: "yes".to_string(),
             epoch_millis: 50,
         });
 
-        let should_be_last = Entries::Mood(MoodReading {
+        let should_be_last = Entry::Mood(MoodReading {
             value: 0,
             epoch_millis: 100,
         });
