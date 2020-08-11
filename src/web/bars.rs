@@ -59,7 +59,7 @@ impl Component for Bars {
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
                     self.repo
-                        .save_sleep(&self.state.sleep_entries)
+                        .save_text(TextType::Sleep, &self.state.sleep_entries)
                         .expect("save sleep")
                 }
                 true
@@ -70,7 +70,7 @@ impl Component for Bars {
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo.save_notes(&self.state.notes).expect("save notes")
+                    self.repo.save_text(TextType::Notes, &self.state.notes).expect("save notes")
                 }
                 true
             }

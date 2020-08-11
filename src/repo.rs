@@ -1,9 +1,10 @@
-use crate::{MoodReading, TextSubmission};
+use crate::{MoodReading, TextSubmission, TextType};
 use yew::format::Json;
 use yew::services::storage::{Area, StorageService};
 
 const MOOD_READINGS_KEY: &str = "mood_readings";
 const NOTES_KEY: &str = "notes";
+const MEDS_KEY: &str = "meds";
 const SLEEP_KEY: &str = "sleep";
 
 /// Yew wrapper around (in our case, local) storage.
@@ -18,14 +19,9 @@ impl YewRepo {
         Ok(self.storage.store(MOOD_READINGS_KEY, value))
     }
 
-    pub fn save_notes(&mut self, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
+    pub fn save_text(&mut self, text_type: TextType, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
         let value = Json(all);
-        Ok(self.storage.store(NOTES_KEY, value))
-    }
-
-    pub fn save_sleep(&mut self, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
-        let value = Json(all);
-        Ok(self.storage.store(SLEEP_KEY, value))
+        Ok(self.storage.store(text_key(text_type), value))
     }
 
     pub fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
@@ -37,18 +33,9 @@ impl YewRepo {
             },
         )
     }
-    pub fn load_notes(&self) -> Result<Vec<TextSubmission>, LoadErr> {
+    pub fn load_text(&self, text_type: TextType) -> Result<Vec<TextSubmission>, LoadErr> {
         Ok(
-            if let Json(Ok(restored_model)) = self.storage.restore(NOTES_KEY) {
-                restored_model
-            } else {
-                Vec::new()
-            },
-        )
-    }
-    pub fn load_sleep(&self) -> Result<Vec<TextSubmission>, LoadErr> {
-        Ok(
-            if let Json(Ok(restored_model)) = self.storage.restore(SLEEP_KEY) {
+            if let Json(Ok(restored_model)) = self.storage.restore(text_key(text_type)) {
                 restored_model
             } else {
                 Vec::new()
@@ -60,6 +47,14 @@ impl YewRepo {
         let storage = StorageService::new(Area::Local).expect("storage was disabled by the user");
 
         Self { storage }
+    }
+}
+
+fn text_key(text_type: TextType) -> &'static str {
+    match text_type {
+        TextType::Sleep => SLEEP_KEY,
+        TextType::Meds => MEDS_KEY,
+        TextType::Notes => NOTES_KEY,
     }
 }
 
