@@ -26,8 +26,15 @@ textarea {
   grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
 }
 
-#bigtext {
+#bigtextgrid {
   grid-column: 2 / span 2;
+}
+
+#submitetcgrid {
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(4, 1fr);
+  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
 }
 
 #moodgrid {
