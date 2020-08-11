@@ -111,19 +111,27 @@ impl Component for Bars {
 
                     </div>
 
-                    <div id="bigtext">
+                    <div id="bigtextgrid">
                         <textarea
                             rows=6
                             value=&self.text_area
                             oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
                             placeholder="Greetings.">
                         </textarea>
-                        <br/>
-                        <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Submit 😴" }</button>
-                        <br/>
-                        <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Submit 🖊" }</button>
-                        <br/>
-                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Show Logs 📚"}</button>
+                        <div id="submitetcgrid">
+                            <div>
+                                <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                            </div>
+                            <div>
+                                <button>{ "Meds 💊" }</button>
+                            </div>
+                            <div>
+                                <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                            </div>
+                            <div>
+                                <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
