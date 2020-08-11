@@ -14,6 +14,7 @@ pub enum BarsMsg {
     AddReading(MoodReading),
     TextAreaUpdated(String),
     SubmitSleep,
+    SubmitMeds,
     SubmitNotes,
     ShowLogs,
 }
@@ -59,8 +60,20 @@ impl Component for Bars {
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
                     self.repo
-                        .save_sleep(&self.state.sleep_entries)
+                        .save_text(TextType::Sleep, &self.state.sleep_entries)
                         .expect("save sleep")
+                }
+                true
+            }
+            BarsMsg::SubmitMeds => {
+                if !self.text_area.is_empty() {
+                    self.state
+                        .meds
+                        .push(TextSubmission::new(self.text_area.clone()));
+                    self.text_area = "".to_string();
+                    self.repo
+                        .save_text(TextType::Meds, &self.state.meds)
+                        .expect("save meds")
                 }
                 true
             }
@@ -70,7 +83,7 @@ impl Component for Bars {
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo.save_notes(&self.state.notes).expect("save notes")
+                    self.repo.save_text(TextType::Notes, &self.state.notes).expect("save notes")
                 }
                 true
             }
@@ -123,7 +136,7 @@ impl Component for Bars {
                                 <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
                             </div>
                             <div>
-                                <button>{ "Meds 💊" }</button>
+                                <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
                             </div>
                             <div>
                                 <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>

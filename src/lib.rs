@@ -25,6 +25,14 @@ impl TextSubmission {
         }
     }
 }
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum TextType {
+    Sleep,
+    Meds,
+    Notes
+}
+
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub struct MoodReading {
     pub epoch_millis: u64,

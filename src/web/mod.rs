@@ -58,6 +58,7 @@ impl Component for Root {
 
 pub struct State {
     mood_readings: Vec<MoodReading>,
+    meds: Vec<TextSubmission>,
     sleep_entries: Vec<TextSubmission>,
     notes: Vec<TextSubmission>,
 }
@@ -65,9 +66,10 @@ pub struct State {
 impl State {
     pub fn load(repo: &YewRepo) -> Self {
         Self {
-            mood_readings: repo.load_mood_readings().unwrap_or(vec![]),
-            sleep_entries: repo.load_sleep().unwrap_or(vec![]),
-            notes: repo.load_notes().unwrap_or(vec![]),
+            mood_readings: repo.load_mood_readings().unwrap_or_default(),
+            meds: repo.load_text(TextType::Meds).unwrap_or_default(),
+            sleep_entries: repo.load_text(TextType::Sleep).unwrap_or_default(),
+            notes: repo.load_text(TextType::Notes).unwrap_or_default(),
         }
     }
 }
