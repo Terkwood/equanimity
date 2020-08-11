@@ -63,6 +63,7 @@ impl Component for Logs {
             entries.push(Entry::Note(n))
         }
         entries.sort();
+        entries.reverse();
 
         Self {
             link,
