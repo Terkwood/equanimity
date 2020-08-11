@@ -21,6 +21,7 @@ pub struct LogsProps {
 enum Entry {
     Mood(MoodReading),
     Sleep(TextSubmission),
+    Meds(TextSubmission),
     Note(TextSubmission),
 }
 impl Entry {
@@ -28,6 +29,7 @@ impl Entry {
         match self {
             Entry::Mood(m) => m.epoch_millis,
             Entry::Sleep(t) => t.epoch_millis,
+            Entry::Meds(m) => m.epoch_millis,
             Entry::Note(t) => t.epoch_millis,
         }
     }
@@ -58,6 +60,9 @@ impl Component for Logs {
         }
         for s in state.sleep_entries {
             entries.push(Entry::Sleep(s))
+        }
+        for m in state.meds {
+            entries.push(Entry::Meds(m))
         }
         for n in state.notes {
             entries.push(Entry::Note(n))
@@ -113,6 +118,12 @@ fn render_entry(e: &Entry) -> Html {
             epoch_millis: _,
         }) => html! {
             <li>{ format!("[{} sleep] {}", date_string, value) }</li>
+        },
+        Entry::Meds(TextSubmission {
+            value,
+            epoch_millis: _,
+        }) => html! {
+            <li>{ format!("[{} meds] {}", date_string, value) }</li>
         },
         Entry::Note(TextSubmission {
             value,
