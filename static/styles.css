@@ -31,7 +31,7 @@ textarea {
 }
 
 #moodgrid {
-  height: 55vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+  height: 52vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(7, 1fr) / repeat(14, 1fr);
@@ -49,6 +49,7 @@ textarea {
 .date {
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  font-size: 32px;
 }
 
 .nocolor {
