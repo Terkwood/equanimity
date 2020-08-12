@@ -8,7 +8,13 @@ pub struct Bars {
     repo: YewRepo,
     state: State,
     text_area: String,
+    top_view: BarsTopView,
     show_logs: Callback<()>,
+}
+
+pub enum BarsTopView {
+    MoodButtons,
+    Writing
 }
 
 pub enum BarsMsg {
@@ -35,6 +41,7 @@ impl Component for Bars {
         Self {
             link,
             repo,
+            top_view: BarsTopView::MoodButtons,
             state,
             text_area: "".to_string(),
             show_logs: props.show_logs,
@@ -108,48 +115,10 @@ impl Component for Bars {
         let rms = moods::recent(utc_now(), &self.state.mood_readings);
         html! {
             <div>
-                <div id="controlgrid">
-                    <div class="center">
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1 ⚡" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(0)))>{ "☯ 🧘 ☯" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-1)))>{ "😢 1 😢" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-2)))>{ "😭 2 😭" }</button>
-                        <br/>
-                        <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
-
-
-                    </div>
-
-                    <div id="bigtextgrid">
-                        <textarea
-                            rows=6
-                            value=&self.text_area
-                            oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
-                            placeholder="Greetings.">
-                        </textarea>
-                        <div id="submitetcgrid">
-                            <div>
-                                <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
-                            </div>
-                            <div>
-                                <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
-                            </div>
-                            <div>
-                                <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
-                            </div>
-                            <div>
-                                <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                { self.render_top_view() }
+                /*<div id="controlgrid">
+    
+                </div>*/
 
                 <div id="moodgrid">
                     { rms.iter().map(render_mood_bar).collect::<Html>() }
@@ -159,6 +128,62 @@ impl Component for Bars {
                     { rms.iter().map(render_mood_date).collect::<Html>() }
                 </div>
             </div>
+        }
+    }
+}
+
+impl Bars {
+    fn render_top_view(&self) -> Html {
+        match self.top_view {
+            BarsTopView::MoodButtons => html! {
+                <div id="moodbuttongrid">
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1 ⚡" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(0)))>{ "☯ 🧘 ☯" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-1)))>{ "😢 1 😢" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-2)))>{ "😭 2 😭" }</button>
+                        </div>
+                        <div class="center">
+                            <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
+                        </div>
+                    </div>
+            },
+            BarsTopView::Writing => html! {
+                <div id="bigtextgrid">
+                    <textarea
+                        rows=6
+                        value=&self.text_area
+                        oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
+                        placeholder="Greetings.">
+                    </textarea>
+                    <div id="submitetcgrid">
+                        <div>
+                            <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                        </div>
+                        <div>
+                            <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                        </div>
+                        <div>
+                            <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                        </div>
+                        <div>
+                            <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     }
 }
