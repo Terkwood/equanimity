@@ -104,6 +104,7 @@ impl Component for Logs {
 }
 
 fn render_entry(e: &Entry) -> Html {
+    todo!("local time");
     let dt = Utc.timestamp_millis(e.timestamp() as i64);
     let date_string = dt.format("%m/%d %R").to_string();
     match e {
