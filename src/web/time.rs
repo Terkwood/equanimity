@@ -1,5 +1,8 @@
 use chrono::prelude::*;
 
+/// Note the bias to western timezone.
+/// If this software were open-sourced, we'd want to make
+/// this usable for individuals in the eastern hemisphere.
 pub fn local_datetime(epoch_millis_utc: u64) -> DateTime<FixedOffset> {
     let offset = FixedOffset::west(local_offset_seconds());
     Utc.timestamp_millis(epoch_millis_utc as i64)
