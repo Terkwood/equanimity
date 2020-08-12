@@ -124,9 +124,6 @@ impl Component for Bars {
         html! {
             <div>
                 { self.render_top_view() }
-                /*<div id="controlgrid">
-
-                </div>*/
 
                 <div id="moodgrid">
                     { rms.iter().map(render_mood_bar).collect::<Html>() }
@@ -170,7 +167,7 @@ impl Bars {
                     </div>
                     <div id="belowmoodbuttongrid">
                         <div class="center">
-                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
                             <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
@@ -179,26 +176,29 @@ impl Bars {
                 </>
             },
             BarsTopView::Writing => html! {
-                <div id="bigtextgrid">
-                    <textarea
-                        rows=6
-                        value=&self.text_area
-                        oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
-                        placeholder="Greetings.">
-                    </textarea>
-                    <div id="submitetcgrid">
-                        <div>
-                            <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
-                        </div>
-                        <div>
-                            <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
-                        </div>
-                        <div>
-                            <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
-                        </div>
-                        <div>
-                            <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
-                        </div>
+                <div id="controlgrid">
+                    <div id="bigtextgrid">
+                        <textarea
+                            rows=6
+                            value=&self.text_area
+                            oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
+                            placeholder="Greetings.">
+                        </textarea>
+                    </div>
+                    <div>
+                        <button onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Moods 🎭" }</button>
+                    </div>                
+                    <div>
+                        <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                    </div>
+                    <div>
+                        <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                    </div>
+                    <div>
+                        <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                    </div>
+                    <div>
+                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
                     </div>
                 </div>
             },
