@@ -10,6 +10,7 @@ button {
 
 .moodbutton {
   font-size: 50px;
+  height: 85%;
 }
 
 #moodbuttongrid {
@@ -48,7 +49,7 @@ textarea {
 }
 
 #moodgrid {
-  height: 52vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+  height: 62vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(7, 1fr) / repeat(14, 1fr);
