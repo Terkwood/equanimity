@@ -1,6 +1,7 @@
 use super::{State, web::utc_now};
 use crate::*;
 use repo::YewRepo;
+use web::time::local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
@@ -176,8 +177,7 @@ fn render_mood_bar(r: &MoodReading) -> Html {
 }
 
 fn render_mood_date(r: &MoodReading) -> Html {
-    todo!("localtime");
-    let dt = Utc.timestamp_millis(r.epoch_millis as i64);
+    let dt = local_datetime(r.epoch_millis);
     let date_string = dt.format("%m/%d").to_string();
     html! {
         <>

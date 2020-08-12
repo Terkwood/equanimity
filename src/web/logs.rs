@@ -1,5 +1,6 @@
 use super::State;
 use crate::*;
+use web::time::local_datetime;
 use repo::YewRepo;
 
 pub struct Logs {
@@ -104,8 +105,7 @@ impl Component for Logs {
 }
 
 fn render_entry(e: &Entry) -> Html {
-    todo!("local time");
-    let dt = Utc.timestamp_millis(e.timestamp() as i64);
+    let dt = local_datetime(e.timestamp());
     let date_string = dt.format("%m/%d %R").to_string();
     match e {
         Entry::Mood(MoodReading {
