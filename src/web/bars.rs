@@ -185,20 +185,20 @@ impl Bars {
                             placeholder="Greetings.">
                         </textarea>
                     </div>
-                    <div>
-                        <button onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Moods 🎭" }</button>
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Moods 🎭" }</button>
                     </div>                
-                    <div>
-                        <button onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
                     </div>
-                    <div>
-                        <button onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
                     </div>
-                    <div>
-                        <button onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
                     </div>
-                    <div>
-                        <button onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
                     </div>
                 </div>
             },
