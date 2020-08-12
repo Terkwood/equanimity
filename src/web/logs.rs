@@ -1,7 +1,7 @@
 use super::State;
 use crate::*;
-use web::time::local_datetime;
 use repo::YewRepo;
+use web::time::local_datetime;
 
 pub struct Logs {
     link: ComponentLink<Self>,

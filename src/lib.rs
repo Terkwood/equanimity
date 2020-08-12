@@ -6,11 +6,10 @@ mod moods;
 mod repo;
 mod web;
 
-use chrono::{TimeZone, Utc};
 use serde_derive::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
-use yew::prelude::*;
 use web::time::utc_now;
+use yew::prelude::*;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct TextSubmission {
@@ -31,7 +30,7 @@ impl TextSubmission {
 pub enum TextType {
     Sleep,
     Meds,
-    Notes
+    Notes,
 }
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
@@ -39,7 +38,6 @@ pub struct MoodReading {
     pub epoch_millis: u64,
     pub value: i8,
 }
-
 
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;

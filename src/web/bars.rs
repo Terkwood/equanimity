@@ -1,4 +1,4 @@
-use super::{State, web::utc_now};
+use super::{web::utc_now, State};
 use crate::*;
 use repo::YewRepo;
 use web::time::local_datetime;
@@ -84,7 +84,9 @@ impl Component for Bars {
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo.save_text(TextType::Notes, &self.state.notes).expect("save notes")
+                    self.repo
+                        .save_text(TextType::Notes, &self.state.notes)
+                        .expect("save notes")
                 }
                 true
             }
