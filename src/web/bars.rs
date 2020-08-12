@@ -14,7 +14,7 @@ pub struct Bars {
 
 pub enum BarsTopView {
     MoodButtons,
-    Writing
+    Writing,
 }
 
 pub enum BarsMsg {
@@ -24,6 +24,7 @@ pub enum BarsMsg {
     SubmitMeds,
     SubmitNotes,
     ShowLogs,
+    ToggleTopView,
 }
 
 #[derive(Properties, Clone)]
@@ -97,6 +98,13 @@ impl Component for Bars {
                 }
                 true
             }
+            BarsMsg::ToggleTopView => {
+                self.top_view = match self.top_view {
+                    BarsTopView::MoodButtons => BarsTopView::Writing,
+                    _ => BarsTopView::MoodButtons,
+                };
+                true
+            }
             BarsMsg::ShowLogs => {
                 self.show_logs.emit(());
                 false
@@ -117,7 +125,7 @@ impl Component for Bars {
             <div>
                 { self.render_top_view() }
                 /*<div id="controlgrid">
-    
+
                 </div>*/
 
                 <div id="moodgrid">
@@ -136,7 +144,8 @@ impl Bars {
     fn render_top_view(&self) -> Html {
         match self.top_view {
             BarsTopView::MoodButtons => html! {
-                <div id="moodbuttongrid">
+                <>
+                    <div id="moodbuttongrid">
                         <div class="center">
                             <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
                         </div>
@@ -159,6 +168,15 @@ impl Bars {
                             <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3 🏥" }</button>
                         </div>
                     </div>
+                    <div id="belowmoodbuttongrid">
+                        <div class="center">
+                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                        </div>
+                        <div class="center">
+                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                        </div>
+                    </div>
+                </>
             },
             BarsTopView::Writing => html! {
                 <div id="bigtextgrid">
@@ -183,7 +201,7 @@ impl Bars {
                         </div>
                     </div>
                 </div>
-            }
+            },
         }
     }
 }
