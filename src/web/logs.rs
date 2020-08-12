@@ -94,8 +94,17 @@ impl Component for Logs {
     fn view(&self) -> Html {
         html! {
             <>
-                <button onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
-                <br/>
+                <div id="logsbuttongrid">
+                    <div class="center">
+                        <button class="expandheight" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>    
+                    </div>
+                    <div class="center">
+                        <button class="expandheight">{ "Update 🖊"}</button>    
+                    </div>
+                    <div class="center">
+                        <button class="expandheight">{ "Delete 🗑"}</button>    
+                    </div>
+                </div>
                 <ul>
                     { self.entries.iter().map(render_entry).collect::<Html>() }
                 </ul>

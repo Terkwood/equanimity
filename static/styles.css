@@ -59,6 +59,22 @@ textarea {
   font-size: 32px;
 }
 
+#logsbuttongrid {
+  height: 5vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(3, 1fr);
+  grid-auto-flow: column;
+}
+
+.center {
+  text-align: center
+}
+
+.expandheight {
+  height: 100%;
+}
+
 .nocolor {
   background-color: transparent;
 }
