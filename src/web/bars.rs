@@ -167,10 +167,10 @@ impl Bars {
                     </div>
                     <div id="belowmoodbuttongrid">
                         <div class="center">
-                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Write 🖊"}</button>
+                            <button class="thick" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="thick" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "View Log 📚"}</button>
                         </div>
                     </div>
                 </>

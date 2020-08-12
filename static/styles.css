@@ -79,7 +79,7 @@ textarea {
   height: 5vh;
   display: grid;
   grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(3, 1fr);
+  grid-template: repeat(1, 1fr) / repeat(4, 1fr);
   grid-auto-flow: column;
 }
 
@@ -89,6 +89,13 @@ textarea {
 
 .expandheight {
   height: 100%;
+}
+
+.thick {
+  display: inline-block;
+  width: 85%;
+  height: 100%;
+  text-align: center;
 }
 
 .nocolor {
