@@ -13,6 +13,11 @@ button {
   height: 85%;
 }
 
+#zenbutton {
+  font-size: 130px;
+  height: 85%;
+}
+
 #moodbuttongrid {
   height: 15vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
