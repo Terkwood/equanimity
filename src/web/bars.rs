@@ -145,7 +145,7 @@ impl Bars {
                     <div id="moodbuttongrid">
                         <div class="center">
                             <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
-                        </div>   
+                        </div>
                         <div class="center">
                             <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
                         </div>
@@ -163,7 +163,7 @@ impl Bars {
                         </div>
                         <div class="center">
                             <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
-                        </div>                        
+                        </div>
                     </div>
                     <div id="belowmoodbuttongrid">
                         <div class="center">
@@ -186,8 +186,8 @@ impl Bars {
                         </textarea>
                     </div>
                     <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Moods 🎭" }</button>
-                    </div>                
+                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Bars 📊" }</button>
+                    </div>
                     <div class="center">
                         <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
                     </div>
