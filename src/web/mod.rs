@@ -2,6 +2,7 @@ use crate::*;
 
 pub mod bars;
 pub mod logs;
+pub mod time;
 
 use bars::Bars;
 use logs::Logs;

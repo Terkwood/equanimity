@@ -1,4 +1,4 @@
-use super::State;
+use super::{State, web::utc_now};
 use crate::*;
 use repo::YewRepo;
 
@@ -102,7 +102,7 @@ impl Component for Bars {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(now(), &self.state.mood_readings);
+        let rms = moods::recent(utc_now(), &self.state.mood_readings);
         html! {
             <div>
                 <div id="controlgrid">
