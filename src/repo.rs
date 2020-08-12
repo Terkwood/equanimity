@@ -19,7 +19,11 @@ impl YewRepo {
         Ok(self.storage.store(MOOD_READINGS_KEY, value))
     }
 
-    pub fn save_text(&mut self, text_type: TextType, all: &Vec<TextSubmission>) -> Result<(), SaveErr> {
+    pub fn save_text(
+        &mut self,
+        text_type: TextType,
+        all: &Vec<TextSubmission>,
+    ) -> Result<(), SaveErr> {
         let value = Json(all);
         Ok(self.storage.store(text_key(text_type), value))
     }

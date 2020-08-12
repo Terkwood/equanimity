@@ -1,15 +1,13 @@
+use crate::web::time::local_datetime;
 use crate::*;
 
 const DAYS_TO_DISPLAY: u8 = 14;
 
 pub fn recent(right_now_ms: u64, mrs: &[MoodReading]) -> Vec<MoodReading> {
-    use chrono::prelude::*;
-    let grouped = group_by(mrs, |mr| {
-        Utc.timestamp_millis(mr.epoch_millis as i64).date()
-    });
+    let grouped = group_by(mrs, |mr| local_datetime(mr.epoch_millis).date());
 
-    let cutoff = Utc.timestamp_millis(right_now_ms as i64).date()
-        - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
+    let cutoff =
+        local_datetime(right_now_ms).date() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
 
     let recent_grouped = grouped.iter().filter(|(date, _)| date > &cutoff);
 

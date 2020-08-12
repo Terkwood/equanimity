@@ -1,6 +1,7 @@
-use super::State;
+use super::{web::utc_now, State};
 use crate::*;
 use repo::YewRepo;
+use web::time::local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
@@ -83,7 +84,9 @@ impl Component for Bars {
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo.save_text(TextType::Notes, &self.state.notes).expect("save notes")
+                    self.repo
+                        .save_text(TextType::Notes, &self.state.notes)
+                        .expect("save notes")
                 }
                 true
             }
@@ -102,7 +105,7 @@ impl Component for Bars {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(now(), &self.state.mood_readings);
+        let rms = moods::recent(utc_now(), &self.state.mood_readings);
         html! {
             <div>
                 <div id="controlgrid">
@@ -176,7 +179,7 @@ fn render_mood_bar(r: &MoodReading) -> Html {
 }
 
 fn render_mood_date(r: &MoodReading) -> Html {
-    let dt = Utc.timestamp_millis(r.epoch_millis as i64);
+    let dt = local_datetime(r.epoch_millis);
     let date_string = dt.format("%m/%d").to_string();
     html! {
         <>

@@ -2,14 +2,14 @@
 extern crate serde_derive;
 extern crate serde_json;
 
-use chrono::{TimeZone, Utc};
-use serde_derive::{Deserialize, Serialize};
-use wasm_bindgen::prelude::*;
-use yew::prelude::*;
-
 mod moods;
 mod repo;
 mod web;
+
+use serde_derive::{Deserialize, Serialize};
+use wasm_bindgen::prelude::*;
+use web::time::utc_now;
+use yew::prelude::*;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct TextSubmission {
@@ -21,7 +21,7 @@ impl TextSubmission {
     pub fn new(value: String) -> Self {
         TextSubmission {
             value,
-            epoch_millis: now(),
+            epoch_millis: utc_now(),
         }
     }
 }
@@ -30,7 +30,7 @@ impl TextSubmission {
 pub enum TextType {
     Sleep,
     Meds,
-    Notes
+    Notes,
 }
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
@@ -39,14 +39,11 @@ pub struct MoodReading {
     pub value: i8,
 }
 
-fn now() -> u64 {
-    js_sys::Date::now() as u64
-}
 const MIN_READING: i8 = -3;
 const MAX_READING: i8 = 3;
 impl MoodReading {
     pub fn new(value: i8) -> MoodReading {
-        let epoch_millis = now();
+        let epoch_millis = utc_now();
         if value < MIN_READING {
             MoodReading {
                 value: MIN_READING,
