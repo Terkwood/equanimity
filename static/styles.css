@@ -26,14 +26,6 @@ textarea {
   font-size: 36px;
 }
 
-#controlgrid {
-  height: 30vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(4, 1fr);
-  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
-}
-
 #bigtextgrid {
   grid-column: 3 / span 3;
 }
