@@ -109,7 +109,7 @@ impl Component for Bars {
         html! {
             <div>
                 <div id="controlgrid">
-                    <div>
+                    <div class="center">
                         <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(3)))>{ "🤯 3 🤯" }</button>
                         <br/>
                         <button class="moodbutton" onclick=self.link.callback(|_| BarsMsg::AddReading(MoodReading::new(2)))>{ "🔥 2 🔥" }</button>

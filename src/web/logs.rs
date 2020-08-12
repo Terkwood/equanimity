@@ -96,13 +96,13 @@ impl Component for Logs {
             <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>    
+                        <button class="expandheight">{ "Update 🖊"}</button>
                     </div>
                     <div class="center">
-                        <button class="expandheight">{ "Update 🖊"}</button>    
+                        <button class="expandheight">{ "Delete 🗑"}</button>
                     </div>
                     <div class="center">
-                        <button class="expandheight">{ "Delete 🗑"}</button>    
+                        <button class="expandheight" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Show Bars 📊"}</button>
                     </div>
                 </div>
                 <ul>
