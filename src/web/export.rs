@@ -8,7 +8,7 @@ pub fn button(storage_state: &StorageState) -> Html {
     let formatted_datetime: String = dt.format("%Y%m%d_%H%M%SZ").to_string();
     let filename: String = format!("equanimity_{}.json", formatted_datetime);
     if let Ok(href) = provide_data(storage_state) {
-        html! { <button class="thick"><a href=href download=filename>{ "Export 💾" }</a></button> }
+        html! { <button class="thick"><a href=href download=filename class="download">{ "Export 💾" }</a></button> }
     } else {
         html! { <button class="thick">{ "Export N/A ⛔" }</button>}
     }

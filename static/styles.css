@@ -129,3 +129,8 @@ textarea {
 .cold3 {
   background-color: #1a32af;
 }
+
+.download {
+  text-decoration: none;
+  color: black;
+}
