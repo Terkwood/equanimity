@@ -3,7 +3,7 @@ authors = ["Terkwood <38859656+Terkwood@users.noreply.github.com>"]
 description = "mood tracking web application"
 edition = "2018"
 name = "equanimity"
-version = "0.4.0-a"
+version = "0.4.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
