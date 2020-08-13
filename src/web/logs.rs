@@ -1,4 +1,4 @@
-use super::State;
+use super::StorageState;
 use crate::*;
 use repo::YewRepo;
 use web::time::local_datetime;
@@ -53,7 +53,7 @@ impl Component for Logs {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
 
-        let state = State::load(&repo);
+        let state = StorageState::load(&repo);
 
         let mut entries = vec![];
         for m in state.mood_readings {

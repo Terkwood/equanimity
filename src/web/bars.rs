@@ -1,4 +1,4 @@
-use super::{web::utc_now, State};
+use super::{web::utc_now, StorageState};
 use crate::*;
 use repo::YewRepo;
 use web::time::local_datetime;
@@ -6,7 +6,7 @@ use web::time::local_datetime;
 pub struct Bars {
     link: ComponentLink<Self>,
     repo: YewRepo,
-    state: State,
+    state: StorageState,
     text_area: String,
     top_view: BarsTopView,
     show_logs: Callback<()>,
@@ -37,7 +37,7 @@ impl Component for Bars {
     type Properties = BarsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
-        let state = State::load(&repo);
+        let state = StorageState::load(&repo);
 
         Self {
             link,

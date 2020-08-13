@@ -1,6 +1,7 @@
 use crate::*;
 
 pub mod bars;
+mod download;
 pub mod logs;
 pub mod time;
 
@@ -57,14 +58,15 @@ impl Component for Root {
     }
 }
 
-pub struct State {
+#[derive(Clone, Serialize, Debug)]
+pub struct StorageState {
     mood_readings: Vec<MoodReading>,
     meds: Vec<TextSubmission>,
     sleep_entries: Vec<TextSubmission>,
     notes: Vec<TextSubmission>,
 }
 
-impl State {
+impl StorageState {
     pub fn load(repo: &YewRepo) -> Self {
         Self {
             mood_readings: repo.load_mood_readings().unwrap_or_default(),
