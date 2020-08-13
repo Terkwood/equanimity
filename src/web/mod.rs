@@ -1,7 +1,7 @@
 use crate::*;
 
 pub mod bars;
-mod download;
+mod export;
 pub mod logs;
 pub mod time;
 
@@ -49,10 +49,10 @@ impl Component for Root {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")}/>
+                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")} />
             },
             Mode::Logs => html! {
-                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")}/>
+                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")} />
             },
         }
     }
