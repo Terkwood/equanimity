@@ -2,7 +2,8 @@ use crate::web::StorageState;
 use yew::prelude::*;
 
 pub fn button(storage_state: &StorageState) -> Html {
-    let filename: String = todo!();
+    let formatted_datetime: String = todo!("formatted datetime");
+    let filename: String = format!("equanimity_{}.json", formatted_datetime);
     if let Ok(href) = provide_data(storage_state) {
         html! { <button class="thick"><a href=href download=filename>{ "Export 💾" }</a></button> }
     } else {
