@@ -1,6 +1,7 @@
 use crate::*;
 
 pub mod bars;
+mod export;
 pub mod logs;
 pub mod time;
 
@@ -48,23 +49,24 @@ impl Component for Root {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")}/>
+                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")} />
             },
             Mode::Logs => html! {
-                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")}/>
+                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")} />
             },
         }
     }
 }
 
-pub struct State {
+#[derive(Clone, Serialize, Debug)]
+pub struct StorageState {
     mood_readings: Vec<MoodReading>,
     meds: Vec<TextSubmission>,
     sleep_entries: Vec<TextSubmission>,
     notes: Vec<TextSubmission>,
 }
 
-impl State {
+impl StorageState {
     pub fn load(repo: &YewRepo) -> Self {
         Self {
             mood_readings: repo.load_mood_readings().unwrap_or_default(),

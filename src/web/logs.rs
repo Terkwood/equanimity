@@ -1,4 +1,4 @@
-use super::State;
+use super::StorageState;
 use crate::*;
 use repo::YewRepo;
 use web::time::local_datetime;
@@ -6,6 +6,7 @@ use web::time::local_datetime;
 pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
+    storage_state: StorageState,
     show_bars: Callback<()>,
 }
 
@@ -53,20 +54,20 @@ impl Component for Logs {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let repo = YewRepo::new();
 
-        let state = State::load(&repo);
+        let storage_state = StorageState::load(&repo);
 
         let mut entries = vec![];
-        for m in state.mood_readings {
-            entries.push(Entry::Mood(m))
+        for m in &storage_state.mood_readings {
+            entries.push(Entry::Mood(*m))
         }
-        for s in state.sleep_entries {
-            entries.push(Entry::Sleep(s))
+        for s in &storage_state.sleep_entries {
+            entries.push(Entry::Sleep(s.clone()))
         }
-        for m in state.meds {
-            entries.push(Entry::Meds(m))
+        for m in &storage_state.meds {
+            entries.push(Entry::Meds(m.clone()))
         }
-        for n in state.notes {
-            entries.push(Entry::Note(n))
+        for n in &storage_state.notes {
+            entries.push(Entry::Note(n.clone()))
         }
         entries.sort();
         entries.reverse();
@@ -74,6 +75,7 @@ impl Component for Logs {
         Self {
             link,
             entries,
+            storage_state,
             show_bars: props.show_bars,
         }
     }
@@ -96,13 +98,13 @@ impl Component for Logs {
             <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="thick">{ "Update 🖊"}</button>
+                        <button class="thick">{ "Update 🖊" }</button>
                     </div>
                     <div class="center">
-                        <button class="thick">{ "Delete 🗑"}</button>
+                        <button class="thick">{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        <button class="thick">{ "Export 💾"}</button>
+                        { super::export::button(&self.storage_state) }
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Bars 📊"}</button>
