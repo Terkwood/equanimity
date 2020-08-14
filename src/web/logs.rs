@@ -143,7 +143,54 @@ impl Component for Logs {
 
                 true
             }
-            LogsMsg::Delete(_) => todo!(),
+            LogsMsg::Delete(Entry::Note(m)) => {
+                self.delete_entry(Entry::Note(m));
+                self.repo
+                    .save_text(
+                        TextType::Notes,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Note(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+
+                true
+            }
+            LogsMsg::Delete(Entry::Sleep(m)) => {
+                self.delete_entry(Entry::Sleep(m));
+                self.repo
+                    .save_text(
+                        TextType::Sleep,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Sleep(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+
+                true
+            }
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
