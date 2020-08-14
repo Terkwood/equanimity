@@ -119,18 +119,32 @@ impl Component for Logs {
                 true
             }
             LogsMsg::Delete(DeleteEntry::Mood { epoch_millis }) => {
-                self.repo.delete_mood_reading(epoch_millis).expect("delete");
-                self.storage_state.reload_moods(&self.repo);
+                self.storage_state
+                    .delete_mood_entry(epoch_millis)
+                    .expect("delete");
+                self.repo
+                    .save_mood_readings(&self.storage_state.mood_readings)
+                    .expect("save");
                 true
             }
             LogsMsg::Delete(DeleteEntry::Text {
                 text_type,
                 epoch_millis,
             }) => {
-                self.repo
-                    .delete_text(text_type, epoch_millis)
+                self.storage_state
+                    .delete_text_entry(text_type, epoch_millis)
                     .expect("delete");
-                self.storage_state.reload_text(&self.repo, text_type);
+                self.repo
+                    .save_text(
+                        text_type,
+                        match text_type {
+                            TextType::Notes => &self.storage_state.notes,
+                            TextType::Sleep => &self.storage_state.sleep_entries,
+                            TextType::Meds => &self.storage_state.meds,
+                        },
+                    )
+                    .expect("save");
+
                 true
             }
         }

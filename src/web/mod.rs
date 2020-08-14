@@ -78,15 +78,18 @@ impl StorageState {
 }
 
 impl StorageState {
-    fn reload_text(&mut self, repo: &YewRepo, text_type: TextType) {
-        match text_type {
-            TextType::Meds => self.meds = repo.load_text(text_type).unwrap_or_default(),
-            TextType::Sleep => self.sleep_entries = repo.load_text(text_type).unwrap_or_default(),
-            TextType::Notes => self.notes = repo.load_text(text_type).unwrap_or_default(),
-        }
+    fn delete_text_entry(
+        &mut self,
+        text_type: TextType,
+        epoch_millis: u64,
+    ) -> Result<(), DeleteErr> {
+        todo!()
     }
 
-    fn reload_moods(&mut self, repo: &YewRepo) {
-        self.mood_readings = repo.load_mood_readings().unwrap_or_default()
+    fn delete_mood_entry(&mut self, epoch_millis: u64) -> Result<(), DeleteErr> {
+        todo!()
     }
 }
+
+#[derive(Debug)]
+pub struct DeleteErr;
