@@ -76,3 +76,17 @@ impl StorageState {
         }
     }
 }
+
+impl StorageState {
+    fn reload_text(&mut self, repo: &YewRepo, text_type: TextType) {
+        match text_type {
+            TextType::Meds => self.meds = repo.load_text(text_type).unwrap_or_default(),
+            TextType::Sleep => self.sleep_entries = repo.load_text(text_type).unwrap_or_default(),
+            TextType::Notes => self.notes = repo.load_text(text_type).unwrap_or_default(),
+        }
+    }
+
+    fn reload_moods(&mut self, repo: &YewRepo) {
+        self.mood_readings = repo.load_mood_readings().unwrap_or_default()
+    }
+}

@@ -7,6 +7,7 @@ pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
     storage_state: StorageState,
+    repo: YewRepo,
     mode: LogsMode,
     show_bars: Callback<()>,
 }
@@ -86,6 +87,7 @@ impl Component for Logs {
             link,
             entries,
             storage_state,
+            repo,
             mode,
             show_bars: props.show_bars,
         }
