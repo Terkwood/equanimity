@@ -7,11 +7,19 @@ pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
     storage_state: StorageState,
+    mode: LogsMode,
     show_bars: Callback<()>,
 }
 
 pub enum LogsMsg {
     ShowBars,
+    ToggleDeleteMode,
+}
+
+pub enum LogsMode {
+    View,
+    Delete,
+    _Edit,
 }
 
 #[derive(Properties, Clone)]
@@ -72,10 +80,13 @@ impl Component for Logs {
         entries.sort();
         entries.reverse();
 
+        let mode = LogsMode::View;
+
         Self {
             link,
             entries,
             storage_state,
+            mode,
             show_bars: props.show_bars,
         }
     }
@@ -84,6 +95,13 @@ impl Component for Logs {
             LogsMsg::ShowBars => {
                 self.show_bars.emit(());
                 false
+            }
+            LogsMsg::ToggleDeleteMode => {
+                self.mode = match self.mode {
+                    LogsMode::Delete => LogsMode::View,
+                    _ => LogsMode::Delete,
+                };
+                true
             }
         }
     }
@@ -101,7 +119,7 @@ impl Component for Logs {
                         <button class="thick">{ "Update 🖊" }</button>
                     </div>
                     <div class="center">
-                        <button class="thick">{ "Delete 🗑" }</button>
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
                         { super::export::button(&self.storage_state) }

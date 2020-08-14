@@ -28,6 +28,14 @@ impl YewRepo {
         Ok(self.storage.store(text_key(text_type), value))
     }
 
+    pub fn delete_mood_reading(&mut self, epoch_millis: u64) -> Result<(), DeleteErr> {
+        todo!()
+    }
+
+    pub fn delete_text(&mut self, text_type: TextType, epoch_millis: u64) -> Result<(), DeleteErr> {
+        todo!()
+    }
+
     pub fn load_mood_readings(&self) -> Result<Vec<MoodReading>, LoadErr> {
         Ok(
             if let Json(Ok(restored_model)) = self.storage.restore(MOOD_READINGS_KEY) {
@@ -66,3 +74,5 @@ fn text_key(text_type: TextType) -> &'static str {
 pub struct SaveErr;
 #[derive(Debug)]
 pub struct LoadErr;
+#[derive(Debug)]
+pub struct DeleteErr;
