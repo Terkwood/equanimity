@@ -22,7 +22,7 @@ pub enum LogsMsg {
 pub enum LogsMode {
     View,
     Delete,
-    Edit,
+    _Edit,
 }
 
 #[derive(Properties, Clone)]
@@ -31,7 +31,7 @@ pub struct LogsProps {
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
-enum Entry {
+pub enum Entry {
     Mood(MoodReading),
     Sleep(TextSubmission),
     Meds(TextSubmission),
@@ -116,7 +116,24 @@ impl Component for Logs {
                     epoch_millis,
                     value,
                 }));
-                self.repo.save_mood_readings(todo!()).expect("save");
+                self.repo
+                    .save_mood_readings(
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Mood(MoodReading {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(MoodReading {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
                 true
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
@@ -231,14 +248,17 @@ impl Logs {
         match e {
             Entry::Mood(MoodReading {
                 value,
-                epoch_millis: _,
+                epoch_millis,
             }) => html! {
                 <li>
                     { format!("[{} mood] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
-                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
+                                value,
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -256,7 +276,7 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -274,7 +294,7 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -292,7 +312,7 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
