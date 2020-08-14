@@ -78,18 +78,17 @@ impl StorageState {
 }
 
 impl StorageState {
-    fn delete_text_entry(
-        &mut self,
-        text_type: TextType,
-        epoch_millis: u64,
-    ) -> Result<(), DeleteErr> {
-        todo!()
+    fn delete_text_entry(&mut self, text_type: TextType, epoch_millis: u64) {
+        let entries = match text_type {
+            TextType::Meds => &mut self.meds,
+            TextType::Sleep => &mut self.sleep_entries,
+            TextType::Notes => &mut self.notes,
+        };
+
+        entries.retain(|ts| epoch_millis != ts.epoch_millis)
     }
 
-    fn delete_mood_entry(&mut self, epoch_millis: u64) -> Result<(), DeleteErr> {
+    fn delete_mood_entry(&mut self, epoch_millis: u64) {
         todo!()
     }
 }
-
-#[derive(Debug)]
-pub struct DeleteErr;
