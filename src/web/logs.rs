@@ -162,19 +162,46 @@ fn render_entry(e: &Entry, logs_mode: LogsMode) -> Html {
             value,
             epoch_millis: _,
         }) => html! {
-            <li>{ format!("[{} sleep] {}", date_string, value) }</li>
+            <li>
+                { format!("[{} sleep] {}", date_string, value) }
+                {
+                    match logs_mode {
+                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                        _ => html! { }
+                    }
+                }
+            </li>
         },
         Entry::Meds(TextSubmission {
             value,
             epoch_millis: _,
         }) => html! {
-            <li>{ format!("[{} meds] {}", date_string, value) }</li>
+            <li>
+                { format!("[{} meds] {}", date_string, value) }
+                {
+                    match logs_mode {
+                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                        _ => html! { }
+                    }
+                }
+            </li>
         },
         Entry::Note(TextSubmission {
             value,
             epoch_millis: _,
         }) => html! {
-            <li>{ format!("[{} note] {}", date_string, value) }</li>
+            <li>
+                { format!("[{} note] {}", date_string, value) }
+                {
+                    match logs_mode {
+                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                        _ => html! { }
+                    }
+                }
+            </li>
         },
     }
 }
