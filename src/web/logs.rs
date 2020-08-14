@@ -17,10 +17,11 @@ pub enum LogsMsg {
     ToggleDeleteMode,
 }
 
+#[derive(Copy, Clone)]
 pub enum LogsMode {
     View,
     Delete,
-    _Edit,
+    Edit,
 }
 
 #[derive(Properties, Clone)]
@@ -131,14 +132,14 @@ impl Component for Logs {
                     </div>
                 </div>
                 <ul>
-                    { self.entries.iter().map(render_entry).collect::<Html>() }
+                    { self.entries.iter().map(|e| render_entry(e, self.mode)).collect::<Html>() }
                 </ul>
             </>
         }
     }
 }
 
-fn render_entry(e: &Entry) -> Html {
+fn render_entry(e: &Entry, logs_mode: LogsMode) -> Html {
     let dt = local_datetime(e.timestamp());
     let date_string = dt.format("%m/%d %R").to_string();
     match e {
@@ -146,7 +147,16 @@ fn render_entry(e: &Entry) -> Html {
             value,
             epoch_millis: _,
         }) => html! {
-            <li>{ format!("[{} mood] {}", date_string, value) }</li>
+            <li>
+                { format!("[{} mood] {}", date_string, value) }
+                {
+                    match logs_mode {
+                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                        _ => html! { }
+                    }
+                }
+            </li>
         },
         Entry::Sleep(TextSubmission {
             value,
