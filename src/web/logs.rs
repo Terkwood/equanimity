@@ -199,13 +199,16 @@ impl Logs {
             },
             Entry::Sleep(TextSubmission {
                 value,
-                epoch_millis: _,
+                epoch_millis,
             }) => html! {
                 <li>
                     { format!("[{} sleep] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
                             LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
@@ -214,13 +217,16 @@ impl Logs {
             },
             Entry::Meds(TextSubmission {
                 value,
-                epoch_millis: _,
+                epoch_millis,
             }) => html! {
                 <li>
                     { format!("[{} meds] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
                             LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
@@ -249,7 +255,7 @@ impl Logs {
     }
 
     fn delete_entry(&mut self, entry: Entry) {
-        todo!()
+        self.entries.retain(|e| e != &entry)
     }
 }
 
