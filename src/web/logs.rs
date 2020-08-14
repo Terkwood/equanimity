@@ -119,25 +119,35 @@ impl Component for Logs {
                 true
             }
             LogsMsg::Delete(DeleteEntry::Mood { epoch_millis }) => {
-                self.storage_state.delete_mood_entry(epoch_millis);
-                self.repo
-                    .save_mood_readings(&self.storage_state.mood_readings)
-                    .expect("save");
+                self.delete_mood_entry(epoch_millis);
+                self.repo.save_mood_readings(todo!()).expect("save");
                 true
             }
             LogsMsg::Delete(DeleteEntry::Text {
                 text_type,
                 epoch_millis,
             }) => {
-                self.storage_state
-                    .delete_text_entry(text_type, epoch_millis);
+                self.delete_text_entry(text_type, epoch_millis);
                 self.repo
                     .save_text(
                         text_type,
-                        match text_type {
-                            TextType::Notes => &self.storage_state.notes,
-                            TextType::Sleep => &self.storage_state.sleep_entries,
-                            TextType::Meds => &self.storage_state.meds,
+                        &match text_type {
+                            TextType::Notes => self
+                                .entries
+                                .iter()
+                                .filter_map(|e| match e {
+                                    Entry::Note(TextSubmission {
+                                        epoch_millis,
+                                        value,
+                                    }) => Some(TextSubmission {
+                                        epoch_millis: *epoch_millis,
+                                        value: value.clone(),
+                                    }),
+                                    _ => None,
+                                })
+                                .collect(),
+                            TextType::Sleep => todo!(),
+                            TextType::Meds => todo!(),
                         },
                     )
                     .expect("save");
@@ -244,6 +254,9 @@ impl Logs {
             },
         }
     }
+
+    fn delete_mood_entry(&mut self, epoch_millis: u64) {}
+    fn delete_text_entry(&mut self, text_type: TextType, epoch_millis: u64) {}
 }
 
 #[cfg(test)]
