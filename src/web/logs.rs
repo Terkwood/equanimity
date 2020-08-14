@@ -15,6 +15,17 @@ pub struct Logs {
 pub enum LogsMsg {
     ShowBars,
     ToggleDeleteMode,
+    Delete(DeleteEntry),
+}
+
+pub enum DeleteEntry {
+    Text {
+        text_type: TextType,
+        epoch_millis: u64,
+    },
+    Mood {
+        epoch_millis: u64,
+    },
 }
 
 #[derive(Copy, Clone)]
@@ -36,6 +47,7 @@ enum Entry {
     Meds(TextSubmission),
     Note(TextSubmission),
 }
+
 impl Entry {
     pub fn timestamp(&self) -> u64 {
         match self {
@@ -106,6 +118,21 @@ impl Component for Logs {
                 };
                 true
             }
+            LogsMsg::Delete(DeleteEntry::Mood { epoch_millis }) => {
+                self.repo.delete_mood_reading(epoch_millis).expect("delete");
+                self.storage_state.reload_moods(&self.repo);
+                true
+            }
+            LogsMsg::Delete(DeleteEntry::Text {
+                text_type,
+                epoch_millis,
+            }) => {
+                self.repo
+                    .delete_text(text_type, epoch_millis)
+                    .expect("delete");
+                self.storage_state.reload_text(&self.repo, text_type);
+                true
+            }
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -132,77 +159,79 @@ impl Component for Logs {
                     </div>
                 </div>
                 <ul>
-                    { self.entries.iter().map(|e| render_entry(e, self.mode)).collect::<Html>() }
+                    { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
             </>
         }
     }
 }
 
-fn render_entry(e: &Entry, logs_mode: LogsMode) -> Html {
-    let dt = local_datetime(e.timestamp());
-    let date_string = dt.format("%m/%d %R").to_string();
-    match e {
-        Entry::Mood(MoodReading {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>
-                { format!("[{} mood] {}", date_string, value) }
-                {
-                    match logs_mode {
-                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
-                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
-                        _ => html! { }
+impl Logs {
+    fn render_entry(&self, e: Entry, logs_mode: LogsMode) -> Html {
+        let dt = local_datetime(e.timestamp());
+        let date_string = dt.format("%m/%d %R").to_string();
+        match e {
+            Entry::Mood(MoodReading {
+                value,
+                epoch_millis: _,
+            }) => html! {
+                <li>
+                    { format!("[{} mood] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
                     }
-                }
-            </li>
-        },
-        Entry::Sleep(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>
-                { format!("[{} sleep] {}", date_string, value) }
-                {
-                    match logs_mode {
-                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
-                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
-                        _ => html! { }
+                </li>
+            },
+            Entry::Sleep(TextSubmission {
+                value,
+                epoch_millis: _,
+            }) => html! {
+                <li>
+                    { format!("[{} sleep] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
                     }
-                }
-            </li>
-        },
-        Entry::Meds(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>
-                { format!("[{} meds] {}", date_string, value) }
-                {
-                    match logs_mode {
-                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
-                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
-                        _ => html! { }
+                </li>
+            },
+            Entry::Meds(TextSubmission {
+                value,
+                epoch_millis: _,
+            }) => html! {
+                <li>
+                    { format!("[{} meds] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
+                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
                     }
-                }
-            </li>
-        },
-        Entry::Note(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>
-                { format!("[{} note] {}", date_string, value) }
-                {
-                    match logs_mode {
-                        LogsMode::Delete => html! { <button>{ "DELETE" }</button> },
-                        LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
-                        _ => html! { }
+                </li>
+            },
+            Entry::Note(TextSubmission {
+                value,
+                epoch_millis,
+            }) => html! {
+                <li>
+                    { format!("[{} note] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(DeleteEntry::Text { text_type: TextType::Notes, epoch_millis }))>{ "DELETE" }</button> },
+                            LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
                     }
-                }
-            </li>
-        },
+                </li>
+            },
+        }
     }
 }
 
