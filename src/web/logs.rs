@@ -15,17 +15,7 @@ pub struct Logs {
 pub enum LogsMsg {
     ShowBars,
     ToggleDeleteMode,
-    Delete(DeleteEntry),
-}
-
-pub enum DeleteEntry {
-    Text {
-        text_type: TextType,
-        epoch_millis: u64,
-    },
-    Mood {
-        epoch_millis: u64,
-    },
+    Delete(Entry),
 }
 
 #[derive(Copy, Clone)]
@@ -118,42 +108,42 @@ impl Component for Logs {
                 };
                 true
             }
-            LogsMsg::Delete(DeleteEntry::Mood { epoch_millis }) => {
-                self.delete_mood_entry(epoch_millis);
+            LogsMsg::Delete(Entry::Mood(MoodReading {
+                epoch_millis,
+                value,
+            })) => {
+                self.delete_entry(Entry::Mood(MoodReading {
+                    epoch_millis,
+                    value,
+                }));
                 self.repo.save_mood_readings(todo!()).expect("save");
                 true
             }
-            LogsMsg::Delete(DeleteEntry::Text {
-                text_type,
-                epoch_millis,
-            }) => {
-                self.delete_text_entry(text_type, epoch_millis);
+            LogsMsg::Delete(Entry::Meds(m)) => {
+                self.delete_entry(Entry::Meds(m));
                 self.repo
                     .save_text(
-                        text_type,
-                        &match text_type {
-                            TextType::Notes => self
-                                .entries
-                                .iter()
-                                .filter_map(|e| match e {
-                                    Entry::Note(TextSubmission {
-                                        epoch_millis,
-                                        value,
-                                    }) => Some(TextSubmission {
-                                        epoch_millis: *epoch_millis,
-                                        value: value.clone(),
-                                    }),
-                                    _ => None,
-                                })
-                                .collect(),
-                            TextType::Sleep => todo!(),
-                            TextType::Meds => todo!(),
-                        },
+                        TextType::Meds,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Meds(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
                     )
                     .expect("save");
 
                 true
             }
+            LogsMsg::Delete(_) => todo!(),
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -245,7 +235,10 @@ impl Logs {
                     { format!("[{} note] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(DeleteEntry::Text { text_type: TextType::Notes, epoch_millis }))>{ "DELETE" }</button> },
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
                             LogsMode::Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
@@ -255,8 +248,9 @@ impl Logs {
         }
     }
 
-    fn delete_mood_entry(&mut self, epoch_millis: u64) {}
-    fn delete_text_entry(&mut self, text_type: TextType, epoch_millis: u64) {}
+    fn delete_entry(&mut self, entry: Entry) {
+        todo!()
+    }
 }
 
 #[cfg(test)]
