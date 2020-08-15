@@ -7,11 +7,22 @@ pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
     storage_state: StorageState,
+    repo: YewRepo,
+    mode: LogsMode,
     show_bars: Callback<()>,
 }
 
 pub enum LogsMsg {
     ShowBars,
+    ToggleDeleteMode,
+    Delete(Entry),
+}
+
+#[derive(Copy, Clone)]
+pub enum LogsMode {
+    View,
+    Delete,
+    _Edit,
 }
 
 #[derive(Properties, Clone)]
@@ -20,12 +31,13 @@ pub struct LogsProps {
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
-enum Entry {
+pub enum Entry {
     Mood(MoodReading),
     Sleep(TextSubmission),
     Meds(TextSubmission),
     Note(TextSubmission),
 }
+
 impl Entry {
     pub fn timestamp(&self) -> u64 {
         match self {
@@ -72,10 +84,14 @@ impl Component for Logs {
         entries.sort();
         entries.reverse();
 
+        let mode = LogsMode::View;
+
         Self {
             link,
             entries,
             storage_state,
+            repo,
+            mode,
             show_bars: props.show_bars,
         }
     }
@@ -84,6 +100,113 @@ impl Component for Logs {
             LogsMsg::ShowBars => {
                 self.show_bars.emit(());
                 false
+            }
+            LogsMsg::ToggleDeleteMode => {
+                self.mode = match self.mode {
+                    LogsMode::Delete => LogsMode::View,
+                    _ => LogsMode::Delete,
+                };
+                true
+            }
+            LogsMsg::Delete(Entry::Mood(MoodReading {
+                epoch_millis,
+                value,
+            })) => {
+                self.delete_entry(Entry::Mood(MoodReading {
+                    epoch_millis,
+                    value,
+                }));
+                self.repo
+                    .save_mood_readings(
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Mood(MoodReading {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(MoodReading {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+                true
+            }
+            LogsMsg::Delete(Entry::Meds(m)) => {
+                self.delete_entry(Entry::Meds(m));
+                self.repo
+                    .save_text(
+                        TextType::Meds,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Meds(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+
+                true
+            }
+            LogsMsg::Delete(Entry::Note(m)) => {
+                self.delete_entry(Entry::Note(m));
+                self.repo
+                    .save_text(
+                        TextType::Notes,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Note(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+
+                true
+            }
+            LogsMsg::Delete(Entry::Sleep(m)) => {
+                self.delete_entry(Entry::Sleep(m));
+                self.repo
+                    .save_text(
+                        TextType::Sleep,
+                        &self
+                            .entries
+                            .iter()
+                            .filter_map(|e| match e {
+                                Entry::Sleep(TextSubmission {
+                                    epoch_millis,
+                                    value,
+                                }) => Some(TextSubmission {
+                                    epoch_millis: *epoch_millis,
+                                    value: value.clone(),
+                                }),
+                                _ => None,
+                            })
+                            .collect(),
+                    )
+                    .expect("save");
+
+                true
             }
         }
     }
@@ -101,7 +224,7 @@ impl Component for Logs {
                         <button class="thick">{ "Update 🖊" }</button>
                     </div>
                     <div class="center">
-                        <button class="thick">{ "Delete 🗑" }</button>
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
                         { super::export::button(&self.storage_state) }
@@ -111,41 +234,95 @@ impl Component for Logs {
                     </div>
                 </div>
                 <ul>
-                    { self.entries.iter().map(render_entry).collect::<Html>() }
+                    { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
             </>
         }
     }
 }
 
-fn render_entry(e: &Entry) -> Html {
-    let dt = local_datetime(e.timestamp());
-    let date_string = dt.format("%m/%d %R").to_string();
-    match e {
-        Entry::Mood(MoodReading {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>{ format!("[{} mood] {}", date_string, value) }</li>
-        },
-        Entry::Sleep(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>{ format!("[{} sleep] {}", date_string, value) }</li>
-        },
-        Entry::Meds(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>{ format!("[{} meds] {}", date_string, value) }</li>
-        },
-        Entry::Note(TextSubmission {
-            value,
-            epoch_millis: _,
-        }) => html! {
-            <li>{ format!("[{} note] {}", date_string, value) }</li>
-        },
+impl Logs {
+    fn render_entry(&self, e: Entry, logs_mode: LogsMode) -> Html {
+        let dt = local_datetime(e.timestamp());
+        let date_string = dt.format("%m/%d %R").to_string();
+        match e {
+            Entry::Mood(MoodReading {
+                value,
+                epoch_millis,
+            }) => html! {
+                <li>
+                    { format!("[{} mood] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
+                                value,
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
+                    }
+                </li>
+            },
+            Entry::Sleep(TextSubmission {
+                value,
+                epoch_millis,
+            }) => html! {
+                <li>
+                    { format!("[{} sleep] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
+                    }
+                </li>
+            },
+            Entry::Meds(TextSubmission {
+                value,
+                epoch_millis,
+            }) => html! {
+                <li>
+                    { format!("[{} meds] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
+                    }
+                </li>
+            },
+            Entry::Note(TextSubmission {
+                value,
+                epoch_millis,
+            }) => html! {
+                <li>
+                    { format!("[{} note] {}", date_string, value) }
+                    {
+                        match logs_mode {
+                            LogsMode::Delete => html! { <button onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
+                                value: value.clone(),
+                                epoch_millis,
+                            })))>{ "DELETE" }</button> },
+                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
+                            _ => html! { }
+                        }
+                    }
+                </li>
+            },
+        }
+    }
+
+    fn delete_entry(&mut self, entry: Entry) {
+        self.entries.retain(|e| e != &entry)
     }
 }
 

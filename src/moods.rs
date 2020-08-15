@@ -86,6 +86,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
+    use chrono::prelude::*;
 
     const ONE_DAY_MS: u64 = 86_400_000;
 
