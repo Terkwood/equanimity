@@ -26,7 +26,7 @@ pub enum BarsMsg {
     ToggleTopView,
 }
 
-#[derive(Properties, Clone)]
+#[derive(Properties, Clone, PartialEq)]
 pub struct BarsProps {
     pub show_logs: Callback<()>,
     pub submit_mood_reading: Callback<MoodReading>,
@@ -105,7 +105,12 @@ impl Component for Bars {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        props.storage_state != self.props.storage_state
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {
