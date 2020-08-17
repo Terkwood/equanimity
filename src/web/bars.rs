@@ -6,11 +6,12 @@ use web::time::js_local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
-    repo: Rc<YewRepo>,
-    storage_state: Rc<StorageState>,
+    storage_state: StorageState,
     text_area: String,
     top_view: BarsTopView,
     show_logs: Callback<()>,
+    submit_mood_reading: Callback<MoodReading>,
+    submit_text: Callback<(TextType, String)>,
 }
 
 pub enum BarsTopView {
@@ -31,8 +32,9 @@ pub enum BarsMsg {
 #[derive(Properties, Clone)]
 pub struct BarsProps {
     pub show_logs: Callback<()>,
-    pub repo: Rc<YewRepo>,
-    pub storage_state: Rc<StorageState>,
+    pub submit_mood_reading: Callback<MoodReading>,
+    pub submit_text: Callback<(TextType, String)>,
+    pub storage_state: StorageState,
 }
 
 impl Component for Bars {
@@ -41,22 +43,20 @@ impl Component for Bars {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            repo: props.repo,
             top_view: BarsTopView::MoodButtons,
             storage_state: props.storage_state,
             text_area: "".to_string(),
             show_logs: props.show_logs,
+            submit_mood_reading: props.submit_mood_reading,
+            submit_text: props.submit_text,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             BarsMsg::AddReading(r) => {
-                todo!("send msg");
-                self.storage_state.mood_readings.push(r);
-                self.repo
-                    .save_mood_readings(&self.storage_state.mood_readings)
-                    .expect("save mood readings");
+                self.submit_mood_reading.emit(r);
+                // TODO can it be false ?
                 true
             }
             BarsMsg::TextAreaUpdated(s) => {
@@ -70,9 +70,10 @@ impl Component for Bars {
                         .sleep_entries
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo
-                        .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
-                        .expect("save sleep")
+                    todo!("lifted");
+                    /*self.repo
+                    .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
+                    .expect("save sleep")*/
                 }
                 true
             }
@@ -83,9 +84,9 @@ impl Component for Bars {
                         .meds
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo
-                        .save_text(TextType::Meds, &self.storage_state.meds)
-                        .expect("save meds")
+                    /*self.repo
+                    .save_text(TextType::Meds, &self.storage_state.meds)
+                    .expect("save meds")*/
                 }
                 true
             }
@@ -96,9 +97,9 @@ impl Component for Bars {
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    self.repo
-                        .save_text(TextType::Notes, &self.storage_state.notes)
-                        .expect("save notes")
+                    /*self.repo
+                    .save_text(TextType::Notes, &self.storage_state.notes)
+                    .expect("save notes")*/
                 }
                 true
             }

@@ -7,8 +7,7 @@ use web::time::js_local_datetime;
 pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
-    storage_state: Rc<StorageState>,
-    repo: Rc<YewRepo>,
+    storage_state: StorageState,
     mode: LogsMode,
     show_bars: Callback<()>,
 }
@@ -29,8 +28,7 @@ pub enum LogsMode {
 #[derive(Properties, Clone)]
 pub struct LogsProps {
     pub show_bars: Callback<()>,
-    pub repo: Rc<YewRepo>,
-    pub storage_state: Rc<StorageState>,
+    pub storage_state: StorageState,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -89,7 +87,6 @@ impl Component for Logs {
             link,
             entries,
             storage_state: props.storage_state,
-            repo: props.repo,
             mode,
             show_bars: props.show_bars,
         }
@@ -116,99 +113,98 @@ impl Component for Logs {
                     value,
                 }));
                 todo!("lift");
-                self.repo
-                    .save_mood_readings(
-                        &self
-                            .entries
-                            .iter()
-                            .filter_map(|e| match e {
-                                Entry::Mood(MoodReading {
-                                    epoch_millis,
-                                    value,
-                                }) => Some(MoodReading {
-                                    epoch_millis: *epoch_millis,
-                                    value: value.clone(),
-                                }),
-                                _ => None,
-                            })
-                            .collect(),
-                    )
-                    .expect("save");
+                /*self.repo
+                .save_mood_readings(
+                    &self
+                        .entries
+                        .iter()
+                        .filter_map(|e| match e {
+                            Entry::Mood(MoodReading {
+                                epoch_millis,
+                                value,
+                            }) => Some(MoodReading {
+                                epoch_millis: *epoch_millis,
+                                value: value.clone(),
+                            }),
+                            _ => None,
+                        })
+                        .collect(),
+                )
+                .expect("save");*/
                 true
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
                 self.delete_entry(Entry::Meds(m));
                 todo!("lift");
-                self.repo
-                    .save_text(
-                        TextType::Meds,
-                        &self
-                            .entries
-                            .iter()
-                            .filter_map(|e| match e {
-                                Entry::Meds(TextSubmission {
-                                    epoch_millis,
-                                    value,
-                                }) => Some(TextSubmission {
-                                    epoch_millis: *epoch_millis,
-                                    value: value.clone(),
-                                }),
-                                _ => None,
-                            })
-                            .collect(),
-                    )
-                    .expect("save");
-
+                /*self.repo
+                .save_text(
+                    TextType::Meds,
+                    &self
+                        .entries
+                        .iter()
+                        .filter_map(|e| match e {
+                            Entry::Meds(TextSubmission {
+                                epoch_millis,
+                                value,
+                            }) => Some(TextSubmission {
+                                epoch_millis: *epoch_millis,
+                                value: value.clone(),
+                            }),
+                            _ => None,
+                        })
+                        .collect(),
+                )
+                .expect("save");*/
                 true
             }
             LogsMsg::Delete(Entry::Note(m)) => {
                 self.delete_entry(Entry::Note(m));
                 todo!("lift");
-                self.repo
-                    .save_text(
-                        TextType::Notes,
-                        &self
-                            .entries
-                            .iter()
-                            .filter_map(|e| match e {
-                                Entry::Note(TextSubmission {
-                                    epoch_millis,
-                                    value,
-                                }) => Some(TextSubmission {
-                                    epoch_millis: *epoch_millis,
-                                    value: value.clone(),
-                                }),
-                                _ => None,
-                            })
-                            .collect(),
-                    )
-                    .expect("save");
-
+                /*self.repo
+                                    .save_text(
+                                        TextType::Notes,
+                                        &self
+                                            .entries
+                                            .iter()
+                                            .filter_map(|e| match e {
+                                                Entry::Note(TextSubmission {
+                                                    epoch_millis,
+                                                    value,
+                                                }) => Some(TextSubmission {
+                                                    epoch_millis: *epoch_millis,
+                                                    value: value.clone(),
+                                                }),
+                                                _ => None,
+                                            })
+                                            .collect(),
+                                    )
+                                    .expect("save");
+                */
                 true
             }
             LogsMsg::Delete(Entry::Sleep(m)) => {
                 self.delete_entry(Entry::Sleep(m));
                 todo!("lift");
-                self.repo
-                    .save_text(
-                        TextType::Sleep,
-                        &self
-                            .entries
-                            .iter()
-                            .filter_map(|e| match e {
-                                Entry::Sleep(TextSubmission {
-                                    epoch_millis,
-                                    value,
-                                }) => Some(TextSubmission {
-                                    epoch_millis: *epoch_millis,
-                                    value: value.clone(),
-                                }),
-                                _ => None,
-                            })
-                            .collect(),
-                    )
-                    .expect("save");
-
+                /*self.repo
+                                    .save_text(
+                                        TextType::Sleep,
+                                        &self
+                                            .entries
+                                            .iter()
+                                            .filter_map(|e| match e {
+                                                Entry::Sleep(TextSubmission {
+                                                    epoch_millis,
+                                                    value,
+                                                }) => Some(TextSubmission {
+                                                    epoch_millis: *epoch_millis,
+                                                    value: value.clone(),
+                                                }),
+                                                _ => None,
+                                            })
+                                            .collect(),
+                                    )
+                                    .expect("save");
+                */
                 true
             }
         }

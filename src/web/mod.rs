@@ -11,10 +11,12 @@ use std::rc::Rc;
 
 pub struct Root {
     mode: Mode,
-    repo: Rc<YewRepo>,
-    storage_state: Rc<StorageState>,
+    repo: YewRepo,
+    storage_state: StorageState,
     show_bars: Option<Callback<()>>,
     show_logs: Option<Callback<()>>,
+    submit_mood_reading: Option<Callback<MoodReading>>,
+    submit_text: Option<Callback<(TextType, String)>>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -25,6 +27,8 @@ pub enum Mode {
 
 pub enum RootMsg {
     SwitchMode(Mode),
+    SubmitMoodReading(MoodReading),
+    SubmitText(TextType, String),
 }
 
 impl Component for Root {
@@ -33,15 +37,20 @@ impl Component for Root {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let show_bars = link.callback(|()| RootMsg::SwitchMode(Mode::Bars));
         let show_logs = link.callback(|()| RootMsg::SwitchMode(Mode::Logs));
+        let submit_text = link.callback(|(text_type, text)| RootMsg::SubmitText(text_type, text));
+        let submit_mood_reading =
+            link.callback(|mood_reading| RootMsg::SubmitMoodReading(mood_reading));
         let repo = YewRepo::new();
-        let storage_state = Rc::new(StorageState::load(&repo));
+        let storage_state = StorageState::load(&repo);
 
         Self {
             mode: Mode::Bars,
-            repo: Rc::new(repo),
+            repo,
             storage_state,
             show_bars: Some(show_bars),
             show_logs: Some(show_logs),
+            submit_mood_reading: Some(submit_mood_reading),
+            submit_text: Some(submit_text),
         }
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
@@ -50,6 +59,16 @@ impl Component for Root {
                 let old = self.mode;
                 self.mode = new_mode;
                 self.mode != old
+            }
+            RootMsg::SubmitText(TextType::Meds, _text) => todo!(),
+            RootMsg::SubmitText(TextType::Sleep, _text) => todo!(),
+            RootMsg::SubmitText(TextType::Notes, _text) => todo!(),
+            RootMsg::SubmitMoodReading(value) => {
+                self.storage_state.mood_readings.push(value);
+                self.repo
+                    .save_mood_readings(&self.storage_state.mood_readings)
+                    .expect("save mood readings");
+                true
             }
         }
     }
@@ -62,10 +81,15 @@ impl Component for Root {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <Bars storage_state={self.storage_state.clone()} repo={self.repo.clone()} show_logs={self.show_logs.as_ref().expect("logs_cb")} />
+                <Bars
+                    storage_state={self.storage_state.clone()}
+                    show_logs={self.show_logs.as_ref().expect("logs_cb")}
+                    submit_mood_reading={self.submit_mood_reading.as_ref().expect("smrcb")},
+                    submit_text={self.submit_text.as_ref().expect("smtcb")}
+                />
             },
             Mode::Logs => html! {
-                <Logs storage_state={self.storage_state.clone()} repo={self.repo.clone()} show_bars={self.show_bars.as_ref().expect("bars_cb")} />
+                <Logs storage_state={self.storage_state.clone()} show_bars={self.show_bars.as_ref().expect("bars_cb")} />
             },
         }
     }
