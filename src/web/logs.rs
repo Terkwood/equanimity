@@ -64,21 +64,7 @@ impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let mut entries = vec![];
-        for m in &props.storage_state.mood_readings {
-            entries.push(Entry::Mood(*m))
-        }
-        for s in &props.storage_state.sleep_entries {
-            entries.push(Entry::Sleep(s.clone()))
-        }
-        for m in &props.storage_state.meds {
-            entries.push(Entry::Meds(m.clone()))
-        }
-        for n in &props.storage_state.notes {
-            entries.push(Entry::Note(n.clone()))
-        }
-        entries.sort();
-        entries.reverse();
+        let entries = derive_entries(&props.storage_state);
 
         let mode = LogsMode::View;
 
@@ -200,6 +186,7 @@ impl Component for Logs {
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if self.props != props {
             self.props = props;
+            self.entries = derive_entries(&self.props.storage_state);
             true
         } else {
             false
@@ -313,6 +300,26 @@ impl Logs {
     fn delete_entry(&mut self, entry: Entry) {
         self.entries.retain(|e| e != &entry)
     }
+}
+
+fn derive_entries(storage_state: &StorageState) -> Vec<Entry> {
+    let mut entries = vec![];
+    for m in &storage_state.mood_readings {
+        entries.push(Entry::Mood(*m))
+    }
+    for s in &storage_state.sleep_entries {
+        entries.push(Entry::Sleep(s.clone()))
+    }
+    for m in &storage_state.meds {
+        entries.push(Entry::Meds(m.clone()))
+    }
+    for n in &storage_state.notes {
+        entries.push(Entry::Note(n.clone()))
+    }
+    entries.sort();
+    entries.reverse();
+
+    entries
 }
 
 #[cfg(test)]

@@ -103,7 +103,18 @@ impl Component for Root {
                     .expect("save mood readings");
                 true
             }
-            _ => todo!(),
+            RootMsg::ReplaceMoodReadings(readings) => {
+                self.repo
+                    .save_mood_readings(&readings)
+                    .expect("replace mood readings");
+                true
+            }
+            RootMsg::ReplaceTexts(text_type, all) => {
+                self.repo
+                    .save_text(text_type, &all)
+                    .expect("replace text entries");
+                true
+            }
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
