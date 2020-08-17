@@ -1,12 +1,13 @@
 use super::{web::utc_now, StorageState};
 use crate::*;
 use repo::YewRepo;
+use std::rc::Rc;
 use web::time::js_local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
-    repo: YewRepo,
-    state: StorageState,
+    repo: Rc<YewRepo>,
+    storage_state: Rc<StorageState>,
     text_area: String,
     top_view: BarsTopView,
     show_logs: Callback<()>,
@@ -30,20 +31,19 @@ pub enum BarsMsg {
 #[derive(Properties, Clone)]
 pub struct BarsProps {
     pub show_logs: Callback<()>,
+    pub repo: Rc<YewRepo>,
+    pub storage_state: Rc<StorageState>,
 }
 
 impl Component for Bars {
     type Message = BarsMsg;
     type Properties = BarsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let repo = YewRepo::new();
-        let state = StorageState::load(&repo);
-
         Self {
             link,
-            repo,
+            repo: props.repo,
             top_view: BarsTopView::MoodButtons,
-            state,
+            storage_state: props.storage_state,
             text_area: "".to_string(),
             show_logs: props.show_logs,
         }
@@ -52,9 +52,10 @@ impl Component for Bars {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             BarsMsg::AddReading(r) => {
-                self.state.mood_readings.push(r);
+                todo!("send msg");
+                self.storage_state.mood_readings.push(r);
                 self.repo
-                    .save_mood_readings(&self.state.mood_readings)
+                    .save_mood_readings(&self.storage_state.mood_readings)
                     .expect("save mood readings");
                 true
             }
@@ -64,36 +65,39 @@ impl Component for Bars {
             }
             BarsMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
-                    self.state
+                    todo!("send msg");
+                    self.storage_state
                         .sleep_entries
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
                     self.repo
-                        .save_text(TextType::Sleep, &self.state.sleep_entries)
+                        .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
                         .expect("save sleep")
                 }
                 true
             }
             BarsMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
-                    self.state
+                    todo!("send msg");
+                    self.storage_state
                         .meds
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
                     self.repo
-                        .save_text(TextType::Meds, &self.state.meds)
+                        .save_text(TextType::Meds, &self.storage_state.meds)
                         .expect("save meds")
                 }
                 true
             }
             BarsMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
-                    self.state
+                    todo!("send msg");
+                    self.storage_state
                         .notes
                         .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
                     self.repo
-                        .save_text(TextType::Notes, &self.state.notes)
+                        .save_text(TextType::Notes, &self.storage_state.notes)
                         .expect("save notes")
                 }
                 true
@@ -120,7 +124,11 @@ impl Component for Bars {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(&self.state.mood_readings, utc_now(), js_local_datetime);
+        let rms = moods::recent(
+            &self.storage_state.mood_readings,
+            utc_now(),
+            js_local_datetime,
+        );
         html! {
             <div>
                 { self.render_top_view() }

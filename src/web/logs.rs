@@ -1,13 +1,14 @@
 use super::StorageState;
 use crate::*;
 use repo::YewRepo;
+use std::rc::Rc;
 use web::time::js_local_datetime;
 
 pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
-    storage_state: StorageState,
-    repo: YewRepo,
+    storage_state: Rc<StorageState>,
+    repo: Rc<YewRepo>,
     mode: LogsMode,
     show_bars: Callback<()>,
 }
@@ -28,6 +29,8 @@ pub enum LogsMode {
 #[derive(Properties, Clone)]
 pub struct LogsProps {
     pub show_bars: Callback<()>,
+    pub repo: Rc<YewRepo>,
+    pub storage_state: Rc<StorageState>,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -64,21 +67,17 @@ impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let repo = YewRepo::new();
-
-        let storage_state = StorageState::load(&repo);
-
         let mut entries = vec![];
-        for m in &storage_state.mood_readings {
+        for m in &props.storage_state.mood_readings {
             entries.push(Entry::Mood(*m))
         }
-        for s in &storage_state.sleep_entries {
+        for s in &props.storage_state.sleep_entries {
             entries.push(Entry::Sleep(s.clone()))
         }
-        for m in &storage_state.meds {
+        for m in &props.storage_state.meds {
             entries.push(Entry::Meds(m.clone()))
         }
-        for n in &storage_state.notes {
+        for n in &props.storage_state.notes {
             entries.push(Entry::Note(n.clone()))
         }
         entries.sort();
@@ -89,8 +88,8 @@ impl Component for Logs {
         Self {
             link,
             entries,
-            storage_state,
-            repo,
+            storage_state: props.storage_state,
+            repo: props.repo,
             mode,
             show_bars: props.show_bars,
         }
@@ -116,6 +115,7 @@ impl Component for Logs {
                     epoch_millis,
                     value,
                 }));
+                todo!("lift");
                 self.repo
                     .save_mood_readings(
                         &self
@@ -138,6 +138,7 @@ impl Component for Logs {
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
                 self.delete_entry(Entry::Meds(m));
+                todo!("lift");
                 self.repo
                     .save_text(
                         TextType::Meds,
@@ -162,6 +163,7 @@ impl Component for Logs {
             }
             LogsMsg::Delete(Entry::Note(m)) => {
                 self.delete_entry(Entry::Note(m));
+                todo!("lift");
                 self.repo
                     .save_text(
                         TextType::Notes,
@@ -186,6 +188,7 @@ impl Component for Logs {
             }
             LogsMsg::Delete(Entry::Sleep(m)) => {
                 self.delete_entry(Entry::Sleep(m));
+                todo!("lift");
                 self.repo
                     .save_text(
                         TextType::Sleep,

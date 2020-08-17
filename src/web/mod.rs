@@ -1,16 +1,18 @@
-use crate::*;
-
 pub mod bars;
 mod export;
 pub mod logs;
 pub mod time;
 
+use crate::*;
 use bars::Bars;
 use logs::Logs;
 use repo::YewRepo;
+use std::rc::Rc;
 
 pub struct Root {
     mode: Mode,
+    repo: Rc<YewRepo>,
+    storage_state: Rc<StorageState>,
     show_bars: Option<Callback<()>>,
     show_logs: Option<Callback<()>>,
 }
@@ -21,24 +23,35 @@ pub enum Mode {
     Logs,
 }
 
-pub struct SwitchModeMsg(Mode);
+pub enum RootMsg {
+    SwitchMode(Mode),
+}
 
 impl Component for Root {
-    type Message = SwitchModeMsg;
+    type Message = RootMsg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let show_bars = link.callback(|()| SwitchModeMsg(Mode::Bars));
-        let show_logs = link.callback(|()| SwitchModeMsg(Mode::Logs));
+        let show_bars = link.callback(|()| RootMsg::SwitchMode(Mode::Bars));
+        let show_logs = link.callback(|()| RootMsg::SwitchMode(Mode::Logs));
+        let repo = YewRepo::new();
+        let storage_state = Rc::new(StorageState::load(&repo));
+
         Self {
             mode: Mode::Bars,
+            repo: Rc::new(repo),
+            storage_state,
             show_bars: Some(show_bars),
             show_logs: Some(show_logs),
         }
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        let old = self.mode;
-        self.mode = msg.0;
-        self.mode != old
+        match msg {
+            RootMsg::SwitchMode(new_mode) => {
+                let old = self.mode;
+                self.mode = new_mode;
+                self.mode != old
+            }
+        }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
         // Should only return "true" if new properties are different to
@@ -49,10 +62,10 @@ impl Component for Root {
     fn view(&self) -> Html {
         match self.mode {
             Mode::Bars => html! {
-                <Bars show_logs={self.show_logs.as_ref().expect("logs_cb")} />
+                <Bars storage_state={self.storage_state.clone()} repo={self.repo.clone()} show_logs={self.show_logs.as_ref().expect("logs_cb")} />
             },
             Mode::Logs => html! {
-                <Logs show_bars={self.show_bars.as_ref().expect("bars_cb")} />
+                <Logs storage_state={self.storage_state.clone()} repo={self.repo.clone()} show_bars={self.show_bars.as_ref().expect("bars_cb")} />
             },
         }
     }
