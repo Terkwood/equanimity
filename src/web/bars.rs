@@ -1,7 +1,5 @@
 use super::{web::utc_now, StorageState};
 use crate::*;
-use repo::YewRepo;
-use std::rc::Rc;
 use web::time::js_local_datetime;
 
 pub struct Bars {
@@ -63,7 +61,7 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    // TODO update?
+                    // TODO false?
                     true
                 } else {
                     false
@@ -71,11 +69,11 @@ impl Component for Bars {
             }
             BarsMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
-                    self.text_area = "".to_string();
                     self.props
                         .add_text
                         .emit((TextType::Meds, self.text_area.clone()));
-                    // todo update?
+                    self.text_area = "".to_string();
+                    // TODO false ?
                     true
                 } else {
                     false
@@ -83,6 +81,9 @@ impl Component for Bars {
             }
             BarsMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
+                    self.props
+                        .add_text
+                        .emit((TextType::Notes, self.text_area.clone()));
                     self.text_area = "".to_string();
                     // todo update?
                     true
