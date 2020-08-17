@@ -4,6 +4,7 @@ use repo::YewRepo;
 use std::rc::Rc;
 use web::time::js_local_datetime;
 
+// TODO trim props, see Bars.rs
 pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
@@ -213,7 +214,7 @@ impl Component for Logs {
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
         // Should only return "true" if new properties are different to
         // previously received properties.
-        todo!()
+        todo!("see bars.rs")
     }
     fn view(&self) -> Html {
         html! {
