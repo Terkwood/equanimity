@@ -26,8 +26,10 @@ pub enum Mode {
 
 pub enum RootMsg {
     SwitchMode(Mode),
-    SubmitMoodReading(MoodReading),
-    SubmitText(TextType, String),
+    AddMoodReading(MoodReading),
+    AddText(TextType, String),
+    ReplaceMoodReadings(Vec<MoodReading>),
+    ReplaceTexts(TextType, Vec<TextSubmission>),
 }
 
 impl Component for Root {
@@ -36,9 +38,9 @@ impl Component for Root {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let show_bars = link.callback(|()| RootMsg::SwitchMode(Mode::Bars));
         let show_logs = link.callback(|()| RootMsg::SwitchMode(Mode::Logs));
-        let submit_text = link.callback(|(text_type, text)| RootMsg::SubmitText(text_type, text));
+        let submit_text = link.callback(|(text_type, text)| RootMsg::AddText(text_type, text));
         let submit_mood_reading =
-            link.callback(|mood_reading| RootMsg::SubmitMoodReading(mood_reading));
+            link.callback(|mood_reading| RootMsg::AddMoodReading(mood_reading));
         let repo = YewRepo::new();
         let storage_state = StorageState::load(&repo);
 
@@ -59,7 +61,7 @@ impl Component for Root {
                 self.mode = new_mode;
                 self.mode != old
             }
-            RootMsg::SubmitText(TextType::Sleep, text) => {
+            RootMsg::AddText(TextType::Sleep, text) => {
                 self.storage_state
                     .sleep_entries
                     .push(TextSubmission::new(text));
@@ -70,14 +72,14 @@ impl Component for Root {
 
                 true
             }
-            RootMsg::SubmitText(TextType::Meds, text) => {
+            RootMsg::AddText(TextType::Meds, text) => {
                 self.storage_state.meds.push(TextSubmission::new(text));
                 self.repo
                     .save_text(TextType::Meds, &self.storage_state.meds)
                     .expect("save meds");
                 true
             }
-            RootMsg::SubmitText(TextType::Notes, text) => {
+            RootMsg::AddText(TextType::Notes, text) => {
                 self.storage_state.notes.push(TextSubmission::new(text));
 
                 self.repo
@@ -85,13 +87,14 @@ impl Component for Root {
                     .expect("save notes");
                 true
             }
-            RootMsg::SubmitMoodReading(value) => {
+            RootMsg::AddMoodReading(value) => {
                 self.storage_state.mood_readings.push(value);
                 self.repo
                     .save_mood_readings(&self.storage_state.mood_readings)
                     .expect("save mood readings");
                 true
             }
+            _ => todo!(),
         }
     }
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {

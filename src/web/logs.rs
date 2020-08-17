@@ -1,16 +1,12 @@
 use super::StorageState;
 use crate::*;
-use repo::YewRepo;
-use std::rc::Rc;
 use web::time::js_local_datetime;
 
-// TODO trim props, see Bars.rs
 pub struct Logs {
     link: ComponentLink<Self>,
     entries: Vec<Entry>,
-    storage_state: StorageState,
     mode: LogsMode,
-    show_bars: Callback<()>,
+    props: LogsProps,
 }
 
 pub enum LogsMsg {
@@ -26,7 +22,7 @@ pub enum LogsMode {
     _Edit,
 }
 
-#[derive(Properties, Clone)]
+#[derive(Properties, Clone, PartialEq)]
 pub struct LogsProps {
     pub show_bars: Callback<()>,
     pub storage_state: StorageState,
@@ -87,15 +83,14 @@ impl Component for Logs {
         Self {
             link,
             entries,
-            storage_state: props.storage_state,
             mode,
-            show_bars: props.show_bars,
+            props,
         }
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             LogsMsg::ShowBars => {
-                self.show_bars.emit(());
+                self.props.show_bars.emit(());
                 false
             }
             LogsMsg::ToggleDeleteMode => {
@@ -211,10 +206,13 @@ impl Component for Logs {
         }
     }
 
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        // Should only return "true" if new properties are different to
-        // previously received properties.
-        todo!("see bars.rs")
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
     fn view(&self) -> Html {
         html! {
@@ -227,7 +225,7 @@ impl Component for Logs {
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        { super::export::button(&self.storage_state) }
+                        { super::export::button(&self.props.storage_state) }
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Bars 📊"}</button>
