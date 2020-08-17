@@ -65,43 +65,35 @@ impl Component for Bars {
             }
             BarsMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
-                    todo!("send msg");
-                    self.storage_state
-                        .sleep_entries
-                        .push(TextSubmission::new(self.text_area.clone()));
+                    self.submit_text
+                        .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    todo!("lifted");
-                    /*self.repo
-                    .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
-                    .expect("save sleep")*/
+                    // TODO update?
+                    true
+                } else {
+                    false
                 }
-                true
             }
             BarsMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
-                    todo!("send msg");
-                    self.storage_state
-                        .meds
-                        .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    /*self.repo
-                    .save_text(TextType::Meds, &self.storage_state.meds)
-                    .expect("save meds")*/
+                    self.submit_text
+                        .emit((TextType::Meds, self.text_area.clone()));
+
+                    // todo update?
+                    true
+                } else {
+                    false
                 }
-                true
             }
             BarsMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
-                    todo!("send msg");
-                    self.storage_state
-                        .notes
-                        .push(TextSubmission::new(self.text_area.clone()));
                     self.text_area = "".to_string();
-                    /*self.repo
-                    .save_text(TextType::Notes, &self.storage_state.notes)
-                    .expect("save notes")*/
+                    // todo update?
+                    true
+                } else {
+                    false
                 }
-                true
             }
             BarsMsg::ToggleTopView => {
                 self.top_view = match self.top_view {

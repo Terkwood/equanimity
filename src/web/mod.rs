@@ -7,7 +7,6 @@ use crate::*;
 use bars::Bars;
 use logs::Logs;
 use repo::YewRepo;
-use std::rc::Rc;
 
 pub struct Root {
     mode: Mode,
@@ -60,9 +59,32 @@ impl Component for Root {
                 self.mode = new_mode;
                 self.mode != old
             }
-            RootMsg::SubmitText(TextType::Meds, _text) => todo!(),
-            RootMsg::SubmitText(TextType::Sleep, _text) => todo!(),
-            RootMsg::SubmitText(TextType::Notes, _text) => todo!(),
+            RootMsg::SubmitText(TextType::Sleep, text) => {
+                self.storage_state
+                    .sleep_entries
+                    .push(TextSubmission::new(text));
+
+                self.repo
+                    .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
+                    .expect("save sleep");
+
+                true
+            }
+            RootMsg::SubmitText(TextType::Meds, text) => {
+                self.storage_state.meds.push(TextSubmission::new(text));
+                self.repo
+                    .save_text(TextType::Meds, &self.storage_state.meds)
+                    .expect("save meds");
+                true
+            }
+            RootMsg::SubmitText(TextType::Notes, text) => {
+                self.storage_state.notes.push(TextSubmission::new(text));
+
+                self.repo
+                    .save_text(TextType::Notes, &self.storage_state.notes)
+                    .expect("save notes");
+                true
+            }
             RootMsg::SubmitMoodReading(value) => {
                 self.storage_state.mood_readings.push(value);
                 self.repo
