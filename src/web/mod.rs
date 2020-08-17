@@ -117,7 +117,7 @@ impl Component for Root {
     }
 }
 
-#[derive(Clone, Serialize, Debug)]
+#[derive(Clone, Serialize, Debug, PartialEq)]
 pub struct StorageState {
     mood_readings: Vec<MoodReading>,
     meds: Vec<TextSubmission>,

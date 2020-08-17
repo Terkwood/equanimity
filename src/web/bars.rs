@@ -6,12 +6,9 @@ use web::time::js_local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
-    storage_state: StorageState,
     text_area: String,
     top_view: BarsTopView,
-    show_logs: Callback<()>,
-    submit_mood_reading: Callback<MoodReading>,
-    submit_text: Callback<(TextType, String)>,
+    props: BarsProps,
 }
 
 pub enum BarsTopView {
@@ -44,18 +41,15 @@ impl Component for Bars {
         Self {
             link,
             top_view: BarsTopView::MoodButtons,
-            storage_state: props.storage_state,
             text_area: "".to_string(),
-            show_logs: props.show_logs,
-            submit_mood_reading: props.submit_mood_reading,
-            submit_text: props.submit_text,
+            props,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             BarsMsg::AddReading(r) => {
-                self.submit_mood_reading.emit(r);
+                self.props.submit_mood_reading.emit(r);
                 // TODO can it be false ?
                 true
             }
@@ -65,7 +59,8 @@ impl Component for Bars {
             }
             BarsMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
-                    self.submit_text
+                    self.props
+                        .submit_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
                     // TODO update?
@@ -77,9 +72,9 @@ impl Component for Bars {
             BarsMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
                     self.text_area = "".to_string();
-                    self.submit_text
+                    self.props
+                        .submit_text
                         .emit((TextType::Meds, self.text_area.clone()));
-
                     // todo update?
                     true
                 } else {
@@ -103,22 +98,19 @@ impl Component for Bars {
                 true
             }
             BarsMsg::ShowLogs => {
-                self.show_logs.emit(());
+                self.props.show_logs.emit(());
                 false
             }
         }
     }
 
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        // Should only return "true" if new properties are different to
-        // previously received properties.
-        // This component has no properties so we will always return "false".
-        false
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        props.storage_state != self.props.storage_state
     }
 
     fn view(&self) -> Html {
         let rms = moods::recent(
-            &self.storage_state.mood_readings,
+            &self.props.storage_state.mood_readings,
             utc_now(),
             js_local_datetime,
         );
