@@ -29,8 +29,8 @@ pub enum BarsMsg {
 #[derive(Properties, Clone, PartialEq)]
 pub struct BarsProps {
     pub show_logs: Callback<()>,
-    pub submit_mood_reading: Callback<MoodReading>,
-    pub submit_text: Callback<(TextType, String)>,
+    pub add_mood_reading: Callback<MoodReading>,
+    pub add_text: Callback<(TextType, String)>,
     pub storage_state: StorageState,
 }
 
@@ -49,7 +49,7 @@ impl Component for Bars {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             BarsMsg::AddReading(r) => {
-                self.props.submit_mood_reading.emit(r);
+                self.props.add_mood_reading.emit(r);
                 // TODO can it be false ?
                 true
             }
@@ -60,7 +60,7 @@ impl Component for Bars {
             BarsMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
                     self.props
-                        .submit_text
+                        .add_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
                     // TODO update?
@@ -73,7 +73,7 @@ impl Component for Bars {
                 if !self.text_area.is_empty() {
                     self.text_area = "".to_string();
                     self.props
-                        .submit_text
+                        .add_text
                         .emit((TextType::Meds, self.text_area.clone()));
                     // todo update?
                     true

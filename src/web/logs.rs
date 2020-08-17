@@ -26,6 +26,8 @@ pub enum LogsMode {
 pub struct LogsProps {
     pub show_bars: Callback<()>,
     pub storage_state: StorageState,
+    pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
+    pub replace_mood_readings: Callback<(Vec<MoodReading>)>,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -104,15 +106,13 @@ impl Component for Logs {
                 epoch_millis,
                 value,
             })) => {
-                self.delete_entry(Entry::Mood(MoodReading {
+                //todo!("remove delete_entry");
+                /*self.delete_entry(Entry::Mood(MoodReading {
                     epoch_millis,
                     value,
-                }));
-                todo!("lift");
-                /*self.repo
-                .save_mood_readings(
-                    &self
-                        .entries
+                }));*/
+                self.props.replace_mood_readings.emit(
+                    self.entries
                         .iter()
                         .filter_map(|e| match e {
                             Entry::Mood(MoodReading {
@@ -125,18 +125,16 @@ impl Component for Logs {
                             _ => None,
                         })
                         .collect(),
-                )
-                .expect("save");*/
+                );
+                // TODO false ?
                 true
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
-                self.delete_entry(Entry::Meds(m));
-                todo!("lift");
-                /*self.repo
-                .save_text(
+                /*todo!("remove delete_entry");
+                self.delete_entry(Entry::Meds(m));*/
+                self.props.replace_texts.emit((
                     TextType::Meds,
-                    &self
-                        .entries
+                    self.entries
                         .iter()
                         .filter_map(|e| match e {
                             Entry::Meds(TextSubmission {
@@ -149,58 +147,51 @@ impl Component for Logs {
                             _ => None,
                         })
                         .collect(),
-                )
-                .expect("save");*/
+                ));
+                // TODO false ?
                 true
             }
             LogsMsg::Delete(Entry::Note(m)) => {
-                self.delete_entry(Entry::Note(m));
-                todo!("lift");
-                /*self.repo
-                                    .save_text(
-                                        TextType::Notes,
-                                        &self
-                                            .entries
-                                            .iter()
-                                            .filter_map(|e| match e {
-                                                Entry::Note(TextSubmission {
-                                                    epoch_millis,
-                                                    value,
-                                                }) => Some(TextSubmission {
-                                                    epoch_millis: *epoch_millis,
-                                                    value: value.clone(),
-                                                }),
-                                                _ => None,
-                                            })
-                                            .collect(),
-                                    )
-                                    .expect("save");
-                */
+                //todo!("remove delete_entry");
+                //self.delete_entry(Entry::Note(m));
+
+                self.props.replace_texts.emit((
+                    TextType::Notes,
+                    self.entries
+                        .iter()
+                        .filter_map(|e| match e {
+                            Entry::Note(TextSubmission {
+                                epoch_millis,
+                                value,
+                            }) => Some(TextSubmission {
+                                epoch_millis: *epoch_millis,
+                                value: value.clone(),
+                            }),
+                            _ => None,
+                        })
+                        .collect(),
+                ));
                 true
             }
             LogsMsg::Delete(Entry::Sleep(m)) => {
                 self.delete_entry(Entry::Sleep(m));
-                todo!("lift");
-                /*self.repo
-                                    .save_text(
-                                        TextType::Sleep,
-                                        &self
-                                            .entries
-                                            .iter()
-                                            .filter_map(|e| match e {
-                                                Entry::Sleep(TextSubmission {
-                                                    epoch_millis,
-                                                    value,
-                                                }) => Some(TextSubmission {
-                                                    epoch_millis: *epoch_millis,
-                                                    value: value.clone(),
-                                                }),
-                                                _ => None,
-                                            })
-                                            .collect(),
-                                    )
-                                    .expect("save");
-                */
+                self.props.replace_texts.emit((
+                    TextType::Sleep,
+                    self.entries
+                        .iter()
+                        .filter_map(|e| match e {
+                            Entry::Sleep(TextSubmission {
+                                epoch_millis,
+                                value,
+                            }) => Some(TextSubmission {
+                                epoch_millis: *epoch_millis,
+                                value: value.clone(),
+                            }),
+                            _ => None,
+                        })
+                        .collect(),
+                ));
+                // TODO false?
                 true
             }
         }
