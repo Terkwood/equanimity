@@ -1,7 +1,7 @@
 use super::{web::utc_now, StorageState};
 use crate::*;
 use repo::YewRepo;
-use web::time::local_datetime;
+use web::time::js_local_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
@@ -120,7 +120,7 @@ impl Component for Bars {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(utc_now(), &self.state.mood_readings);
+        let rms = moods::recent(&self.state.mood_readings, utc_now(), js_local_datetime);
         html! {
             <div>
                 { self.render_top_view() }
@@ -222,7 +222,7 @@ fn render_mood_bar(r: &MoodReading) -> Html {
 }
 
 fn render_mood_date(r: &MoodReading) -> Html {
-    let dt = local_datetime(r.epoch_millis);
+    let dt = js_local_datetime(r.epoch_millis);
     let date_string = dt.format("%m/%d").to_string();
     html! {
         <>

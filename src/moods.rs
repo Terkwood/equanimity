@@ -1,9 +1,13 @@
-use crate::web::time::local_datetime;
 use crate::*;
+use chrono::prelude::*;
 
 const DAYS_TO_DISPLAY: u8 = 14;
 
-pub fn recent(right_now_ms: u64, mrs: &[MoodReading]) -> Vec<MoodReading> {
+pub fn recent(
+    mrs: &[MoodReading],
+    right_now_ms: u64,
+    local_datetime: fn(u64) -> DateTime<FixedOffset>,
+) -> Vec<MoodReading> {
     let grouped = group_by(mrs, |mr| local_datetime(mr.epoch_millis).date());
 
     let cutoff =
@@ -172,7 +176,7 @@ mod test {
     }
 
     #[test]
-    fn test_dedup_recent_mood_vals() {
+    fn test_recent_mood_dedup_2() {
         let right_now = Utc::now().timestamp_millis() as u64;
 
         let mut many_dup_vals = vec![];
