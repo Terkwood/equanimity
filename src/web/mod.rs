@@ -104,12 +104,18 @@ impl Component for Root {
                 true
             }
             RootMsg::ReplaceMoodReadings(readings) => {
+                self.storage_state.mood_readings = readings.clone();
                 self.repo
                     .save_mood_readings(&readings)
                     .expect("replace mood readings");
                 true
             }
             RootMsg::ReplaceTexts(text_type, all) => {
+                match text_type {
+                    TextType::Meds => self.storage_state.meds = all.clone(),
+                    TextType::Notes => self.storage_state.notes = all.clone(),
+                    TextType::Sleep => self.storage_state.sleep_entries = all.clone(),
+                };
                 self.repo
                     .save_text(text_type, &all)
                     .expect("replace text entries");
