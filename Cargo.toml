@@ -3,18 +3,18 @@ authors = ["Terkwood <38859656+Terkwood@users.noreply.github.com>"]
 description = "mood tracking web application"
 edition = "2018"
 name = "equanimity"
-version = "0.5.1-b"
+version = "0.5.1-c"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-chrono = "0.4.13"
+chrono = "0.4.15"
 js-sys = "0.3.44"
-serde = "1.0.114"
-serde_derive = "1.0.114"
+serde = "1.0.115"
+serde_derive = "1.0.115"
 serde_json = "1.0.57"
 wasm-bindgen = "0.2.67"
 web-sys = {version = "0.3.44", features = ["Window", "Storage"]}
 wee_alloc = "0.4.5"
-yew = "0.17.2"
+yew = "0.17.3"
