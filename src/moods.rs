@@ -39,6 +39,7 @@ pub fn recent(
     }
 }
 
+#[derive(Debug, PartialEq)]
 enum HighLowMoods {
     Nothing,
     One(MoodReading),
@@ -208,5 +209,33 @@ mod test {
 
         let result = recent(&many_dup_vals, right_now, fake_local_datetime);
         assert_eq!(10, result.len());
+    }
+
+    const ONE_HOUR_MS: u64 = 3_600_000;
+
+    #[test]
+    fn test_wildest_suppresses_zero() {
+        let right_now = Utc::now().timestamp_millis() as u64;
+
+        let mut back_and_forth = vec![];
+
+        for i in 0..6 {
+            let value = if i % 2 == 0 { 0 } else { -1 };
+            let m = MoodReading {
+                epoch_millis: right_now - i * ONE_HOUR_MS,
+                value,
+            };
+            back_and_forth.push(m)
+        }
+
+        let actual = wildest(&back_and_forth.iter().map(|m| m).collect());
+
+        assert!(match actual {
+            HighLowMoods::One(MoodReading {
+                value: -1,
+                epoch_millis: _,
+            }) => true,
+            _ => false,
+        })
     }
 }
