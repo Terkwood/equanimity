@@ -238,4 +238,92 @@ mod test {
             _ => false,
         })
     }
+
+    #[test]
+    fn test_wildest_suppresses_zero_2() {
+        let readings = vec![
+            MoodReading {
+                epoch_millis: 1597523124084,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597523122690,
+                value: -1,
+            },
+            MoodReading {
+                epoch_millis: 1597493415667,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597493132454,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597491323691,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597485707821,
+                value: -1,
+            },
+            MoodReading {
+                epoch_millis: 1597452104644,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597425244763,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597407014195,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597361837123,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597349743059,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597341509304,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597334424046,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597326808955,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597318625023,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597312187831,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597281016460,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597276242288,
+                value: 0,
+            },
+        ];
+
+        let actual = wildest(&readings.iter().map(|r| r).collect());
+
+        assert!(match actual {
+            HighLowMoods::One(MoodReading {
+                value: -1,
+                epoch_millis: _,
+            }) => true,
+            _ => false,
+        })
+    }
 }
