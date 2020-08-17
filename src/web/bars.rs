@@ -48,7 +48,6 @@ impl Component for Bars {
         match msg {
             BarsMsg::AddReading(r) => {
                 self.props.add_mood_reading.emit(r);
-                // TODO can it be false ?
                 true
             }
             BarsMsg::TextAreaUpdated(s) => {
@@ -61,7 +60,6 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    // TODO false?
                     true
                 } else {
                     false
@@ -73,7 +71,6 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Meds, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    // TODO false ?
                     true
                 } else {
                     false
@@ -85,7 +82,6 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Notes, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    // todo update?
                     true
                 } else {
                     false

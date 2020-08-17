@@ -27,7 +27,7 @@ pub struct LogsProps {
     pub show_bars: Callback<()>,
     pub storage_state: StorageState,
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
-    pub replace_mood_readings: Callback<(Vec<MoodReading>)>,
+    pub replace_mood_readings: Callback<Vec<MoodReading>>,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -111,7 +111,6 @@ impl Component for Logs {
                         })
                         .collect(),
                 );
-                // TODO false ?
                 true
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
@@ -132,7 +131,6 @@ impl Component for Logs {
                         })
                         .collect(),
                 ));
-                // TODO false ?
                 true
             }
             LogsMsg::Delete(Entry::Note(m)) => {
@@ -174,7 +172,6 @@ impl Component for Logs {
                         })
                         .collect(),
                 ));
-                // TODO false?
                 true
             }
         }
