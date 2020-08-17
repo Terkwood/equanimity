@@ -1,7 +1,7 @@
 use super::StorageState;
 use crate::*;
 use repo::YewRepo;
-use web::time::local_datetime;
+use web::time::js_local_datetime;
 
 pub struct Logs {
     link: ComponentLink<Self>,
@@ -243,7 +243,7 @@ impl Component for Logs {
 
 impl Logs {
     fn render_entry(&self, e: Entry, logs_mode: LogsMode) -> Html {
-        let dt = local_datetime(e.timestamp());
+        let dt = js_local_datetime(e.timestamp());
         let date_string = dt.format("%m/%d %R").to_string();
         match e {
             Entry::Mood(MoodReading {
