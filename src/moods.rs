@@ -1,5 +1,5 @@
 use crate::*;
-use chrono::prelude::*;
+use chrono::prelude::{DateTime, FixedOffset};
 
 const DAYS_TO_DISPLAY: u8 = 14;
 
@@ -94,6 +94,13 @@ mod test {
 
     const ONE_DAY_MS: u64 = 86_400_000;
 
+    const LOCAL_OFFSET_SECONDS: i32 = 240;
+    fn fake_local_datetime(epoch_millis_utc: u64) -> DateTime<FixedOffset> {
+        let offset = FixedOffset::west(LOCAL_OFFSET_SECONDS);
+        Utc.timestamp_millis(epoch_millis_utc as i64)
+            .with_timezone(&offset)
+    }
+
     #[test]
     fn test_recent_moods_dedup() {
         let right_now = Utc::now().timestamp_millis() as u64;
@@ -161,7 +168,7 @@ mod test {
             exp03_b,
         ];
 
-        let actual = recent(right_now, &convoluted);
+        let actual = recent(&convoluted, right_now, fake_local_datetime);
 
         let mut last_timestamp = 0;
         for a in &actual {
@@ -199,7 +206,7 @@ mod test {
             });
         }
 
-        let result = recent(right_now, &many_dup_vals);
+        let result = recent(&many_dup_vals, right_now, fake_local_datetime);
         assert_eq!(10, result.len());
     }
 }
