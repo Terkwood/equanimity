@@ -92,11 +92,10 @@ impl Component for Logs {
                 epoch_millis,
                 value,
             })) => {
-                //todo!("remove delete_entry");
-                /*self.delete_entry(Entry::Mood(MoodReading {
+                self.delete_entry(Entry::Mood(MoodReading {
                     epoch_millis,
                     value,
-                }));*/
+                }));
                 self.props.replace_mood_readings.emit(
                     self.entries
                         .iter()
@@ -116,8 +115,7 @@ impl Component for Logs {
                 true
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
-                /*todo!("remove delete_entry");
-                self.delete_entry(Entry::Meds(m));*/
+                self.delete_entry(Entry::Meds(m));
                 self.props.replace_texts.emit((
                     TextType::Meds,
                     self.entries
@@ -138,8 +136,7 @@ impl Component for Logs {
                 true
             }
             LogsMsg::Delete(Entry::Note(m)) => {
-                //todo!("remove delete_entry");
-                //self.delete_entry(Entry::Note(m));
+                self.delete_entry(Entry::Note(m));
 
                 self.props.replace_texts.emit((
                     TextType::Notes,
