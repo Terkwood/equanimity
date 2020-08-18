@@ -326,4 +326,242 @@ mod test {
             _ => false,
         })
     }
+
+    #[test]
+    fn test_local_timezone_sanity_no_dups() {
+        let bunches = vec![
+            MoodReading {
+                epoch_millis: 1597702278763,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597681202925,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597671886589,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597668627387,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597660254860,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597649650958,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597592618604,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597576524553,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597543842972,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597526972008,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597523124084,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597523122690,
+                value: -1,
+            },
+            MoodReading {
+                epoch_millis: 1597493415667,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597493132454,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597491323691,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597485707821,
+                value: -1,
+            },
+            MoodReading {
+                epoch_millis: 1597452104644,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597425244763,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597407014195,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597361837123,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597349743059,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597341509304,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597334424046,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597326808955,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597318625023,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597312187831,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597281016460,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597276242288,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597272995216,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597272349945,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597270780125,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597267554233,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597263312498,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597258096295,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597256944336,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597255118798,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597255117475,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597251241611,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597250269535,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597244236242,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597233653458,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597218655745,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597176031749,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597165377041,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597157950814,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597144162773,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597099974869,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597067839254,
+                value: 1,
+            },
+            MoodReading {
+                epoch_millis: 1597061104712,
+                value: 1,
+            },
+            MoodReading {
+                epoch_millis: 1597049490659,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597041862256,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597015425013,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 1597715308686,
+                value: 0,
+            },
+        ];
+
+        let right_now = Utc::now().timestamp_millis() as u64;
+
+        let actual = recent(&bunches, right_now, fake_local_datetime);
+
+        let mut actual_local_dates: Vec<String> = actual
+            .iter()
+            .map(|mr| {
+                let dt = fake_local_datetime(mr.epoch_millis);
+                let date_string = dt.format("%m/%d").to_string();
+                date_string
+            })
+            .collect();
+
+        let num_dates_before_dedup = actual_local_dates.len();
+
+        actual_local_dates.sort();
+        actual_local_dates.dedup();
+
+        assert_eq!(num_dates_before_dedup, actual_local_dates.len())
+    }
 }
