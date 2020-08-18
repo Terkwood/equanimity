@@ -142,7 +142,7 @@ impl Component for Bars {
                     </div>
                     </>
                 }} else {
-                    html!{ <div></div> }
+                    html!{ <></> }
                 }}
             </div>
         }
