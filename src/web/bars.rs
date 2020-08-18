@@ -6,6 +6,7 @@ pub struct Bars {
     link: ComponentLink<Self>,
     text_area: String,
     top_view: BarsTopView,
+    show_bars: bool,
     props: BarsProps,
 }
 
@@ -22,6 +23,8 @@ pub enum BarsMsg {
     SubmitNotes,
     ShowLogs,
     ToggleTopView,
+    HideBars,
+    ShowBars,
 }
 
 #[derive(Properties, Clone, PartialEq)]
@@ -40,6 +43,7 @@ impl Component for Bars {
             link,
             top_view: BarsTopView::MoodButtons,
             text_area: "".to_string(),
+            show_bars: true,
             props,
         }
     }
@@ -98,6 +102,14 @@ impl Component for Bars {
                 self.props.show_logs.emit(());
                 false
             }
+            BarsMsg::HideBars => {
+                self.show_bars = false;
+                true
+            }
+            BarsMsg::ShowBars => {
+                self.show_bars = true;
+                true
+            }
         }
     }
 
@@ -119,14 +131,19 @@ impl Component for Bars {
         html! {
             <div>
                 { self.render_top_view() }
+                { if self.show_bars { html! {
+                    <>
+                    <div id="moodgrid">
+                        { rms.iter().map(render_mood_bar).collect::<Html>() }
+                    </div>
 
-                <div id="moodgrid">
-                    { rms.iter().map(render_mood_bar).collect::<Html>() }
-                </div>
-
-                <div id="dategrid">
-                    { rms.iter().map(render_mood_date).collect::<Html>() }
-                </div>
+                    <div id="dategrid">
+                        { rms.iter().map(render_mood_date).collect::<Html>() }
+                    </div>
+                    </>
+                }} else {
+                    html!{ <></> }
+                }}
             </div>
         }
     }
@@ -176,6 +193,8 @@ impl Bars {
                         <textarea
                             rows=6
                             value=&self.text_area
+                            onfocus=self.link.callback(|_| BarsMsg::HideBars)
+                            onchange=self.link.callback(|_| BarsMsg::ShowBars)
                             oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
                             placeholder="Greetings.">
                         </textarea>
