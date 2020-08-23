@@ -12,7 +12,8 @@ pub struct Bars {
 
 pub enum BarsTopView {
     MoodButtons,
-    Writing,
+    WaitingForText,
+    FocusedOnText,
 }
 
 pub enum BarsMsg {
@@ -23,8 +24,8 @@ pub enum BarsMsg {
     SubmitNotes,
     ShowLogs,
     ToggleTopView,
-    HideBars,
     ShowBars,
+    FocusInput,
 }
 
 #[derive(Properties, Clone, PartialEq)]
@@ -51,6 +52,8 @@ impl Component for Bars {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             BarsMsg::AddReading(r) => {
+                self.top_view = BarsTopView::MoodButtons;
+                self.show_bars = true;
                 self.props.add_mood_reading.emit(r);
                 true
             }
@@ -64,10 +67,11 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    true
-                } else {
-                    false
                 }
+                self.top_view = BarsTopView::MoodButtons;
+                self.show_bars = true;
+
+                true
             }
             BarsMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
@@ -75,10 +79,12 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Meds, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    true
-                } else {
-                    false
                 }
+
+                self.top_view = BarsTopView::MoodButtons;
+                self.show_bars = true;
+
+                true
             }
             BarsMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
@@ -86,14 +92,15 @@ impl Component for Bars {
                         .add_text
                         .emit((TextType::Notes, self.text_area.clone()));
                     self.text_area = "".to_string();
-                    true
-                } else {
-                    false
                 }
+                self.top_view = BarsTopView::MoodButtons;
+                self.show_bars = true;
+
+                true
             }
             BarsMsg::ToggleTopView => {
                 self.top_view = match self.top_view {
-                    BarsTopView::MoodButtons => BarsTopView::Writing,
+                    BarsTopView::MoodButtons => BarsTopView::WaitingForText,
                     _ => BarsTopView::MoodButtons,
                 };
                 true
@@ -102,12 +109,13 @@ impl Component for Bars {
                 self.props.show_logs.emit(());
                 false
             }
-            BarsMsg::HideBars => {
-                self.show_bars = false;
-                true
-            }
             BarsMsg::ShowBars => {
                 self.show_bars = true;
+                true
+            }
+            BarsMsg::FocusInput => {
+                self.show_bars = false;
+                self.top_view = BarsTopView::FocusedOnText;
                 true
             }
         }
@@ -187,36 +195,48 @@ impl Bars {
                     </div>
                 </>
             },
-            BarsTopView::Writing => html! {
-                <div id="controlgrid">
-                    <div id="bigtextgrid">
-                        <textarea
-                            rows=6
-                            value=&self.text_area
-                            onfocus=self.link.callback(|_| BarsMsg::HideBars)
-                            onchange=self.link.callback(|_| BarsMsg::ShowBars)
-                            oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
-                            placeholder="Greetings.">
-                        </textarea>
+            BarsTopView::WaitingForText | BarsTopView::FocusedOnText => {
+                let button_class = text_entry_button_class(&self.top_view);
+                html! {
+                    <div id=format!("controlgrid{}", match self.top_view { BarsTopView::FocusedOnText => "full", _ => "mini" })>
+                        <div id="bigtextgrid">
+                            <textarea
+                                rows=6
+                                value=&self.text_area
+                                onfocus=self.link.callback(|_| BarsMsg::FocusInput)
+                                onchange=self.link.callback(|_| BarsMsg::ShowBars)
+                                oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
+                                placeholder="Greetings.">
+                            </textarea>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Bars 📊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
+                        </div>
                     </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Bars 📊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
-                    </div>
-                </div>
-            },
+                }
+            }
         }
+    }
+}
+
+const TEXT_ENTRY_BUTTON_FOCUSED: &str = "lookgoodfocused";
+const TEXT_ENTRY_BUTTON_DEFAULT: &str = "expandheight";
+fn text_entry_button_class(top_view: &BarsTopView) -> &'static str {
+    match top_view {
+        BarsTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,
+        _ => TEXT_ENTRY_BUTTON_DEFAULT,
     }
 }
 

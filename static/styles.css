@@ -40,12 +40,24 @@ textarea {
   font-size: 36px;
 }
 
-#controlgrid {
+#controlgridmini {
   height: 20vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(4, 1fr) / repeat(5, 1fr);
-  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
+  grid-auto-flow: column;
+}
+
+#controlgridfull {
+  height: 85vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(4, 1fr) / repeat(5, 1fr);
+  grid-auto-flow: column;
+}
+
+#controlgridfull textarea {
+  height: 95%;
 }
 
 #bigtextgrid {
@@ -91,11 +103,17 @@ textarea {
   height: 100%;
 }
 
+.lookgoodfocused {
+  top: 0;
+  height: 50%;
+}
+
 .thick {
   display: inline-block;
   width: 85%;
   height: 100%;
   text-align: center;
+  font-size: 4vw;
 }
 
 .nocolor {
