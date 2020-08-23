@@ -45,14 +45,13 @@ textarea {
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(4, 1fr) / repeat(5, 1fr);
-  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
+  grid-auto-flow: column;
 }
 
 #controlgridfull {
   height: 100vh;
   display: grid;
   grid-gap: 5px;
-  /** Plus one row vs mini */
   grid-template: repeat(4, 1fr) / repeat(5, 1fr);
   grid-auto-flow: column;
 }
