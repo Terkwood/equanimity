@@ -52,8 +52,11 @@ textarea {
   height: 100vh;
   display: grid;
   grid-gap: 5px;
-  grid-template: repeat(4, 1fr) / repeat(5, 1fr);
   grid-auto-flow: column;
+}
+
+#controlgridfull textarea {
+  height: 95%;
 }
 
 #bigtextgrid {
@@ -97,6 +100,11 @@ textarea {
 
 .expandheight {
   height: 100%;
+}
+
+.lookgoodfocused {
+  top: 0;
+  height: 50%;
 }
 
 .thick {

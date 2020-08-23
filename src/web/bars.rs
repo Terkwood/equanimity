@@ -195,36 +195,48 @@ impl Bars {
                     </div>
                 </>
             },
-            BarsTopView::WaitingForText | BarsTopView::FocusedOnText => html! {
-                <div id=format!("controlgrid{}", match self.top_view { BarsTopView::FocusedOnText => "full", _ => "mini" })>
-                    <div id="bigtextgrid">
-                        <textarea
-                            rows=6
-                            value=&self.text_area
-                            onfocus=self.link.callback(|_| BarsMsg::FocusInput)
-                            onchange=self.link.callback(|_| BarsMsg::ShowBars)
-                            oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
-                            placeholder="Greetings.">
-                        </textarea>
+            BarsTopView::WaitingForText | BarsTopView::FocusedOnText => {
+                let button_class = text_entry_button_class(&self.top_view);
+                html! {
+                    <div id=format!("controlgrid{}", match self.top_view { BarsTopView::FocusedOnText => "full", _ => "mini" })>
+                        <div id="bigtextgrid">
+                            <textarea
+                                rows=6
+                                value=&self.text_area
+                                onfocus=self.link.callback(|_| BarsMsg::FocusInput)
+                                onchange=self.link.callback(|_| BarsMsg::ShowBars)
+                                oninput=self.link.callback(|e: InputData| BarsMsg::TextAreaUpdated(e.value))
+                                placeholder="Greetings.">
+                            </textarea>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Bars 📊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                        </div>
+                        <div class="center">
+                            <button class=button_class onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
+                        </div>
                     </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ToggleTopView)>{ "Bars 📊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitSleep)>{ "Sleep 😴" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitMeds)>{ "Meds 💊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::SubmitNotes)>{ "Notes 🖊" }</button>
-                    </div>
-                    <div class="center">
-                        <button class="expandheight" onclick=self.link.callback(|_| BarsMsg::ShowLogs)>{ "Logs 📚"}</button>
-                    </div>
-                </div>
-            },
+                }
+            }
         }
+    }
+}
+
+const TEXT_ENTRY_BUTTON_FOCUSED: &str = "lookgoodfocused";
+const TEXT_ENTRY_BUTTON_DEFAULT: &str = "expandheight";
+fn text_entry_button_class(top_view: &BarsTopView) -> &'static str {
+    match top_view {
+        BarsTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,
+        _ => TEXT_ENTRY_BUTTON_DEFAULT,
     }
 }
 
