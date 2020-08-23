@@ -49,9 +49,10 @@ textarea {
 }
 
 #controlgridfull {
-  height: 100vh;
+  height: 85vh;
   display: grid;
   grid-gap: 5px;
+  grid-template: repeat(4, 1fr) / repeat(5, 1fr);
   grid-auto-flow: column;
 }
 
