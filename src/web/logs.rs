@@ -198,15 +198,26 @@ impl Component for Logs {
         if self.mode == LogsMode::About {
             html! {
                 <div id="about">
-                    { "BLAH BLAH BLAH" }
-                    <button onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "OK" }</button>
+                    <h1>{ "About" }</h1>
+                    <p>{ "EQUANIMITY helps you track mood variations." }</p>
+                    <p>{ "EQUANIMITY is designed with privacy in mind.  Your data will never be transmitted to a third party.  Data is kept in browser local storage, unencypted.  KEEP YOUR DATA SAFE: make sure there is no malware on your system!" }</p>
+                    <h2>{ "Source Code" }</h2>
+                    <p>{ "The source code is available under MIT license." }</p>
+                    <p><a href=REPO_URL>{ REPO_URL }</a></p>
+                    <button
+                        class="thick"
+                        onclick=self
+                            .link
+                            .callback(|_| LogsMsg::ToggleAboutMode)>
+                        { "OK" }
+                    </button>
                 </div>
             }
         } else {
             html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="thick">{ "Update 🖊" }</button>
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
@@ -306,6 +317,8 @@ impl Logs {
         self.entries.retain(|e| e != &entry)
     }
 }
+
+const REPO_URL: &str = "https://github.com/Terkwood/equanimity";
 
 fn derive_entries(storage_state: &StorageState) -> Vec<Entry> {
     let mut entries = vec![];
