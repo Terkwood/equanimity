@@ -14,7 +14,7 @@ button {
 }
 
 #zenbutton {
-  font-size: 130px;
+  font-size: 14vw;
   height: 85%;
 }
 
@@ -37,7 +37,7 @@ button {
 textarea {
   width: 100%;
   height: 75%;
-  font-size: 36px;
+  font-size: 4vw;
 }
 
 #controlgridmini {
@@ -84,7 +84,7 @@ textarea {
 .date {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size: 32px;
+  font-size: 3.555vw;
 }
 
 #logsbuttongrid {
