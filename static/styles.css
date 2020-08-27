@@ -10,12 +10,12 @@ button {
 
 .moodbutton {
   font-size: 5vmin;
-  height: 85%;
+  height: 93.5%;
 }
 
 #zenbutton {
   font-size: 14vmin;
-  height: 85%;
+  height: 93.5%;
 }
 
 #moodbuttongrid {
@@ -41,7 +41,7 @@ textarea {
 }
 
 #controlgridmini {
-  height: 20vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+  height: 20vh;
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(4, 1fr) / repeat(5, 1fr);
