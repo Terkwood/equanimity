@@ -19,7 +19,7 @@ pub enum LogsMsg {
 pub enum LogsMode {
     View,
     Delete,
-    _Edit,
+    About,
 }
 
 #[derive(Properties, Clone, PartialEq)]
@@ -228,7 +228,6 @@ impl Logs {
                                 value,
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -246,7 +245,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -264,7 +262,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -282,7 +279,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
