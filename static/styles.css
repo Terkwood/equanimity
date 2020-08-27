@@ -5,11 +5,11 @@ body {
 }
 
 button {
-  font-size: 36px;
+  font-size: 4vw;
 }
 
 .moodbutton {
-  font-size: 50px;
+  font-size: 5vw;
   height: 85%;
 }
 
