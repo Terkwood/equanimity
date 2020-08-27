@@ -1,6 +1,6 @@
 # equanimity
 
-bipolar mood charting utility
+mood charting utility with a focus on privacy
 
 ## build and run
 
