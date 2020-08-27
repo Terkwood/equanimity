@@ -1,3 +1,4 @@
+use super::about;
 use super::StorageState;
 use crate::*;
 use web::time::js_local_datetime;
@@ -12,14 +13,15 @@ pub struct Logs {
 pub enum LogsMsg {
     ShowBars,
     ToggleDeleteMode,
+    ToggleAboutMode,
     Delete(Entry),
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum LogsMode {
     View,
     Delete,
-    _Edit,
+    About,
 }
 
 #[derive(Properties, Clone, PartialEq)]
@@ -85,6 +87,13 @@ impl Component for Logs {
                 self.mode = match self.mode {
                     LogsMode::Delete => LogsMode::View,
                     _ => LogsMode::Delete,
+                };
+                true
+            }
+            LogsMsg::ToggleAboutMode => {
+                self.mode = match self.mode {
+                    LogsMode::About => LogsMode::View,
+                    _ => LogsMode::About,
                 };
                 true
             }
@@ -187,11 +196,14 @@ impl Component for Logs {
         }
     }
     fn view(&self) -> Html {
-        html! {
-            <>
+        if self.mode == LogsMode::About {
+            let callback = self.link.callback(|_| LogsMsg::ToggleAboutMode);
+            about::section(callback)
+        } else {
+            html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="thick">{ "Update 🖊" }</button>
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
@@ -206,7 +218,7 @@ impl Component for Logs {
                 <ul>
                     { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
-            </>
+            </> }
         }
     }
 }
@@ -228,7 +240,6 @@ impl Logs {
                                 value,
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -246,7 +257,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -264,7 +274,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }
@@ -282,7 +291,6 @@ impl Logs {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
-                            LogsMode::_Edit => html! { <button>{ "EDIT" }</button> },
                             _ => html! { }
                         }
                     }

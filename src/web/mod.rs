@@ -1,3 +1,4 @@
+mod about;
 pub mod bars;
 mod export;
 pub mod logs;
