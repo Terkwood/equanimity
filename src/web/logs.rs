@@ -12,10 +12,11 @@ pub struct Logs {
 pub enum LogsMsg {
     ShowBars,
     ToggleDeleteMode,
+    ToggleAboutMode,
     Delete(Entry),
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum LogsMode {
     View,
     Delete,
@@ -85,6 +86,13 @@ impl Component for Logs {
                 self.mode = match self.mode {
                     LogsMode::Delete => LogsMode::View,
                     _ => LogsMode::Delete,
+                };
+                true
+            }
+            LogsMsg::ToggleAboutMode => {
+                self.mode = match self.mode {
+                    LogsMode::About => LogsMode::View,
+                    _ => LogsMode::About,
                 };
                 true
             }
@@ -187,8 +195,15 @@ impl Component for Logs {
         }
     }
     fn view(&self) -> Html {
-        html! {
-            <>
+        if self.mode == LogsMode::About {
+            html! {
+                <div id="about">
+                    { "BLAH BLAH BLAH" }
+                    <button onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "OK" }</button>
+                </div>
+            }
+        } else {
+            html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
                         <button class="thick">{ "Update 🖊" }</button>
@@ -206,7 +221,7 @@ impl Component for Logs {
                 <ul>
                     { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
-            </>
+            </> }
         }
     }
 }
