@@ -153,3 +153,11 @@ textarea {
   text-decoration: none;
   color: black;
 }
+
+#exportbutton {
+  display: inline-block;
+  width: 85%;
+  height: 100%;
+  text-align: center;
+  font-size: 4vw;
+}

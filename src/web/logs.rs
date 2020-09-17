@@ -2,6 +2,7 @@ use super::about;
 use super::StorageState;
 use crate::*;
 use web::time::js_local_datetime;
+use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
     link: ComponentLink<Self>,
@@ -61,6 +62,10 @@ impl Ord for Entry {
         self.timestamp().cmp(&other.timestamp())
     }
 }
+
+const EXPORT_BUTTON_CSS_ID: &str = "exportbutton";
+const EXPORT_LINK_CSS_CLASS: &str = "download";
+const EXPORT_FILE_PREFIX: &str = "equanimity";
 
 impl Component for Logs {
     type Message = LogsMsg;
@@ -200,6 +205,15 @@ impl Component for Logs {
             let callback = self.link.callback(|_| LogsMsg::ToggleAboutMode);
             about::section(callback)
         } else {
+            let export_button = export_button(
+                &self.props.storage_state,
+                ButtonOpts {
+                    a_class: EXPORT_LINK_CSS_CLASS,
+                    button_id: EXPORT_BUTTON_CSS_ID,
+                    file_prefix: EXPORT_FILE_PREFIX,
+                    utc_millis: utc_now(),
+                },
+            );
             html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
@@ -209,7 +223,7 @@ impl Component for Logs {
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        { super::export::button(&self.props.storage_state) }
+                        { export_button }
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Bars 📊"}</button>
