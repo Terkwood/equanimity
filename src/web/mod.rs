@@ -1,6 +1,5 @@
 mod about;
 pub mod bars;
-mod export;
 pub mod logs;
 pub mod time;
 
