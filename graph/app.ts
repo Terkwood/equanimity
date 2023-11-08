@@ -2,14 +2,17 @@
 
 import { Log } from "./model.ts";
 
+// check for a first arg to this program
+if (Deno.args.length === 0) {
+    console.log("Usage: deno run --allow-read app.ts <filename>");
+    Deno.exit(1);
+}
 
-// read in text from file named "sample.json"
+const fileNameArg = Deno.args[0];
 
 
-const sample: Log = JSON.parse( Deno.readTextFileSync("sample.json"));
 
-// print out the mood readings
-console.log(sample.mood_readings);
+const sample: Log = JSON.parse( Deno.readTextFileSync(fileNameArg));
 
 // group mood readings by day
 // create a map from day (string) to list of mood readings (number[])
