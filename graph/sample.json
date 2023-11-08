@@ -1,5 +1,10 @@
 {
   "mood_readings": [
+
+    { "epoch_millis":     1699343110321, "value": 1 },
+    { "epoch_millis":     1699343110323, "value": 0 },
+    { "epoch_millis":     1699343110329, "value": 2 },
+    { "epoch_millis":     1699343110328, "value": -2 },
     { "epoch_millis": 1699429434510, "value": 1 },
     { "epoch_millis": 1699429509109, "value": 0 },
     { "epoch_millis": 1699429509860, "value": 1 },
