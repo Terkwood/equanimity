@@ -39,8 +39,6 @@ for (const mood of sample.mood_readings) {
     byDay.set(day, deduped);
 }
 
-console.log(byDay);
-
 // for each day print circles of the mood value 
 for (const [day, moods] of byDay) {
     console.log(`${circles(moods)}    ${day}`);
