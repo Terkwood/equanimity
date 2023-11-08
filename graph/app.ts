@@ -1,6 +1,7 @@
 // an app that can print mood graphs over a very long period
 
 import { Log } from "./model.ts";
+import { circles } from "./graph.ts";
 
 // check for a first arg to this program
 if (Deno.args.length === 0) {
@@ -38,5 +39,10 @@ for (const mood of sample.mood_readings) {
     byDay.set(day, deduped);
 }
 
-// print out the map
 console.log(byDay);
+
+// for each day print circles of the mood value 
+for (const [day, moods] of byDay) {
+    console.log(`${circles(moods)}    ${day}`);
+}
+
