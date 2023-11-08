@@ -38,11 +38,13 @@ for (const mood of sample.mood_readings) {
     // store the list in the map
     byDay.set(day, deduped);
 }
+// store the keys of byDay, sorted, in a list
+const days = [...byDay.keys()].sort();
 
-console.log(byDay);
 
 // for each day print circles of the mood value 
-for (const [day, moods] of byDay) {
+for (const day of days) {
+    const moods = byDay.get(day) ?? [];
     console.log(`${circles(moods)}    ${day}`);
 }
 
