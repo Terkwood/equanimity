@@ -1,0 +1,21 @@
+{
+  "mood_readings": [
+    { "epoch_millis": 1699429434510, "value": 1 },
+    { "epoch_millis": 1699429509109, "value": 0 },
+    { "epoch_millis": 1699429509860, "value": 1 },
+    { "epoch_millis": 1699429510328, "value": -1 }
+  ],
+  "meds": [
+    { "epoch_millis": 1699429459179, "value": "ok" },
+    { "epoch_millis": 1699429486325, "value": "ueoaueouaeoueoa" },
+    { "epoch_millis": 1699429541702, "value": "43432432" }
+  ],
+  "sleep_entries": [
+    { "epoch_millis": 1699429462602, "value": "aaa" },
+    { "epoch_millis": 1699429504275, "value": "11111" }
+  ],
+  "notes": [
+    { "epoch_millis": 1699429467118, "value": "ueauoeua" },
+    { "epoch_millis": 1699429501488, "value": "222222" }
+  ]
+}
