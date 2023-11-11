@@ -39,7 +39,6 @@ impl Component for History {
         }
     }
     fn view(&self) -> Html {
-        
             html! { <>
                 <div id="history">
                     <p>{ "OK THEN" }</p>
