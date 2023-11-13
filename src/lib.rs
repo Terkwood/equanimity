@@ -5,6 +5,7 @@ extern crate serde_json;
 mod moods;
 mod repo;
 mod web;
+mod pips;
 
 use serde_derive::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;

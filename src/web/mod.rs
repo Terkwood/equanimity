@@ -2,10 +2,12 @@ mod about;
 pub mod bars;
 pub mod logs;
 pub mod time;
+mod history;
 
 use crate::*;
 use bars::Bars;
 use logs::Logs;
+use history::History;
 use repo::YewRepo;
 
 pub struct Root {
@@ -24,6 +26,7 @@ pub struct Root {
 pub enum Mode {
     Bars,
     Logs,
+    History
 }
 
 pub enum RootMsg {
@@ -147,6 +150,9 @@ impl Component for Root {
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
             },
+            Mode::History => html! {
+                <History/>
+            }
         }
     }
 }
