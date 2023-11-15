@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+use chrono::NaiveDate;
+use chrono::NaiveDateTime;
+
 use crate::{moods::HighLowMoods, *};
 
 // pub fn draw(v: &[MoodReading]) -> String {
@@ -80,36 +83,22 @@ use crate::{moods::HighLowMoods, *};
 //     s
 // }
 
-fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<MoodReading>> {
+fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
+    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
 
+    for mood in v {
+        if let Some(date) = NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t|t.date()) {
+            let list = by_day.entry(date).or_default();
+            list.push(mood.value);
 
-    // // group mood readings by day
-    // // create a map from day (string) to list of mood readings (number[])
-    // const byDay: Map<string, number[]> = new Map<string, number[]>();
+            list.dedup();
 
-    // // for each mood reading
-    // for (const mood of sample.mood_readings) {
-    //     // convert epoch_millis to a date
-    //     const d = new Date(mood.epoch_millis);
-    //     // get the day (yyyy-mm-dd)
-    //     const day = d.toISOString().slice(0, 10);
-    //     // add this mood reading to the list of mood readings for this day
-    //     // if this is the first mood reading for this day, create a new list
-    //     const list = byDay.get(day) ?? [];
-    //     list.push(mood.value);
+            list.sort();
+        }      
 
-    //     // deduplicate entries in the list
-    //     const deduped = [...new Set(list)];
-    //     // sort the list
-    //     deduped.sort((a, b) => a - b);
-
-    //     // store the list in the map
-    //     byDay.set(day, deduped);
-    // }
-    // // store the keys of byDay, sorted, in a list
-    // const days = [...byDay.keys()].sort();
-
-    unimplemented!()
+    }
+ 
+    by_day
 }
 
 
