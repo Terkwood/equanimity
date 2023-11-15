@@ -46,7 +46,7 @@ fn group_by_day(v: &[MoodReading]) -> Vec<(HighLowMoods, WithEquanimity)> {
 }
 
 fn draw_one(mr: &MoodReading, with_equanimity: WithEquanimity) -> String {
-   let s = format!("{}{}{}", manic_pips(mr), equanimity_pip(mr, with_equanimity == WithEquanimity::Yes), depressive_pips(mr));
+   let s = format!("{}{}{}", depressive_pips(mr), equanimity_pip(mr, with_equanimity == WithEquanimity::Yes), manic_pips(mr) );
    s
 }
 
@@ -128,5 +128,44 @@ mod tests {
         };
         let s = draw_one(&mr, WithEquanimity::Yes);
         assert_eq!(s, "⚫⚫⚫⚪🔴🔴⚫");
+    }
+
+
+
+    #[test]
+    fn test_depressive_draw_one_no_eq() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: -1,
+        };
+        let s = draw_one(&mr, WithEquanimity::No);
+        assert_eq!(s, "⚫⚫🔵⚫⚫⚫⚫");
+    }
+    #[test]
+    fn test_depressive_draw_one_1() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: -1,
+        };
+        let s = draw_one(&mr, WithEquanimity::Yes);
+        assert_eq!(s, "⚫⚫🔵⚪⚫⚫⚫");
+    }
+    #[test]
+    fn test_depressive_draw_one_2() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: -2,
+        };
+        let s = draw_one(&mr, WithEquanimity::No);
+        assert_eq!(s, "⚫🔵🔵⚫⚫⚫⚫");
+    }
+    #[test]
+    fn test_depressive_draw_one_2_a() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: -2,
+        };
+        let s = draw_one(&mr, WithEquanimity::Yes);
+        assert_eq!(s, "⚫🔵🔵⚪⚫⚫⚫");
     }
 }
