@@ -79,6 +79,30 @@ fn depressive_pips (mr: &MoodReading) -> String {
     }
     s
 }
+use std::cmp::max;
+use std::cmp::min;
+
+fn deepest_blue(moods: Vec<i8>) ->  i8 {
+    let smallest = moods.iter().reduce(|a, b|  min(a, b));
+     if let Some(sm) = smallest {
+        if *sm < 1  { *sm } else {0}
+     } else {
+        0
+     }
+}
+
+fn brightest_red(moods: Vec<i8>) -> i8 {
+    let largest = moods.iter().reduce(|a, b|  max(a, b));
+    if let Some(l ) = largest {
+        if *l > -1 { *l }else{ 0}
+    }else {
+        0
+    }
+}
+
+fn had_equanimity(moods: Vec<i8>) -> bool {
+     moods.iter().find(|mood|  **mood == 0).map(|_| true).unwrap_or(false)
+}
 
 #[cfg(test)]
 mod tests {
