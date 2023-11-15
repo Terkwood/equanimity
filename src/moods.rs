@@ -21,8 +21,8 @@ pub fn recent(
     let mut maybe_more_entries_than_allowed: Vec<MoodReading> = max_in_each
         .map(|at_most_two| match at_most_two {
             HighLowMoods::Nothing => vec![],
-            HighLowMoods::One(mr, eq) => vec![mr],
-            HighLowMoods::MaxMin(h, l, eq) => vec![h, l],
+            HighLowMoods::One(mr ) => vec![mr],
+            HighLowMoods::MaxMin(h, l ) => vec![h, l],
         })
         .flatten()
         .collect();
@@ -43,39 +43,16 @@ pub fn recent(
 #[derive(Debug, PartialEq)]
 pub enum HighLowMoods {
     Nothing,
-    One(MoodReading, WithEquanimity),
-    MaxMin(MoodReading, MoodReading, WithEquanimity),
+    One(MoodReading ),
+    MaxMin(MoodReading, MoodReading ),
 }
 
-#[derive(Debug,PartialEq,Clone,Copy)]
-pub enum WithEquanimity {
-    Yes,
-    No,
-}
-impl From<WithEquanimity> for bool {
-    fn from(value: WithEquanimity) -> Self {
-        value == WithEquanimity::Yes
-    }
-}
-impl Into<WithEquanimity> for bool {
-    fn into(self) -> WithEquanimity {
-        if self {
-            WithEquanimity::Yes
-        } else {
-            WithEquanimity::No
-        }
-    }
-}
 
 fn wildest(readings: &Vec<&MoodReading>) -> HighLowMoods {
     let mut lowest: Option<MoodReading> = None;
     let mut nil: Option<MoodReading> = None;
     let mut highest: Option<MoodReading> = None;
-    let mut was_equanimity = WithEquanimity::No;
     for mr in readings {
-        if mr.value == 0 {
-            was_equanimity = WithEquanimity::Yes;
-        }
         if mr.value < 0 && mr.value < lowest.map(|l| l.value).unwrap_or(0) {
             lowest = Some(**mr)
         } else if mr.value == 0 && nil.is_none() {
@@ -87,10 +64,10 @@ fn wildest(readings: &Vec<&MoodReading>) -> HighLowMoods {
 
     match (lowest, nil, highest) {
         (None, None, None) => HighLowMoods::Nothing,
-        (None, Some(mr), None) => HighLowMoods::One(mr, was_equanimity),
-        (Some(l), _, None) => HighLowMoods::One(l, was_equanimity),
-        (None, _, Some(h)) => HighLowMoods::One(h, was_equanimity),
-        (Some(l), _, Some(h)) => HighLowMoods::MaxMin(h, l, was_equanimity),
+        (None, Some(mr), None) => HighLowMoods::One(mr   ),
+        (Some(l), _, None) => HighLowMoods::One(l ),
+        (None, _, Some(h)) => HighLowMoods::One(h ),
+        (Some(l), _, Some(h)) => HighLowMoods::MaxMin(h, l ),
     }
 }
 
@@ -240,7 +217,7 @@ mod test {
             HighLowMoods::One(MoodReading {
                 value: -1,
                 epoch_millis: _,
-            }, _) => true,
+            }) => true,
             _ => false,
         })
     }
@@ -328,7 +305,7 @@ mod test {
             HighLowMoods::One(MoodReading {
                 value: -1,
                 epoch_millis: _,
-            }, _) => true,
+            }) => true,
             _ => false,
         })
     }
