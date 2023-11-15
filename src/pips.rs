@@ -50,39 +50,63 @@ use crate::{*, moods::{HighLowMoods}};
 //    s
 // }
 
-fn equanimity_pip(mr: &MoodReading, with_equanimity: bool) -> String {
-    if with_equanimity || mr.value == 0 {
-        "⚪".to_string()
-    } else {
-        "⚫".to_string()
-    }
+// fn equanimity_pip(mr: &MoodReading, with_equanimity: bool) -> String {
+//     if with_equanimity || mr.value == 0 {
+//         "⚪".to_string()
+//     } else {
+//         "⚫".to_string()
+//     }
+// }
+
+// fn manic_pips(mr: &MoodReading) -> String {
+//     let mut s = String::new();
+//     for _ in 0..mr.value.abs() {
+//         s.push_str("🔴");
+//     }
+//     for _ in mr.value.abs()..3 {
+//         s.push_str("⚫");
+//     }
+//     let r = s.chars().rev().collect();
+//     r
+// }
+// fn depressive_pips (mr: &MoodReading) -> String {
+//     let mut s = String::new();
+//     for _ in 0..mr.value.abs() {
+//         s.push_str("🔵");
+//     }
+//     for _ in mr.value.abs()..3 {
+//         s.push_str("⚫");
+//     }
+//     s
+// }
+
+
+const MANIC_CIRCLE: char = '🔴';
+const DEPRESSED_CIRCLE:char = '🔵';
+const EQUANIMITY_CIRCLE: char = '⚪';
+const EMPTY_CIRCLE: char = '⚫';
+
+pub fn   circles(moods: &[i8]) -> String {
+    let red = brightest_red(moods);
+    let blue = deepest_blue(moods);
+    let equanimity = had_equanimity(moods);
+
+
+    let red_circles = format!("{}{}",MANIC_CIRCLE.to_string().repeat(red as usize),EMPTY_CIRCLE.to_string().repeat(3 - red as usize)) ;
+    let blue_circles = format!("{}{}",EMPTY_CIRCLE.to_string().repeat(3 - (blue as usize)), DEPRESSED_CIRCLE.to_string().repeat(blue as usize));
+
+    // define a string which shows EQUANIMITY_CIRCLE if equanimity is true, otherwise EMPTY_CIRCLE
+    let  equanimity_circle = if equanimity { EQUANIMITY_CIRCLE} else { EMPTY_CIRCLE};
+
+    format!("{}{}{}",blue_circles,equanimity_circle,red_circles)
+
 }
 
-fn manic_pips(mr: &MoodReading) -> String {
-    let mut s = String::new();
-    for _ in 0..mr.value.abs() {
-        s.push_str("🔴");
-    }
-    for _ in mr.value.abs()..3 {
-        s.push_str("⚫");
-    }
-    let r = s.chars().rev().collect();
-    r
-}
-fn depressive_pips (mr: &MoodReading) -> String {
-    let mut s = String::new();
-    for _ in 0..mr.value.abs() {
-        s.push_str("🔵");
-    }
-    for _ in mr.value.abs()..3 {
-        s.push_str("⚫");
-    }
-    s
-}
+
 use std::cmp::max;
 use std::cmp::min;
 
-fn deepest_blue(moods: Vec<i8>) ->  i8 {
+fn deepest_blue(moods: &[i8]) ->  i8 {
     let smallest = moods.iter().reduce(|a, b|  min(a, b));
      if let Some(sm) = smallest {
         if *sm < 1  { *sm } else {0}
@@ -91,7 +115,7 @@ fn deepest_blue(moods: Vec<i8>) ->  i8 {
      }
 }
 
-fn brightest_red(moods: Vec<i8>) -> i8 {
+fn brightest_red(moods: &[i8]) -> i8 {
     let largest = moods.iter().reduce(|a, b|  max(a, b));
     if let Some(l ) = largest {
         if *l > -1 { *l }else{ 0}
@@ -100,7 +124,7 @@ fn brightest_red(moods: Vec<i8>) -> i8 {
     }
 }
 
-fn had_equanimity(moods: Vec<i8>) -> bool {
+fn had_equanimity(moods: &[i8]) -> bool {
      moods.iter().find(|mood|  **mood == 0).map(|_| true).unwrap_or(false)
 }
 
