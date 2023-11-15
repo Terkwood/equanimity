@@ -1,13 +1,13 @@
 mod about;
 pub mod bars;
+mod history;
 pub mod logs;
 pub mod time;
-mod history;
 
 use crate::*;
 use bars::Bars;
-use logs::Logs;
 use history::History;
+use logs::Logs;
 use repo::YewRepo;
 
 pub struct Root {
@@ -26,7 +26,7 @@ pub struct Root {
 pub enum Mode {
     Bars,
     Logs,
-    History
+    History,
 }
 
 pub enum RootMsg {
@@ -152,7 +152,7 @@ impl Component for Root {
             },
             Mode::History => html! {
                 <History/>
-            }
+            },
         }
     }
 }

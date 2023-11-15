@@ -1,10 +1,10 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
-use crate::{*, moods::{HighLowMoods}};
+use crate::{moods::HighLowMoods, *};
 
 // pub fn draw(v: &[MoodReading]) -> String {
 //     let by_day = group_by_day(v);
-    
+
 //     let mut s = String::new();
 //     for mr in by_day {
 //         match mr.0  {
@@ -17,7 +17,7 @@ use crate::{*, moods::{HighLowMoods}};
 //             }
 
 //         }
-        
+
 //     }
 
 //     s
@@ -27,18 +27,18 @@ use crate::{*, moods::{HighLowMoods}};
 // /// if it needs to print both manic and depressive
 // fn group_by_day(v: &[MoodReading]) -> Vec<(HighLowMoods, WithEquanimity)> {
 //     let mut by_day: HashMap<chrono::NaiveDate, (MoodReading, WithEquanimity)> = HashMap::new();
-    
+
 //     for mr in v {
 //         let time = chrono::NaiveDateTime::from_timestamp_millis(mr.epoch_millis as i64);
 //         let date = time.map(|t | t.date());
 //         if let Some(d) = date {
 //             let entry = by_day.entry(d).or_insert(
 //                 (
-//                     mr.clone(), 
+//                     mr.clone(),
 //                 (mr.value == 0).into()
 //             ));
 //             let new_eq = if mr.value == 0  {
-//                WithEquanimity::Yes 
+//                WithEquanimity::Yes
 //             } else { WithEquanimity::No};
 //         }
 //     }
@@ -80,52 +80,72 @@ use crate::{*, moods::{HighLowMoods}};
 //     s
 // }
 
-
 const MANIC_CIRCLE: char = '🔴';
-const DEPRESSED_CIRCLE:char = '🔵';
+const DEPRESSED_CIRCLE: char = '🔵';
 const EQUANIMITY_CIRCLE: char = '⚪';
 const EMPTY_CIRCLE: char = '⚫';
 
-pub fn   circles(moods: &[i8]) -> String {
+pub fn circles(moods: &[i8]) -> String {
     let red = brightest_red(moods);
     let blue = deepest_blue(moods);
     let equanimity = had_equanimity(moods);
 
-
-    let red_circles = format!("{}{}",MANIC_CIRCLE.to_string().repeat(red as usize),EMPTY_CIRCLE.to_string().repeat(3 - red as usize)) ;
-    let blue_circles = format!("{}{}",EMPTY_CIRCLE.to_string().repeat(3 - (blue as usize)), DEPRESSED_CIRCLE.to_string().repeat(blue as usize));
+    let red_circles = format!(
+        "{}{}",
+        MANIC_CIRCLE.to_string().repeat(red as usize),
+        EMPTY_CIRCLE.to_string().repeat(3 - red as usize)
+    );
+    let blue_circles = format!(
+        "{}{}",
+        EMPTY_CIRCLE.to_string().repeat(3 - (blue as usize)),
+        DEPRESSED_CIRCLE.to_string().repeat(blue as usize)
+    );
 
     // define a string which shows EQUANIMITY_CIRCLE if equanimity is true, otherwise EMPTY_CIRCLE
-    let  equanimity_circle = if equanimity { EQUANIMITY_CIRCLE} else { EMPTY_CIRCLE};
+    let equanimity_circle = if equanimity {
+        EQUANIMITY_CIRCLE
+    } else {
+        EMPTY_CIRCLE
+    };
 
-    format!("{}{}{}",blue_circles,equanimity_circle,red_circles)
-
+    format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
 }
-
 
 use std::cmp::max;
 use std::cmp::min;
 
-fn deepest_blue(moods: &[i8]) ->  i8 {
-    let smallest = moods.iter().reduce(|a, b|  min(a, b));
-     if let Some(sm) = smallest {
-        if *sm < 1  { *sm } else {0}
-     } else {
+fn deepest_blue(moods: &[i8]) -> i8 {
+    let smallest = moods.iter().reduce(|a, b| min(a, b));
+    if let Some(sm) = smallest {
+        if *sm < 1 {
+            *sm
+        } else {
+            0
+        }
+    } else {
         0
-     }
+    }
 }
 
 fn brightest_red(moods: &[i8]) -> i8 {
-    let largest = moods.iter().reduce(|a, b|  max(a, b));
-    if let Some(l ) = largest {
-        if *l > -1 { *l }else{ 0}
-    }else {
+    let largest = moods.iter().reduce(|a, b| max(a, b));
+    if let Some(l) = largest {
+        if *l > -1 {
+            *l
+        } else {
+            0
+        }
+    } else {
         0
     }
 }
 
 fn had_equanimity(moods: &[i8]) -> bool {
-     moods.iter().find(|mood|  **mood == 0).map(|_| true).unwrap_or(false)
+    moods
+        .iter()
+        .find(|mood| **mood == 0)
+        .map(|_| true)
+        .unwrap_or(false)
 }
 
 #[cfg(test)]
@@ -177,8 +197,6 @@ mod tests {
     //     let s = draw_one(&mr, WithEquanimity::Yes);
     //     assert_eq!(s, "⚫⚫⚫⚪🔴🔴⚫");
     // }
-
-
 
     // #[test]
     // fn test_depressive_draw_one_no_eq() {

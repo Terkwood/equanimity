@@ -21,8 +21,8 @@ pub fn recent(
     let mut maybe_more_entries_than_allowed: Vec<MoodReading> = max_in_each
         .map(|at_most_two| match at_most_two {
             HighLowMoods::Nothing => vec![],
-            HighLowMoods::One(mr ) => vec![mr],
-            HighLowMoods::MaxMin(h, l ) => vec![h, l],
+            HighLowMoods::One(mr) => vec![mr],
+            HighLowMoods::MaxMin(h, l) => vec![h, l],
         })
         .flatten()
         .collect();
@@ -43,10 +43,9 @@ pub fn recent(
 #[derive(Debug, PartialEq)]
 pub enum HighLowMoods {
     Nothing,
-    One(MoodReading ),
-    MaxMin(MoodReading, MoodReading ),
+    One(MoodReading),
+    MaxMin(MoodReading, MoodReading),
 }
-
 
 fn wildest(readings: &Vec<&MoodReading>) -> HighLowMoods {
     let mut lowest: Option<MoodReading> = None;
@@ -64,10 +63,10 @@ fn wildest(readings: &Vec<&MoodReading>) -> HighLowMoods {
 
     match (lowest, nil, highest) {
         (None, None, None) => HighLowMoods::Nothing,
-        (None, Some(mr), None) => HighLowMoods::One(mr   ),
-        (Some(l), _, None) => HighLowMoods::One(l ),
-        (None, _, Some(h)) => HighLowMoods::One(h ),
-        (Some(l), _, Some(h)) => HighLowMoods::MaxMin(h, l ),
+        (None, Some(mr), None) => HighLowMoods::One(mr),
+        (Some(l), _, None) => HighLowMoods::One(l),
+        (None, _, Some(h)) => HighLowMoods::One(h),
+        (Some(l), _, Some(h)) => HighLowMoods::MaxMin(h, l),
     }
 }
 
