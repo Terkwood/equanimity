@@ -1,118 +1,33 @@
 use std::collections::HashMap;
 
-use chrono::NaiveDate;
+use crate::*;
 use chrono::NaiveDateTime;
-
-use crate::{moods::HighLowMoods, *};
-
-// pub fn draw(v: &[MoodReading]) -> String {
-//     let by_day = group_by_day(v);
-
-//     let mut s = String::new();
-//     for mr in by_day {
-//         match mr.0  {
-//             HighLowMoods::Nothing => {},
-//             HighLowMoods::One(mr, eq) => {s.
-//                 push_str(&draw_one(&mr, eq));},
-//             HighLowMoods::MaxMin(max, min,eq) => {
-//                 s.push_str(&draw_one(&max, eq));
-//                 s.push_str(&draw_one(&min, eq));
-//             }
-
-//         }
-
-//     }
-
-//     s
-// }
-
-// /// but it will return two readings on a given day
-// /// if it needs to print both manic and depressive
-// fn group_by_day(v: &[MoodReading]) -> Vec<(HighLowMoods, WithEquanimity)> {
-//     let mut by_day: HashMap<chrono::NaiveDate, (MoodReading, WithEquanimity)> = HashMap::new();
-
-//     for mr in v {
-//         let time = chrono::NaiveDateTime::from_timestamp_millis(mr.epoch_millis as i64);
-//         let date = time.map(|t | t.date());
-//         if let Some(d) = date {
-//             let entry = by_day.entry(d).or_insert(
-//                 (
-//                     mr.clone(),
-//                 (mr.value == 0).into()
-//             ));
-//             let new_eq = if mr.value == 0  {
-//                WithEquanimity::Yes
-//             } else { WithEquanimity::No};
-//         }
-//     }
-//     panic!("group by day");
-// }
-
-// fn draw_one(mr: &MoodReading, with_equanimity: WithEquanimity) -> String {
-//    let s = format!("{}{}{}", depressive_pips(mr), equanimity_pip(mr, with_equanimity == WithEquanimity::Yes), manic_pips(mr) );
-//    s
-// }
-
-// fn equanimity_pip(mr: &MoodReading, with_equanimity: bool) -> String {
-//     if with_equanimity || mr.value == 0 {
-//         "⚪".to_string()
-//     } else {
-//         "⚫".to_string()
-//     }
-// }
-
-// fn manic_pips(mr: &MoodReading) -> String {
-//     let mut s = String::new();
-//     for _ in 0..mr.value.abs() {
-//         s.push_str("🔴");
-//     }
-//     for _ in mr.value.abs()..3 {
-//         s.push_str("⚫");
-//     }
-//     let r = s.chars().rev().collect();
-//     r
-// }
-// fn depressive_pips (mr: &MoodReading) -> String {
-//     let mut s = String::new();
-//     for _ in 0..mr.value.abs() {
-//         s.push_str("🔵");
-//     }
-//     for _ in mr.value.abs()..3 {
-//         s.push_str("⚫");
-//     }
-//     s
-// }
 
 fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
     let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
 
     for mood in v {
-        if let Some(date) = NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t|t.date()) {
+        if let Some(date) =
+            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
+        {
             let list = by_day.entry(date).or_default();
             list.push(mood.value);
 
             list.dedup();
 
             list.sort();
-        }      
-
+        }
     }
- 
+
     by_day
 }
-
-
-
-
-
-
 
 const MANIC_CIRCLE: char = '🔴';
 const DEPRESSED_CIRCLE: char = '🔵';
 const EQUANIMITY_CIRCLE: char = '⚪';
 const EMPTY_CIRCLE: char = '⚫';
 
- fn circles(moods: &[i8]) -> String {
+fn circles(moods: &[i8]) -> String {
     let red = brightest_red(moods);
     let blue = deepest_blue(moods);
     let equanimity = had_equanimity(moods);
@@ -124,7 +39,9 @@ const EMPTY_CIRCLE: char = '⚫';
     );
     let blue_circles = format!(
         "{}{}",
-        EMPTY_CIRCLE.to_string().repeat(3 - (i8::abs(blue) as usize)),
+        EMPTY_CIRCLE
+            .to_string()
+            .repeat(3 - (i8::abs(blue) as usize)),
         DEPRESSED_CIRCLE.to_string().repeat(i8::abs(blue) as usize)
     );
 
@@ -185,7 +102,7 @@ mod tests {
             epoch_millis: 0,
             value: 0,
         };
-        let s = circles(&[mr.value] );
+        let s = circles(&[mr.value]);
         assert_eq!(s, "⚫⚫⚫⚪⚫⚫⚫");
     }
     #[test]
@@ -203,65 +120,10 @@ mod tests {
         let s = circles(&[1, 0]);
         assert_eq!(s, "⚫⚫⚫⚪🔴⚫⚫");
     }
-    
+
     #[test]
     fn test_draw_multi() {
         let s = circles(&[1, 3, -2, -1, 0]);
         assert_eq!(s, "⚫🔵🔵⚪🔴🔴🔴");
     }
-    // #[test]
-    // fn test_draw_one_2() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: 2,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::No);
-    //     assert_eq!(s, "⚫⚫⚫⚫🔴🔴⚫");
-    // }
-    // #[test]
-    // fn test_draw_one_2_a() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: 2,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::Yes);
-    //     assert_eq!(s, "⚫⚫⚫⚪🔴🔴⚫");
-    // }
-
-    // #[test]
-    // fn test_depressive_draw_one_no_eq() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: -1,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::No);
-    //     assert_eq!(s, "⚫⚫🔵⚫⚫⚫⚫");
-    // }
-    // #[test]
-    // fn test_depressive_draw_one_1() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: -1,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::Yes);
-    //     assert_eq!(s, "⚫⚫🔵⚪⚫⚫⚫");
-    // }
-    // #[test]
-    // fn test_depressive_draw_one_2() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: -2,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::No);
-    //     assert_eq!(s, "⚫🔵🔵⚫⚫⚫⚫");
-    // }
-    // #[test]
-    // fn test_depressive_draw_one_2_a() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: -2,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::Yes);
-    //     assert_eq!(s, "⚫🔵🔵⚪⚫⚫⚫");
-    // }
 }
