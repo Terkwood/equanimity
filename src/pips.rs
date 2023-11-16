@@ -1,26 +1,9 @@
 use std::collections::HashMap;
+use std::cmp::max;
+use std::cmp::min;
 
 use crate::*;
 use chrono::NaiveDateTime;
-
-pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
-    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
-
-    for mood in v {
-        if let Some(date) =
-            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
-        {
-            let list = by_day.entry(date).or_default();
-            list.push(mood.value);
-
-            list.dedup();
-
-            list.sort();
-        }
-    }
-
-    by_day
-}
 
 const MANIC_CIRCLE: char = '🔴';
 const DEPRESSED_CIRCLE: char = '🔵';
@@ -55,8 +38,24 @@ pub fn circles(moods: &[i8]) -> String {
     format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
 }
 
-use std::cmp::max;
-use std::cmp::min;
+pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
+    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
+
+    for mood in v {
+        if let Some(date) =
+            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
+        {
+            let list = by_day.entry(date).or_default();
+            list.push(mood.value);
+
+            list.dedup();
+
+            list.sort();
+        }
+    }
+
+    by_day
+}
 
 fn deepest_blue(moods: &[i8]) -> i8 {
     let smallest = moods.iter().reduce(|a, b| min(a, b));
