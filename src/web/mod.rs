@@ -55,7 +55,7 @@ impl Component for Root {
         let storage_state = StorageState::load(&repo);
 
         Self {
-            mode: Mode::Bars,
+            mode: Mode::History,
             repo,
             storage_state,
             show_bars,
@@ -151,7 +151,12 @@ impl Component for Root {
                 />
             },
             Mode::History => html! {
-                <History/>
+                <History
+                    storage_state={self.storage_state.clone()}
+                    show_logs={self.show_logs.as_ref().expect("logs_cb")}
+                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")},
+                    add_text={self.add_text.as_ref().expect("smtcb")}
+                />
             },
         }
     }

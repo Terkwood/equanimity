@@ -131,18 +131,28 @@ impl Component for History {
     }
 
     fn view(&self) -> Html {
-        let rms = moods::recent(
-            &self.props.storage_state.mood_readings,
-            utc_now(),
-            js_local_datetime,
-        );
+        // let rms = moods::recent(
+        //     &self.props.storage_state.mood_readings,
+        //     utc_now(),
+        //     js_local_datetime,
+        // );
         html! {
             <div>
                 { self.render_top_view() }
                 { if self.show_history { html! {
                     <>
-                      { "IMAGINE HISTORY HERE" }
+                    <br/>
+                    {  
+                        pips::circles(
+                            &self.props.storage_state.mood_readings
+                             .iter()
+                             .map(|mood| mood.value)
+                             .collect::<Vec<i8>>()
+                        )
+                    }
+                    
                     </>
+                      
                 }} else {
                     html!{ <></> }
                 }}
