@@ -55,7 +55,7 @@ impl Component for Root {
         let storage_state = StorageState::load(&repo);
 
         Self {
-            mode: Mode::History,
+            mode: Mode::Bars,
             repo,
             storage_state,
             show_bars,
