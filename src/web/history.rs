@@ -136,7 +136,7 @@ impl Component for History {
                 { if self.show_history { html! {
                     <>
                     <br/>
-                    {  
+                    {
                         pips::group_by_day(&self.props.storage_state.mood_readings).iter().map(|(day, readings)| {
                             html! {
                                 <>
@@ -149,9 +149,9 @@ impl Component for History {
                             }
                          }).collect::<Html>()
                     }
-                    
+
                     </>
-                      
+
                 }} else {
                     html!{ <></> }
                 }}
@@ -242,4 +242,3 @@ fn text_entry_button_class(top_view: &HistoryTopView) -> &'static str {
         _ => TEXT_ENTRY_BUTTON_DEFAULT,
     }
 }
- 
