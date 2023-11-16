@@ -16,6 +16,7 @@ pub struct Root {
     storage_state: StorageState,
     show_bars: Option<Callback<()>>,
     show_logs: Option<Callback<()>>,
+    show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
@@ -43,6 +44,8 @@ impl Component for Root {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let show_bars = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Bars)));
         let show_logs = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+
+        let show_history = Some(link.callback(|()| RootMsg::SwitchMode(Mode::History)));
         let add_text = Some(link.callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
         let add_mood_reading =
             Some(link.callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));
@@ -55,11 +58,12 @@ impl Component for Root {
         let storage_state = StorageState::load(&repo);
 
         Self {
-            mode: Mode::Bars,
+            mode: Mode::History,
             repo,
             storage_state,
             show_bars,
             show_logs,
+            show_history,
             add_mood_reading,
             add_text,
             replace_texts,
@@ -146,6 +150,7 @@ impl Component for Root {
                 <Logs
                     storage_state={self.storage_state.clone()}
                     show_bars={self.show_bars.as_ref().expect("bars_cb")}
+                    show_history={self.show_history.as_ref().expect("history cb")},
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />

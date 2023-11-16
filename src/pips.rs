@@ -1,26 +1,9 @@
+use std::cmp::max;
+use std::cmp::min;
 use std::collections::HashMap;
 
 use crate::*;
 use chrono::NaiveDateTime;
-
-pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
-    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
-
-    for mood in v {
-        if let Some(date) =
-            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
-        {
-            let list = by_day.entry(date).or_default();
-            list.push(mood.value);
-
-            list.dedup();
-
-            list.sort();
-        }
-    }
-
-    by_day
-}
 
 const MANIC_CIRCLE: char = '🔴';
 const DEPRESSED_CIRCLE: char = '🔵';
@@ -55,8 +38,31 @@ pub fn circles(moods: &[i8]) -> String {
     format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
 }
 
-use std::cmp::max;
-use std::cmp::min;
+pub fn day_label(day: &chrono::NaiveDate) -> String {
+    day.format("  %a %b %e  ").to_string()
+}
+
+pub fn group_by_day(v: &[MoodReading]) -> Vec<(chrono::NaiveDate, Vec<i8>)> {
+    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
+
+    for mood in v {
+        if let Some(date) =
+            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
+        {
+            let list = by_day.entry(date).or_default();
+            list.push(mood.value);
+
+            list.dedup();
+
+            list.sort();
+        }
+    }
+
+    let mut output = by_day.into_iter().collect::<Vec<_>>();
+    output.sort();
+    output.reverse();
+    output
+}
 
 fn deepest_blue(moods: &[i8]) -> i8 {
     let smallest = moods.iter().reduce(|a, b| min(a, b));
@@ -95,6 +101,43 @@ fn had_equanimity(moods: &[i8]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_group_by_date() {
+        let mrs = vec![
+            MoodReading {
+                epoch_millis: 0,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 999999999,
+                value: 0,
+            },
+        ];
+
+        let by_day = group_by_day(&mrs);
+        assert_eq!(by_day.len(), 2);
+    }
+    #[test]
+    fn test_group_by_date_2() {
+        let mrs = vec![
+            MoodReading {
+                epoch_millis: 0,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 999999999,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 7999999999,
+                value: 0,
+            },
+        ];
+
+        let by_day = group_by_day(&mrs);
+        assert_eq!(by_day.len(), 3);
+    }
 
     #[test]
     fn test_draw_one() {
