@@ -179,24 +179,30 @@ fn had_equanimity(moods: &[i8]) -> bool {
 mod tests {
     use super::*;
 
-    // #[test]
-    // fn test_draw_one() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: 0,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::Yes);
-    //     assert_eq!(s, "⚫⚫⚫⚪⚫⚫⚫");
-    // }
-    // #[test]
-    // fn test_draw_one_no_eq() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: 1,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::No);
-    //     assert_eq!(s, "⚫⚫⚫⚫🔴⚫⚫");
-    // }
+    #[test]
+    fn test_draw_one() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: 0,
+        };
+        let s = circles(&[mr.value] );
+        assert_eq!(s, "⚫⚫⚫⚪⚫⚫⚫");
+    }
+    #[test]
+    fn test_draw_one_no_eq() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: 1,
+        };
+        let s = circles(&[mr.value]);
+        assert_eq!(s, "⚫⚫⚫⚫🔴⚫⚫");
+    }
+
+    #[test]
+    fn test_draw_one_with_eq() {
+        let s = circles(&[1, 0]);
+        assert_eq!(s, "⚫⚫⚫⚪🔴⚫⚫");
+    }
     // #[test]
     // fn test_draw_one_1() {
     //     let mr = MoodReading {
