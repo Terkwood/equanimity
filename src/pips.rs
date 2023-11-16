@@ -43,7 +43,7 @@ pub fn day_label(day: &chrono::NaiveDate) -> String {
     day.format("  %a %b %e  ").to_string()
 }
 
-pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
+pub fn group_by_day(v: &[MoodReading]) -> Vec<(chrono::NaiveDate, Vec<i8>)> {
     let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
 
     for mood in v {
@@ -59,7 +59,9 @@ pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
         }
     }
 
-    by_day
+    let mut output = by_day.into_iter().collect::<Vec<_>>();
+    output.sort();
+    output
 }
 
 fn deepest_blue(moods: &[i8]) -> i8 {
