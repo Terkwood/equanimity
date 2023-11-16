@@ -124,8 +124,8 @@ const EMPTY_CIRCLE: char = '⚫';
     );
     let blue_circles = format!(
         "{}{}",
-        EMPTY_CIRCLE.to_string().repeat(3 - (blue as usize)),
-        DEPRESSED_CIRCLE.to_string().repeat(blue as usize)
+        EMPTY_CIRCLE.to_string().repeat(3 - (i8::abs(blue) as usize)),
+        DEPRESSED_CIRCLE.to_string().repeat(i8::abs(blue) as usize)
     );
 
     // define a string which shows EQUANIMITY_CIRCLE if equanimity is true, otherwise EMPTY_CIRCLE
