@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::*;
 use chrono::NaiveDateTime;
 
-fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
+pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
     let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
 
     for mood in v {

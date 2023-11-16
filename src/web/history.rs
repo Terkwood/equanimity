@@ -1,6 +1,5 @@
-use super::{web::utc_now, StorageState};
+use super::StorageState;
 use crate::*;
-use web::time::js_local_datetime;
 
 pub struct History {
     link: ComponentLink<Self>,
@@ -138,18 +137,17 @@ impl Component for History {
                     <>
                     <br/>
                     {  
-                        // TODO THIS SHOULD BE A GROUP BY DAY
-                        // SORT OF THING, AND THEN EMIT 
-                        // A NEW HTML CHUNK FOR EACH LINE
-                        // 
-                        // RIGHT NOW THERE IS NO GROUPING !
-                        // ALL DAYS ARE TAKEN FOR ONE CALL OF CIRCLES!
-                        pips::circles(
-                            &self.props.storage_state.mood_readings
-                             .iter()
-                             .map(|mood| mood.value)
-                             .collect::<Vec<i8>>()
-                        )
+                        pips::group_by_day(&self.props.storage_state.mood_readings).iter().map(|(day, readings)| {
+                            html! {
+                                <>
+                                    <div class="day-container">
+                                        <div class="day-content">
+                                            { pips::circles(&readings) }
+                                        </div>
+                                    </div>
+                                </>
+                            }
+                         }).collect::<Html>()
                     }
                     
                     </>
@@ -244,34 +242,4 @@ fn text_entry_button_class(top_view: &HistoryTopView) -> &'static str {
         _ => TEXT_ENTRY_BUTTON_DEFAULT,
     }
 }
-
-fn render_mood(r: &MoodReading) -> Html {
-    let value = r.value;
-    html! {
-        <>
-            { crate::pips::circles(&[r.value]) }
-        </>
-    }
-}
-
-fn render_mood_date(r: &MoodReading) -> Html {
-    let dt = js_local_datetime(r.epoch_millis);
-    let date_string = dt.format("%m/%d").to_string();
-    html! {
-        <>
-            <div class="date">{ date_string }</div>
-        </>
-    }
-}
-
-fn class_from(value: i8, position: i8) -> String {
-    if position == 0 {
-        "neutral".to_string()
-    } else if position > 0 && value >= position {
-        format!("hot{}", position)
-    } else if position < 0 && value <= position {
-        format!("cold{}", position.abs())
-    } else {
-        "nocolor".to_string()
-    }
-}
+ 

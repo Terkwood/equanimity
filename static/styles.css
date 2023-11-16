@@ -161,3 +161,10 @@ textarea {
   text-align: center;
   font-size: 4vw;
 }
+
+.day-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.day-content {}
