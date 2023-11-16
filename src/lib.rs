@@ -3,9 +3,9 @@ extern crate serde_derive;
 extern crate serde_json;
 
 mod moods;
+mod pips;
 mod repo;
 mod web;
-mod pips;
 
 use serde_derive::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;

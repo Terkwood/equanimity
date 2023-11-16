@@ -41,7 +41,7 @@ pub fn recent(
 }
 
 #[derive(Debug, PartialEq)]
-enum HighLowMoods {
+pub enum HighLowMoods {
     Nothing,
     One(MoodReading),
     MaxMin(MoodReading, MoodReading),

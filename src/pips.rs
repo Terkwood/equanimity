@@ -1,55 +1,95 @@
+use std::collections::HashMap;
+
 use crate::*;
+use chrono::NaiveDateTime;
 
-pub fn draw(v: &[MoodReading]) -> String {
-    let by_day = group_by_day(v);
-    
-    let mut s = String::new();
-    for mr in by_day {
-        s.push_str(&draw_one(&mr));
+fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
+    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
+
+    for mood in v {
+        if let Some(date) =
+            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
+        {
+            let list = by_day.entry(date).or_default();
+            list.push(mood.value);
+
+            list.dedup();
+
+            list.sort();
+        }
     }
 
-    s
+    by_day
 }
 
-/// but it will return two readings on a given day
-/// if it needs to print both manic and depressive
-fn group_by_day(v: &[MoodReading]) -> Vec<MoodReading> {
-    panic!("group by day");
-}
+const MANIC_CIRCLE: char = '🔴';
+const DEPRESSED_CIRCLE: char = '🔵';
+const EQUANIMITY_CIRCLE: char = '⚪';
+const EMPTY_CIRCLE: char = '⚫';
 
-fn draw_one(mr: &MoodReading) -> String {
-   let s = format!("{}{}{}", manic_pips(mr), equanimity_pip(mr), depressive_pips(mr));
-   s
-}
+fn circles(moods: &[i8]) -> String {
+    let red = brightest_red(moods);
+    let blue = deepest_blue(moods);
+    let equanimity = had_equanimity(moods);
 
-fn equanimity_pip(mr: &MoodReading) -> String {
-    if mr.value == 0 {
-        "⚪".to_string()
+    let red_circles = format!(
+        "{}{}",
+        MANIC_CIRCLE.to_string().repeat(red as usize),
+        EMPTY_CIRCLE.to_string().repeat(3 - red as usize)
+    );
+    let blue_circles = format!(
+        "{}{}",
+        EMPTY_CIRCLE
+            .to_string()
+            .repeat(3 - (i8::abs(blue) as usize)),
+        DEPRESSED_CIRCLE.to_string().repeat(i8::abs(blue) as usize)
+    );
+
+    // define a string which shows EQUANIMITY_CIRCLE if equanimity is true, otherwise EMPTY_CIRCLE
+    let equanimity_circle = if equanimity {
+        EQUANIMITY_CIRCLE
     } else {
-        "⚫".to_string()
+        EMPTY_CIRCLE
+    };
+
+    format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
+}
+
+use std::cmp::max;
+use std::cmp::min;
+
+fn deepest_blue(moods: &[i8]) -> i8 {
+    let smallest = moods.iter().reduce(|a, b| min(a, b));
+    if let Some(sm) = smallest {
+        if *sm < 1 {
+            *sm
+        } else {
+            0
+        }
+    } else {
+        0
     }
 }
 
-fn manic_pips(mr: &MoodReading) -> String {
-    let mut s = String::new();
-    for _ in 0..mr.value.abs() {
-        s.push_str("🔴");
+fn brightest_red(moods: &[i8]) -> i8 {
+    let largest = moods.iter().reduce(|a, b| max(a, b));
+    if let Some(l) = largest {
+        if *l > -1 {
+            *l
+        } else {
+            0
+        }
+    } else {
+        0
     }
-    for _ in mr.value.abs()..3 {
-        s.push_str("⚫");
-    }
-    let r = s.chars().rev().collect();
-    r
 }
-fn depressive_pips (mr: &MoodReading) -> String {
-    let mut s = String::new();
-    for _ in 0..mr.value.abs() {
-        s.push_str("🔵");
-    }
-    for _ in mr.value.abs()..3 {
-        s.push_str("⚫");
-    }
-    s
+
+fn had_equanimity(moods: &[i8]) -> bool {
+    moods
+        .iter()
+        .find(|mood| **mood == 0)
+        .map(|_| true)
+        .unwrap_or(false)
 }
 
 #[cfg(test)]
@@ -62,7 +102,28 @@ mod tests {
             epoch_millis: 0,
             value: 0,
         };
-        let s = draw_one(&mr);
+        let s = circles(&[mr.value]);
         assert_eq!(s, "⚫⚫⚫⚪⚫⚫⚫");
+    }
+    #[test]
+    fn test_draw_one_no_eq() {
+        let mr = MoodReading {
+            epoch_millis: 0,
+            value: 1,
+        };
+        let s = circles(&[mr.value]);
+        assert_eq!(s, "⚫⚫⚫⚫🔴⚫⚫");
+    }
+
+    #[test]
+    fn test_draw_one_with_eq() {
+        let s = circles(&[1, 0]);
+        assert_eq!(s, "⚫⚫⚫⚪🔴⚫⚫");
+    }
+
+    #[test]
+    fn test_draw_multi() {
+        let s = circles(&[1, 3, -2, -1, 0]);
+        assert_eq!(s, "⚫🔵🔵⚪🔴🔴🔴");
     }
 }
