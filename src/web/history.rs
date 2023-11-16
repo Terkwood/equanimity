@@ -131,11 +131,6 @@ impl Component for History {
     }
 
     fn view(&self) -> Html {
-        // let rms = moods::recent(
-        //     &self.props.storage_state.mood_readings,
-        //     utc_now(),
-        //     js_local_datetime,
-        // );
         html! {
             <div>
                 { self.render_top_view() }
