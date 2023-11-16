@@ -43,6 +43,8 @@ impl Component for Root {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let show_bars = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Bars)));
         let show_logs = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+
+        let show_history = Some(link.callback(|()| RootMsg::SwitchMode(Mode::History)));
         let add_text = Some(link.callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
         let add_mood_reading =
             Some(link.callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));

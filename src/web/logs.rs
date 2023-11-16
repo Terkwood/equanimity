@@ -12,7 +12,7 @@ pub struct Logs {
 }
 
 pub enum LogsMsg {
-    ShowBars,
+    ShowMain,
     ToggleDeleteMode,
     ToggleAboutMode,
     Delete(Entry),
@@ -84,7 +84,7 @@ impl Component for Logs {
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            LogsMsg::ShowBars => {
+            LogsMsg::ShowMain => {
                 self.props.show_bars.emit(());
                 false
             }
