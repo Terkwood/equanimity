@@ -143,6 +143,12 @@ impl Component for History {
                     <>
                     <br/>
                     {  
+                        // TODO THIS SHOULD BE A GROUP BY DAY
+                        // SORT OF THING, AND THEN EMIT 
+                        // A NEW HTML CHUNK FOR EACH LINE
+                        // 
+                        // RIGHT NOW THERE IS NO GROUPING !
+                        // ALL DAYS ARE TAKEN FOR ONE CALL OF CIRCLES!
                         pips::circles(
                             &self.props.storage_state.mood_readings
                              .iter()
