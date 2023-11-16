@@ -61,6 +61,7 @@ pub fn group_by_day(v: &[MoodReading]) -> Vec<(chrono::NaiveDate, Vec<i8>)> {
 
     let mut output = by_day.into_iter().collect::<Vec<_>>();
     output.sort();
+    output.reverse();
     output
 }
 
