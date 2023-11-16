@@ -38,6 +38,11 @@ pub fn circles(moods: &[i8]) -> String {
     format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
 }
 
+
+pub fn day_label(day: &chrono::NaiveDate) -> String {
+    day.format("  %a %b %e  ").to_string()
+}
+
 pub fn group_by_day(v: &[MoodReading]) -> HashMap<chrono::NaiveDate, Vec<i8>> {
     let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
 
@@ -70,6 +75,7 @@ fn deepest_blue(moods: &[i8]) -> i8 {
     }
 }
 
+
 fn brightest_red(moods: &[i8]) -> i8 {
     let largest = moods.iter().reduce(|a, b| max(a, b));
     if let Some(l) = largest {
@@ -94,6 +100,17 @@ fn had_equanimity(moods: &[i8]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_group_by_date() {
+        let mrs = vec![
+            MoodReading { epoch_millis: 0, value: 0 },
+            MoodReading { epoch_millis: 999999999, value: 0 }
+        ];
+
+        let by_day = group_by_day(&mrs);
+        assert_eq!(by_day.len(), 2);
+    }
 
     #[test]
     fn test_draw_one() {

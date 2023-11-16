@@ -142,6 +142,7 @@ impl Component for History {
                                 <>
                                     <div class="day-container">
                                         <div class="day-content">
+                                            { pips::day_label(day) }
                                             { pips::circles(&readings) }
                                             { pips::day_label(day) }
                                         </div>
