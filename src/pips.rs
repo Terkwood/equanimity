@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use std::cmp::max;
 use std::cmp::min;
+use std::collections::HashMap;
 
 use crate::*;
 use chrono::NaiveDateTime;
@@ -37,7 +37,6 @@ pub fn circles(moods: &[i8]) -> String {
 
     format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
 }
-
 
 pub fn day_label(day: &chrono::NaiveDate) -> String {
     day.format("  %a %b %e  ").to_string()
@@ -78,7 +77,6 @@ fn deepest_blue(moods: &[i8]) -> i8 {
     }
 }
 
-
 fn brightest_red(moods: &[i8]) -> i8 {
     let largest = moods.iter().reduce(|a, b| max(a, b));
     if let Some(l) = largest {
@@ -107,18 +105,34 @@ mod tests {
     #[test]
     fn test_group_by_date() {
         let mrs = vec![
-            MoodReading { epoch_millis: 0, value: 0 },
-            MoodReading { epoch_millis: 999999999, value: 0 }
+            MoodReading {
+                epoch_millis: 0,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 999999999,
+                value: 0,
+            },
         ];
 
         let by_day = group_by_day(&mrs);
         assert_eq!(by_day.len(), 2);
-    }#[test]
+    }
+    #[test]
     fn test_group_by_date_2() {
         let mrs = vec![
-            MoodReading { epoch_millis: 0, value: 0 },
-            MoodReading { epoch_millis: 999999999, value: 0 },
-            MoodReading { epoch_millis: 7999999999, value: 0 }
+            MoodReading {
+                epoch_millis: 0,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 999999999,
+                value: 0,
+            },
+            MoodReading {
+                epoch_millis: 7999999999,
+                value: 0,
+            },
         ];
 
         let by_day = group_by_day(&mrs);
