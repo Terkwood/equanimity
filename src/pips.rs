@@ -203,15 +203,12 @@ mod tests {
         let s = circles(&[1, 0]);
         assert_eq!(s, "⚫⚫⚫⚪🔴⚫⚫");
     }
-    // #[test]
-    // fn test_draw_one_1() {
-    //     let mr = MoodReading {
-    //         epoch_millis: 0,
-    //         value: 1,
-    //     };
-    //     let s = draw_one(&mr, WithEquanimity::Yes);
-    //     assert_eq!(s, "⚫⚫⚫⚪🔴⚫⚫");
-    // }
+    
+    #[test]
+    fn test_draw_multi() {
+        let s = circles(&[1, 3, -2, -1, 0]);
+        assert_eq!(s, "⚫🔵🔵⚪🔴🔴🔴");
+    }
     // #[test]
     // fn test_draw_one_2() {
     //     let mr = MoodReading {
