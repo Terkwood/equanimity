@@ -16,6 +16,7 @@ pub struct Root {
     storage_state: StorageState,
     show_bars: Option<Callback<()>>,
     show_logs: Option<Callback<()>>,
+    show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
@@ -62,6 +63,7 @@ impl Component for Root {
             storage_state,
             show_bars,
             show_logs,
+            show_history,
             add_mood_reading,
             add_text,
             replace_texts,
@@ -148,6 +150,7 @@ impl Component for Root {
                 <Logs
                     storage_state={self.storage_state.clone()}
                     show_bars={self.show_bars.as_ref().expect("bars_cb")}
+                    show_history={self.show_history.as_ref().expect("history cb")},
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />

@@ -12,7 +12,8 @@ pub struct Logs {
 }
 
 pub enum LogsMsg {
-    ShowMain,
+    ShowBars,
+    ShowHistory,
     ToggleDeleteMode,
     ToggleAboutMode,
     Delete(Entry),
@@ -28,6 +29,7 @@ pub enum LogsMode {
 #[derive(Properties, Clone, PartialEq)]
 pub struct LogsProps {
     pub show_bars: Callback<()>,
+    pub show_history: Callback<()>,
     pub storage_state: StorageState,
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
     pub replace_mood_readings: Callback<Vec<MoodReading>>,
@@ -84,8 +86,12 @@ impl Component for Logs {
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            LogsMsg::ShowMain => {
+            LogsMsg::ShowBars => {
                 self.props.show_bars.emit(());
+                false
+            }
+            LogsMsg::ShowHistory => {
+                self.props.show_history.emit(());
                 false
             }
             LogsMsg::ToggleDeleteMode => {
@@ -227,6 +233,10 @@ impl Component for Logs {
                     </div>
                     <div class="center">
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Bars 📊"}</button>
+                    </div>
+
+                    <div class="center">
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴"}</button>
                     </div>
                 </div>
                 <ul>
