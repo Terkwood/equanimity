@@ -27,7 +27,7 @@ const DEPRESSED_CIRCLE: char = '🔵';
 const EQUANIMITY_CIRCLE: char = '⚪';
 const EMPTY_CIRCLE: char = '⚫';
 
-fn circles(moods: &[i8]) -> String {
+pub fn circles(moods: &[i8]) -> String {
     let red = brightest_red(moods);
     let blue = deepest_blue(moods);
     let equanimity = had_equanimity(moods);
