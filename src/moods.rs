@@ -9,10 +9,10 @@ pub fn recent(
     right_now_ms: u64,
     local_datetime: fn(u64) -> DateTime<FixedOffset>,
 ) -> Vec<MoodReading> {
-    let grouped = group_by(mrs, |mr| local_datetime(mr.epoch_millis).date());
+    let grouped = group_by(mrs, |mr| local_datetime(mr.epoch_millis).date_naive());
 
     let cutoff =
-        local_datetime(right_now_ms).date() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
+        local_datetime(right_now_ms).date_naive() - chrono::Duration::days(DAYS_TO_DISPLAY as i64);
 
     let recent_grouped = grouped.iter().filter(|(date, _)| date > &cutoff);
 
@@ -79,8 +79,9 @@ mod test {
 
     const LOCAL_OFFSET_SECONDS: i32 = 240;
     fn fake_local_datetime(epoch_millis_utc: u64) -> DateTime<FixedOffset> {
-        let offset = FixedOffset::west(LOCAL_OFFSET_SECONDS);
-        Utc.timestamp_millis(epoch_millis_utc as i64)
+        let offset = FixedOffset::west_opt(LOCAL_OFFSET_SECONDS).expect("fixed offset");
+        Utc.timestamp_millis_opt(epoch_millis_utc as i64)
+            .unwrap()
             .with_timezone(&offset)
     }
 
