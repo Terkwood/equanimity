@@ -217,7 +217,7 @@ impl History {
                             </textarea>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Cancel 🚫" }</button>
+                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Exit 🚫" }</button>
                         </div>
                         <div class="center">
                             <button class=button_class onclick=self.link.callback(|_| HistoryMsg::SubmitSleep)>{ "Sleep 😴" }</button>
