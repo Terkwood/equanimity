@@ -4,9 +4,9 @@ use chrono::prelude::*;
 /// If this software were open-sourced, we'd want to make
 /// this usable for individuals in the eastern hemisphere.
 pub fn js_local_datetime(epoch_millis_utc: u64) -> DateTime<FixedOffset> {
-    let offset = FixedOffset::west(local_offset_seconds());
-    Utc.timestamp_millis(epoch_millis_utc as i64)
-        .with_timezone(&offset)
+    let offset = FixedOffset::west_opt(local_offset_seconds()).expect("offset");
+    Utc.timestamp_millis_opt(epoch_millis_utc as i64)
+        .unwrap().with_timezone(&offset)
 }
 
 pub fn utc_now() -> u64 {
