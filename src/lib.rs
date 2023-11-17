@@ -2,7 +2,6 @@
 extern crate serde_derive;
 extern crate serde_json;
 
-mod moods;
 mod pips;
 mod repo;
 mod web;
