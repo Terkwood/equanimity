@@ -39,7 +39,12 @@ pub fn circles(moods: &[i8]) -> String {
 }
 
 pub fn day_label(day: &chrono::NaiveDate) -> String {
-    day.format("  %a %b %e  ").to_string()
+    day.format(" %m-%d ").to_string()
+}
+
+const NBSP: char = '\u{00a0}';
+pub fn blank_label() -> String {
+    [NBSP; 7].iter().collect::<String>()
 }
 
 pub fn group_by_day(v: &[MoodReading]) -> Vec<(chrono::NaiveDate, Vec<i8>)> {
