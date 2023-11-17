@@ -12,7 +12,6 @@ pub struct Logs {
 }
 
 pub enum LogsMsg {
-    ShowBars,
     ShowHistory,
     ToggleDeleteMode,
     ToggleAboutMode,
@@ -28,7 +27,6 @@ pub enum LogsMode {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct LogsProps {
-    pub show_bars: Callback<()>,
     pub show_history: Callback<()>,
     pub storage_state: StorageState,
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
@@ -69,6 +67,7 @@ const EXPORT_BUTTON_CSS_ID: &str = "exportbutton";
 const EXPORT_LINK_CSS_CLASS: &str = "download";
 const EXPORT_FILE_PREFIX: &str = "equanimity";
 
+
 impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
@@ -86,10 +85,6 @@ impl Component for Logs {
     }
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            LogsMsg::ShowBars => {
-                self.props.show_bars.emit(());
-                false
-            }
             LogsMsg::ShowHistory => {
                 self.props.show_history.emit(());
                 false
@@ -232,11 +227,7 @@ impl Component for Logs {
                         { export_button }
                     </div>
                     <div class="center">
-                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowBars)>{ "Bars 📊"}</button>
-                    </div>
-
-                    <div class="center">
-                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴"}</button>
+                        <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
                     </div>
                 </div>
                 <ul>
