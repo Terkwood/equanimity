@@ -1,11 +1,9 @@
 mod about;
-pub mod bars;
 mod history;
 pub mod logs;
 pub mod time;
 
 use crate::*;
-use bars::Bars;
 use history::History;
 use logs::Logs;
 use repo::YewRepo;
@@ -14,7 +12,6 @@ pub struct Root {
     mode: Mode,
     repo: YewRepo,
     storage_state: StorageState,
-    show_bars: Option<Callback<()>>,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
@@ -25,7 +22,6 @@ pub struct Root {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Mode {
-    Bars,
     Logs,
     History,
 }
@@ -42,7 +38,6 @@ impl Component for Root {
     type Message = RootMsg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let show_bars = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Bars)));
         let show_logs = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Logs)));
 
         let show_history = Some(link.callback(|()| RootMsg::SwitchMode(Mode::History)));
@@ -61,7 +56,6 @@ impl Component for Root {
             mode: Mode::History,
             repo,
             storage_state,
-            show_bars,
             show_logs,
             show_history,
             add_mood_reading,
@@ -138,18 +132,9 @@ impl Component for Root {
     }
     fn view(&self) -> Html {
         match self.mode {
-            Mode::Bars => html! {
-                <Bars
-                    storage_state={self.storage_state.clone()}
-                    show_logs={self.show_logs.as_ref().expect("logs_cb")}
-                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")},
-                    add_text={self.add_text.as_ref().expect("smtcb")}
-                />
-            },
             Mode::Logs => html! {
                 <Logs
                     storage_state={self.storage_state.clone()}
-                    show_bars={self.show_bars.as_ref().expect("bars_cb")}
                     show_history={self.show_history.as_ref().expect("history cb")},
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
