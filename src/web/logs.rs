@@ -1,7 +1,7 @@
 use super::about;
+use super::time::js_utc_datetime;
 use super::StorageState;
 use crate::*;
-use web::time::js_local_datetime;
 use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
@@ -249,7 +249,7 @@ impl Component for Logs {
 
 impl Logs {
     fn render_entry(&self, e: Entry, logs_mode: LogsMode) -> Html {
-        let dt = js_local_datetime(e.timestamp());
+        let dt = js_utc_datetime(e.timestamp());
         let date_string = dt.format("%m/%d %R").to_string();
         match e {
             Entry::Mood(MoodReading {

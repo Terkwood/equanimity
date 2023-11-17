@@ -1,6 +1,6 @@
 use super::{web::utc_now, StorageState};
 use crate::*;
-use web::time::js_local_datetime;
+use web::time::js_utc_datetime;
 
 pub struct Bars {
     link: ComponentLink<Self>,
@@ -134,7 +134,7 @@ impl Component for Bars {
         let rms = moods::recent(
             &self.props.storage_state.mood_readings,
             utc_now(),
-            js_local_datetime,
+            js_utc_datetime,
         );
         html! {
             <div>
@@ -256,7 +256,7 @@ fn render_mood_bar(r: &MoodReading) -> Html {
 }
 
 fn render_mood_date(r: &MoodReading) -> Html {
-    let dt = js_local_datetime(r.epoch_millis);
+    let dt = js_utc_datetime(r.epoch_millis);
     let date_string = dt.format("%m/%d").to_string();
     html! {
         <>

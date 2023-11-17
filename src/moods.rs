@@ -1,5 +1,5 @@
 use crate::*;
-use chrono::prelude::{DateTime, FixedOffset};
+use chrono::prelude::{DateTime, Utc};
 use group_by::group_by;
 
 const DAYS_TO_DISPLAY: u8 = 14;
@@ -7,7 +7,7 @@ const DAYS_TO_DISPLAY: u8 = 14;
 pub fn recent(
     mrs: &[MoodReading],
     right_now_ms: u64,
-    local_datetime: fn(u64) -> DateTime<FixedOffset>,
+    local_datetime: fn(u64) -> DateTime<Utc>,
 ) -> Vec<MoodReading> {
     let grouped = group_by(mrs, |mr| local_datetime(mr.epoch_millis).date_naive());
 
@@ -152,7 +152,7 @@ mod test {
             exp03_b,
         ];
 
-        let actual = recent(&convoluted, right_now, fake_local_datetime);
+        let actual = recent(&convoluted, right_now, web::time::js_utc_datetime);
 
         let mut last_timestamp = 0;
         for a in &actual {
@@ -190,7 +190,7 @@ mod test {
             });
         }
 
-        let result = recent(&many_dup_vals, right_now, fake_local_datetime);
+        let result = recent(&many_dup_vals, right_now, web::time::js_utc_datetime);
         assert_eq!(10, result.len());
     }
 
@@ -529,7 +529,7 @@ mod test {
 
         let right_now = Utc::now().timestamp_millis() as u64;
 
-        let actual = recent(&bunches, right_now, fake_local_datetime);
+        let actual = recent(&bunches, right_now, web::time::js_utc_datetime);
 
         let mut actual_local_dates: Vec<String> = actual
             .iter()
