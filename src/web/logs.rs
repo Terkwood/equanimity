@@ -67,7 +67,6 @@ const EXPORT_BUTTON_CSS_ID: &str = "exportbutton";
 const EXPORT_LINK_CSS_CLASS: &str = "download";
 const EXPORT_FILE_PREFIX: &str = "equanimity";
 
-
 impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
