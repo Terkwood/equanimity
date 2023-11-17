@@ -6,7 +6,8 @@ use chrono::prelude::*;
 pub fn js_local_datetime(epoch_millis_utc: u64) -> DateTime<FixedOffset> {
     let offset = FixedOffset::west_opt(local_offset_seconds()).expect("offset");
     Utc.timestamp_millis_opt(epoch_millis_utc as i64)
-        .unwrap().with_timezone(&offset)
+        .unwrap()
+        .with_timezone(&offset)
 }
 
 pub fn utc_now() -> u64 {
