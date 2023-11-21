@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/Terkwood/equanimity/compare/v1.1.0...v1.1.1) (2023-11-21)
+
+
+### Bug Fixes
+
+* **build:** bump rust edition ([6b3f86b](https://github.com/Terkwood/equanimity/commit/6b3f86be8d57fd750d5943d282ee956ddb5d9572))
+* shrink log entries ([14ae4e0](https://github.com/Terkwood/equanimity/commit/14ae4e0f251ef667194764ee99cb429d01243790))
+* trim lies from comments! ([f316a58](https://github.com/Terkwood/equanimity/commit/f316a58648c4eaa9e73e49e54b40a0c020d9b4b6))
+
 ## [1.1.0](https://github.com/Terkwood/equanimity/compare/v1.0.0...v1.1.0) (2023-11-21)
 
 
