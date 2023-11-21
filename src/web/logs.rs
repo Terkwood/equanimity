@@ -229,7 +229,7 @@ impl Component for Logs {
                         <button class="thick" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
                     </div>
                 </div>
-                <ul>
+                <ul id="logentries">
                     { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
             </> }
