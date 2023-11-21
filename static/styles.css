@@ -102,6 +102,7 @@ textarea {
 
 #logentries {
   font-family: "Monaspace Argon", monospace !important;
+  font-size: 4vw;
 }
 
 #logsbuttongrid {
