@@ -136,21 +136,21 @@ impl Component for History {
                 { if self.show_history { html! {
                     <>
                     <br/>
-                    <div id="pips">
+                    <>
                     {
                         pips::group_by_day(&self.props.storage_state.mood_readings).iter().map(|(day, readings)| {
                             html! {
                                 <>
                                     <div class="day-container">
-                                        { pips::blank_label() }
-                                        { pips::circles(&readings) }
-                                        { pips::day_label(day) }
+                                        <div class="piplabel">{ pips::blank_label() }</div>
+                                        <div class="pips">{ pips::circles(&readings) }</div>
+                                        <div class="piplabel">{ pips::day_label(day) }</div>
                                     </div>
                                 </>
                             }
                          }).collect::<Html>()
                     }
-                    </div>
+                    </>
 
                     </>
 

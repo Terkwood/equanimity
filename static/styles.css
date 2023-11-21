@@ -6,8 +6,13 @@ body {
 
 }
 
-#pips {
+.pips {
   font-size: 6.5vw;
+  font-family: "Monaspace Argon", monospace !important;
+}
+
+.piplabels {
+  font-size: 5vw;
   font-family: "Monaspace Argon", monospace !important;
 }
 
