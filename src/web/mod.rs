@@ -9,7 +9,7 @@ use history::History;
 use logs::Logs;
 pub struct Root {
     mode: Mode,
-    storage_state: LocalStorage,
+    storage_state: StorageState,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
@@ -51,7 +51,6 @@ impl Component for Root {
 
         Self {
             mode: Mode::History,
-            storage_state,
             show_logs,
             show_history,
             add_mood_reading,
@@ -67,11 +66,10 @@ impl Component for Root {
                 self.mode = new_mode;
                 self.mode != old
             }
-            RootMsg::AddText(TextType::Sleep, text) => {
-                self.storage_state
-                    .sleep_entries
-                    .push(TextSubmission::new(text));
+            RootMsg::AddText(TextType::Sleep, text) => { 
+                self.storage_state.sleep_entries.push(TextSubmission::new(text));
 
+            
                 repo::save_text(TextType::Sleep, &self.storage_state.sleep_entries)
                     .expect("save sleep");
 
@@ -79,30 +77,25 @@ impl Component for Root {
             }
             RootMsg::AddText(TextType::Meds, text) => {
                 self.storage_state.meds.push(TextSubmission::new(text));
-                self.repo
-                    .save_text(TextType::Meds, &self.storage_state.meds)
+                repo::save_text(TextType::Meds, &self.storage_state.meds)
                     .expect("save meds");
                 true
             }
             RootMsg::AddText(TextType::Notes, text) => {
                 self.storage_state.notes.push(TextSubmission::new(text));
-
-                self.repo
-                    .save_text(TextType::Notes, &self.storage_state.notes)
+                repo::save_text(TextType::Notes, &self.storage_state.notes)
                     .expect("save notes");
                 true
             }
             RootMsg::AddMoodReading(value) => {
                 self.storage_state.mood_readings.push(value);
-                self.repo
-                    .save_mood_readings(&self.storage_state.mood_readings)
+                repo::save_mood_readings(&self.storage_state.mood_readings)
                     .expect("save mood readings");
                 true
             }
             RootMsg::ReplaceMoodReadings(readings) => {
                 self.storage_state.mood_readings = readings.clone();
-                self.repo
-                    .save_mood_readings(&readings)
+                repo::save_mood_readings(&readings)
                     .expect("replace mood readings");
                 true
             }
@@ -112,8 +105,7 @@ impl Component for Root {
                     TextType::Notes => self.storage_state.notes = all.clone(),
                     TextType::Sleep => self.storage_state.sleep_entries = all.clone(),
                 };
-                self.repo
-                    .save_text(text_type, &all)
+                repo::save_text(text_type, &all)
                     .expect("replace text entries");
                 true
             }
@@ -151,12 +143,12 @@ pub struct StorageState {
 }
 
 impl StorageState {
-    pub fn load(repo: &YewRepo) -> Self {
+    pub fn load() -> Self {
         Self {
-            mood_readings: repo.load_mood_readings().unwrap_or_default(),
-            meds: repo.load_text(TextType::Meds).unwrap_or_default(),
-            sleep_entries: repo.load_text(TextType::Sleep).unwrap_or_default(),
-            notes: repo.load_text(TextType::Notes).unwrap_or_default(),
+            mood_readings: repo::load_mood_readings().unwrap_or_default(),
+            meds: repo::load_text(TextType::Meds).unwrap_or_default(),
+            sleep_entries: repo::load_text(TextType::Sleep).unwrap_or_default(),
+            notes: repo::load_text(TextType::Notes).unwrap_or_default(),
         }
     }
 }
