@@ -16,7 +16,7 @@ pub fn section(callback: Callback<MouseEvent>) -> Html {
             <button
                 class="fancy-button thick"
                 role="button"
-                onclick=callback>
+                onclick={callback}>
                 { "OK" }
             </button>
         </div>
