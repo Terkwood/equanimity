@@ -42,7 +42,7 @@ impl Component for History {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
             show_history: true,
-            storage_state: StorageState::load()
+            storage_state: StorageState::load(),
         }
     }
 
@@ -208,7 +208,7 @@ impl History {
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
                                 onchange={ctx.link().callback(|_| HistoryMsg::ShowHistory)}
-                                oninput={ctx.link().callback(|e: InputEvent |     
+                                oninput={ctx.link().callback(|e: InputEvent |
                                         HistoryMsg::TextAreaUpdated(e.data().unwrap_or_default())
                                     )}
                                 placeholder="Greetings.">
