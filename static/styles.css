@@ -48,14 +48,6 @@ textarea {
   grid-row: 1 / span 3;
 }
 
-#moodgrid {
-  height: 62vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(7, 1fr) / repeat(14, 1fr);
-  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
-}
-
 #dategrid {
   height: 10vh;
   display: grid;
@@ -70,12 +62,12 @@ textarea {
   font-size: 3.555vmin;
 }
 
-#logentries {
+#log-entries {
   font-family: "Monaspace Argon", monospace !important;
   font-size: 4vw;
 }
 
-#logsbuttongrid {
+#logs-button-grid {
   height: 5vh;
   display: grid;
   grid-gap: 5px;

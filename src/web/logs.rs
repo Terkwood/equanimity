@@ -215,7 +215,7 @@ impl Component for Logs {
                 },
             );
             html! { <>
-                <div id="logsbuttongrid">
+                <div id="logs-button-grid">
                     <div class="center">
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
                     </div>
@@ -229,7 +229,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
                     </div>
                 </div>
-                <ul id="logentries">
+                <ul id="log-entries">
                     { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
                 </ul>
             </> }
