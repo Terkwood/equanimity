@@ -215,8 +215,6 @@ impl Component for Logs {
                     utc_millis: utc_now(),
                 },
             );
-
-            let v: VNode = export_button.into();
             html! { <>
                 <div id="logs-button-grid">
                     <div class="center">
@@ -226,7 +224,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        {  v }
+                        {  export_button }
                     </div>
                     <div class="center">
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>

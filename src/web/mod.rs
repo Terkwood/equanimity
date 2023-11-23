@@ -37,17 +37,17 @@ pub enum RootMsg {
 impl Component for Root {
     type Message = RootMsg;
     type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let show_logs = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+    fn create(ctx: &yew::Context<Self>) -> Self {
+        let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
 
-        let show_history = Some(link.callback(|()| RootMsg::SwitchMode(Mode::History)));
-        let add_text = Some(link.callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
+        let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
+        let add_text = Some(ctx.link().callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
         let add_mood_reading =
-            Some(link.callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));
+            Some(ctx.link().callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));
         let replace_texts =
-            Some(link.callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)));
+            Some(ctx.link().callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)));
         let replace_mood_readings =
-            Some(link.callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
+            Some(ctx.link().callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
 
         let repo = YewRepo::new();
         let storage_state = StorageState::load(&repo);
@@ -64,7 +64,7 @@ impl Component for Root {
             replace_mood_readings,
         }
     }
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool{
         match msg {
             RootMsg::SwitchMode(new_mode) => {
                 let old = self.mode;
@@ -124,13 +124,8 @@ impl Component for Root {
             }
         }
     }
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        // Should only return "true" if new properties are different to
-        // previously received properties.
-        // This component has no properties so we will always return "false".
-        false
-    }
-    fn view(&self) -> Html {
+
+    fn view(&self, ctx: &yew::Context<Self>) -> Html {
         match self.mode {
             Mode::Logs => html! {
                 <Logs

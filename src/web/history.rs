@@ -2,11 +2,9 @@ use super::StorageState;
 use crate::*;
 
 pub struct History {
-    link: ComponentLink<Self>,
     text_area: String,
     top_view: HistoryTopView,
-    show_history: bool,
-    props: HistoryProps,
+    show_history: bool
 }
 
 pub enum HistoryTopView {
@@ -38,22 +36,20 @@ pub struct HistoryProps {
 impl Component for History {
     type Message = HistoryMsg;
     type Properties = HistoryProps;
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(ctx: &yew::Context<Self>) -> Self {
         Self {
-            link,
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
-            show_history: true,
-            props,
+            show_history: true
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, ctx: &yew::Context<Self>,msg: Self::Message) -> bool {
         match msg {
             HistoryMsg::AddReading(r) => {
                 self.top_view = HistoryTopView::MoodButtons;
                 self.show_history = true;
-                self.props.add_mood_reading.emit(r);
+                ctx.props().add_mood_reading.emit(r);
                 true
             }
             HistoryMsg::TextAreaUpdated(s) => {
@@ -62,7 +58,7 @@ impl Component for History {
             }
             HistoryMsg::SubmitSleep => {
                 if !self.text_area.is_empty() {
-                    self.props
+                    ctx.props()
                         .add_text
                         .emit((TextType::Sleep, self.text_area.clone()));
                     self.text_area = "".to_string();
@@ -74,7 +70,7 @@ impl Component for History {
             }
             HistoryMsg::SubmitMeds => {
                 if !self.text_area.is_empty() {
-                    self.props
+                    ctx.props()
                         .add_text
                         .emit((TextType::Meds, self.text_area.clone()));
                     self.text_area = "".to_string();
@@ -87,7 +83,7 @@ impl Component for History {
             }
             HistoryMsg::SubmitNotes => {
                 if !self.text_area.is_empty() {
-                    self.props
+                    ctx.props()
                         .add_text
                         .emit((TextType::Notes, self.text_area.clone()));
                     self.text_area = "".to_string();
@@ -105,7 +101,7 @@ impl Component for History {
                 true
             }
             HistoryMsg::ShowLogs => {
-                self.props.show_logs.emit(());
+                ctx.props().show_logs.emit(());
                 false
             }
             HistoryMsg::ShowHistory => {
@@ -120,25 +116,17 @@ impl Component for History {
         }
     }
 
-    fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            true
-        } else {
-            false
-        }
-    }
 
-    fn view(&self) -> Html {
+    fn view(&self,ctx: &yew::Context<History>) -> Html {
         html! {
             <div>
-                { self.render_top_view() }
+                { self.render_top_view(ctx) }
                 { if self.show_history { html! {
                     <>
                     <br/>
                     <>
                     {
-                        pips::group_by_day(&self.props.storage_state.mood_readings).iter().map(|(day, readings)| {
+                        pips::group_by_day(&ctx.props().storage_state.mood_readings).iter().map(|(day, readings)| {
                             html! {
                                 <>
                                     <div class="day-container">
@@ -163,39 +151,39 @@ impl Component for History {
 }
 
 impl History {
-    fn render_top_view(&self) -> Html {
+    fn render_top_view(&self, ctx: &yew::Context<Self>) -> Html {
         match self.top_view {
             HistoryTopView::MoodButtons => html! {
                 <>
                     <div id="mood-button-grid">
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))}>{ "🏥 3️⃣ 🏥" }</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))}>{ "😭 2️⃣ 😭" }</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))}>{ "😢 1️⃣ 😢" }</button>
                         </div>
                         <div class="center">
-                            <button id="equanimity-button" class="fancy-button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
+                            <button id="equanimity-button" class="fancy-button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))}>{ "☯" }</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))}>{ "⚡ 1️⃣ ⚡" }</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))>{ "🔥 2️⃣ 🔥" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))}>{ "🔥 2️⃣ 🔥" }</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))}>{ "🤯 3️⃣ 🤯" }</button>
                         </div>
                     </div>
                     <div id="below-mood-button-grid">
                         <div class="center">
-                            <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
+                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HistoryMsg::ToggleTopView)}>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HistoryMsg::ShowLogs)}>{ "View Log 📚"}</button>
                         </div>
                     </div>
                 </>
@@ -203,31 +191,31 @@ impl History {
             HistoryTopView::WaitingForText | HistoryTopView::FocusedOnText => {
                 let button_class = text_entry_button_class(&self.top_view);
                 html! {
-                    <div id=format!("controlgrid{}", match self.top_view { HistoryTopView::FocusedOnText => "full", _ => "mini" })>
+                    <div id={format!("controlgrid{}", match self.top_view { HistoryTopView::FocusedOnText => "full", _ => "mini" })}>
                         <div id="bigtextgrid">
                             <textarea
                                 rows=6
-                                value=self.text_area.clone()
-                                onfocus=self.link.callback(|_| HistoryMsg::FocusInput)
-                                onchange=self.link.callback(|_| HistoryMsg::ShowHistory)
-                                oninput=self.link.callback(|e: InputData| HistoryMsg::TextAreaUpdated(e.value))
+                                value={self.text_area}
+                                onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
+                                onchange={ctx.link().callback(|_| HistoryMsg::ShowHistory)}
+                                oninput={ctx.link().callback(|e: InputData| HistoryMsg::TextAreaUpdated(e.value))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Exit 🚫" }</button>
+                            <button class={button_class} onclick={ctx.link().callback(|_| HistoryMsg::ToggleTopView)}>{ "Exit 🚫" }</button>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::SubmitSleep)>{ "Sleep 😴" }</button>
+                            <button class={button_class} onclick={ctx.link().callback(|_| HistoryMsg::SubmitSleep)}>{ "Sleep 😴" }</button>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::SubmitMeds)>{ "Meds 💊" }</button>
+                            <button class={button_class} onclick={ctx.link().callback(|_| HistoryMsg::SubmitMeds)}>{ "Meds 💊" }</button>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::SubmitNotes)>{ "Notes 🖊" }</button>
+                            <button class={button_class} onclick={ctx.link().callback(|_| HistoryMsg::SubmitNotes)}>{ "Notes 🖊" }</button>
                         </div>
                         <div class="center">
-                            <button class=button_class onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "Logs 📚"}</button>
+                            <button class={button_class} onclick={ctx.link().callback(|_| HistoryMsg::ShowLogs)}>{ "Logs 📚"}</button>
                         </div>
                     </div>
                 }
@@ -235,6 +223,7 @@ impl History {
         }
     }
 }
+    
 
 const TEXT_ENTRY_BUTTON_FOCUSED: &str = "fancy-button";
 const TEXT_ENTRY_BUTTON_DEFAULT: &str = "fancy-button";
