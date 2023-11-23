@@ -16,36 +16,6 @@ body {
   font-family: "Monaspace Argon", monospace !important;
 }
 
-button {
-  font-size: 4vw;
-}
-
-.moodbutton {
-  font-size: 5vmin;
-  height: 93.5%;
-}
-
-#zenbutton {
-  font-size: 14vmin;
-  height: 93.5%;
-}
-
-#moodbuttongrid {
-  height: 17vh;
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(7, 1fr);
-  grid-auto-flow: column;
-}
-
-#belowmoodbuttongrid {
-  height: 5vh;
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(2, 1fr);
-  grid-auto-flow: column;
-}
-
 textarea {
   width: 100%;
   height: 75%;
@@ -78,14 +48,6 @@ textarea {
   grid-row: 1 / span 3;
 }
 
-#moodgrid {
-  height: 62vh; /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(7, 1fr) / repeat(14, 1fr);
-  grid-auto-flow: column; /* or 'row', 'row dense', 'column dense' */
-}
-
 #dategrid {
   height: 10vh;
   display: grid;
@@ -100,12 +62,12 @@ textarea {
   font-size: 3.555vmin;
 }
 
-#logentries {
+#log-entries {
   font-family: "Monaspace Argon", monospace !important;
   font-size: 4vw;
 }
 
-#logsbuttongrid {
+#logs-button-grid {
   height: 5vh;
   display: grid;
   grid-gap: 5px;
@@ -126,13 +88,6 @@ textarea {
   height: 50%;
 }
 
-.thick {
-  display: inline-block;
-  width: 85%;
-  height: 100%;
-  text-align: center;
-  font-size: 4vw;
-}
 
 .nocolor {
   background-color: transparent;
@@ -166,17 +121,23 @@ textarea {
   background-color: #1a32af;
 }
 
-.download {
-  text-decoration: none;
-  color: black;
-}
-
-#exportbutton {
-  display: inline-block;
-  width: 85%;
-  height: 100%;
-  text-align: center;
+#export-button {
+  background: #5E5DF0;
+  border-radius: 999px;
+  box-shadow: #5E5DF0 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
   font-size: 4vw;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
 }
 
 .day-container {
@@ -187,4 +148,60 @@ textarea {
 
 #about {
   font-family: "Monaspace Argon", monospace !important;
+}
+
+.fancy-button {
+  background: #5E5DF0;
+  border-radius: 999px;
+  box-shadow: #5E5DF0 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 4vw;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
+}
+
+
+.thick {
+  display: inline-block;
+  width: 85%;
+  height: 100%;
+  text-align: center;
+  font-size: 4vw;
+}
+
+
+
+.mood-button {
+  font-size: 5vmin;
+  height: 93.5%;
+}
+
+#equanimity-button {
+  font-size: 14vmin;
+  height: 93.5%;
+}
+
+#mood-button-grid {
+  height: 17vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(7, 1fr);
+  grid-auto-flow: column;
+}
+
+#below-mood-button-grid {
+  height: 5vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(1, 1fr) / repeat(2, 1fr);
+  grid-auto-flow: column;
 }
