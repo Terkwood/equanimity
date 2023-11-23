@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/Terkwood/equanimity/compare/v1.1.1...v1.2.1) (2023-11-23)
+
+
+### Features
+
+* better buttons ([#102](https://github.com/Terkwood/equanimity/issues/102)) ([40ba192](https://github.com/Terkwood/equanimity/commit/40ba1920e9bb52086f6c578e2046be89167e9c5c))
+
+
+### Bug Fixes
+
+* button color ([#103](https://github.com/Terkwood/equanimity/issues/103)) ([cc6b0af](https://github.com/Terkwood/equanimity/commit/cc6b0afeda045fb750c9c8c995b4ecdbc5954689))
+
 ### [1.1.1](https://github.com/Terkwood/equanimity/compare/v1.1.0...v1.1.1) (2023-11-21)
 
 
