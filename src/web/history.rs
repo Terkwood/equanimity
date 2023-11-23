@@ -198,7 +198,7 @@ impl History {
                                 value={self.text_area}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
                                 onchange={ctx.link().callback(|_| HistoryMsg::ShowHistory)}
-                                oninput={ctx.link().callback(|e: InputData| HistoryMsg::TextAreaUpdated(e.value))}
+                                oninput={ctx.link().callback(|e: InputData | HistoryMsg::TextAreaUpdated(e.value))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
