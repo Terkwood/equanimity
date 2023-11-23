@@ -217,16 +217,16 @@ impl Component for Logs {
             html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="button-11" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
+                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
                     </div>
                     <div class="center">
-                        <button class="button-11" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
+                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
                         { export_button }
                     </div>
                     <div class="center">
-                        <button class="button-11" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
+                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
                     </div>
                 </div>
                 <ul id="logentries">
