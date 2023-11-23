@@ -195,10 +195,10 @@ impl History {
                         <div id="bigtextgrid">
                             <textarea
                                 rows=6
-                                value={self.text_area}
+                                value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
                                 onchange={ctx.link().callback(|_| HistoryMsg::ShowHistory)}
-                                oninput={ctx.link().callback(|e: InputData | HistoryMsg::TextAreaUpdated(e.value))}
+                                oninput={ctx.link().callback(|e: InputEvent | HistoryMsg::TextAreaUpdated(e.data().unwrap_or_default()))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
