@@ -178,7 +178,7 @@ impl History {
                             <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
                         </div>
                         <div class="center">
-                            <button id="fancy-button equanimity-button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
+                            <button id="equanimity-button" class="fancy-button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
                         </div>
                         <div class="center">
                             <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
