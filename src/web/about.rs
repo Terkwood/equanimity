@@ -12,7 +12,7 @@ pub fn section(callback: Callback<MouseEvent>) -> Html {
             <p>{ format!("This is version {}.", VERSION) }</p>
             <h2>{ "Source Code" }</h2>
             <p>{ "The source code is available under MIT license." }</p>
-            <p><a href=REPO_URL>{ REPO_URL }</a></p>
+            <p><a href={REPO_URL}>{ REPO_URL }</a></p>
             <button
                 class="fancy-button thick"
                 role="button"
