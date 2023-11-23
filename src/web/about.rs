@@ -14,7 +14,8 @@ pub fn section(callback: Callback<MouseEvent>) -> Html {
             <p>{ "The source code is available under MIT license." }</p>
             <p><a href=REPO_URL>{ REPO_URL }</a></p>
             <button
-                class="thick"
+                class="button-11"
+                role="button"
                 onclick=callback>
                 { "OK" }
             </button>

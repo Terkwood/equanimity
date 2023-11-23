@@ -169,33 +169,33 @@ impl History {
                 <>
                     <div id="moodbuttongrid">
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
                         </div>
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
                         </div>
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
                         </div>
                         <div class="center">
                             <button id="zenbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
                         </div>
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
                         </div>
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))>{ "🔥 2️⃣ 🔥" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))>{ "🔥 2️⃣ 🔥" }</button>
                         </div>
                         <div class="center">
-                            <button class="moodbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
                         </div>
                     </div>
                     <div id="belowmoodbuttongrid">
                         <div class="center">
-                            <button class="thick" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="thick" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
                         </div>
                     </div>
                 </>
@@ -236,8 +236,8 @@ impl History {
     }
 }
 
-const TEXT_ENTRY_BUTTON_FOCUSED: &str = "lookgoodfocused";
-const TEXT_ENTRY_BUTTON_DEFAULT: &str = "expandheight";
+const TEXT_ENTRY_BUTTON_FOCUSED: &str = "button-11";
+const TEXT_ENTRY_BUTTON_DEFAULT: &str = "button-11";
 fn text_entry_button_class(top_view: &HistoryTopView) -> &'static str {
     match top_view {
         HistoryTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,
