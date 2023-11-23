@@ -167,35 +167,35 @@ impl History {
         match self.top_view {
             HistoryTopView::MoodButtons => html! {
                 <>
-                    <div id="moodbuttongrid">
+                    <div id="mood-button-grid">
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-3)))>{ "🏥 3️⃣ 🏥" }</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-2)))>{ "😭 2️⃣ 😭" }</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(-1)))>{ "😢 1️⃣ 😢" }</button>
                         </div>
                         <div class="center">
-                            <button id="zenbutton" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
+                            <button id="fancy-button equanimity-button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(0)))>{ "☯" }</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(1)))>{ "⚡ 1️⃣ ⚡" }</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))>{ "🔥 2️⃣ 🔥" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(2)))>{ "🔥 2️⃣ 🔥" }</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
+                            <button class="fancy-button mood-button" role="button" onclick=self.link.callback(|_| HistoryMsg::AddReading(MoodReading::new(3)))>{ "🤯 3️⃣ 🤯" }</button>
                         </div>
                     </div>
-                    <div id="belowmoodbuttongrid">
+                    <div id="below-mood-button-grid">
                         <div class="center">
-                            <button class="button-11 thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
+                            <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="button-11 thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
                         </div>
                     </div>
                 </>
@@ -236,8 +236,8 @@ impl History {
     }
 }
 
-const TEXT_ENTRY_BUTTON_FOCUSED: &str = "button-11";
-const TEXT_ENTRY_BUTTON_DEFAULT: &str = "button-11";
+const TEXT_ENTRY_BUTTON_FOCUSED: &str = "fancy-button";
+const TEXT_ENTRY_BUTTON_DEFAULT: &str = "fancy-button";
 fn text_entry_button_class(top_view: &HistoryTopView) -> &'static str {
     match top_view {
         HistoryTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,

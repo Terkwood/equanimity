@@ -217,16 +217,16 @@ impl Component for Logs {
             html! { <>
                 <div id="logsbuttongrid">
                     <div class="center">
-                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
+                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
                     </div>
                     <div class="center">
-                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
+                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
                         { export_button }
                     </div>
                     <div class="center">
-                        <button class="button-11 thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
+                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
                     </div>
                 </div>
                 <ul id="logentries">
@@ -250,7 +250,7 @@ impl Logs {
                     { format!("[{} mood] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="button-11" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
                                 value,
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
@@ -267,7 +267,7 @@ impl Logs {
                     { format!("[{} sleep] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="button-11" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
@@ -284,7 +284,7 @@ impl Logs {
                     { format!("[{} meds] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="button-11" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
@@ -301,7 +301,7 @@ impl Logs {
                     { format!("[{} note] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="button-11" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
                             })))>{ "DELETE" }</button> },
