@@ -38,13 +38,22 @@ impl Component for Root {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
 
         let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
-        let add_text = Some(ctx.link().callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
-        let add_mood_reading =
-            Some(ctx.link().callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));
-        let replace_texts =
-            Some(ctx.link().callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)));
-        let replace_mood_readings =
-            Some(ctx.link().callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
+        let add_text = Some(
+            ctx.link()
+                .callback(|(text_type, text)| RootMsg::AddText(text_type, text)),
+        );
+        let add_mood_reading = Some(
+            ctx.link()
+                .callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)),
+        );
+        let replace_texts = Some(
+            ctx.link()
+                .callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)),
+        );
+        let replace_mood_readings = Some(
+            ctx.link()
+                .callback(|readings| RootMsg::ReplaceMoodReadings(readings)),
+        );
 
         let storage_state = StorageState::load();
 
@@ -59,17 +68,18 @@ impl Component for Root {
             replace_mood_readings,
         }
     }
-    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool{
+    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             RootMsg::SwitchMode(new_mode) => {
                 let old = self.mode;
                 self.mode = new_mode;
                 self.mode != old
             }
-            RootMsg::AddText(TextType::Sleep, text) => { 
-                self.storage_state.sleep_entries.push(TextSubmission::new(text));
+            RootMsg::AddText(TextType::Sleep, text) => {
+                self.storage_state
+                    .sleep_entries
+                    .push(TextSubmission::new(text));
 
-            
                 repo::save_text(TextType::Sleep, &self.storage_state.sleep_entries)
                     .expect("save sleep");
 
@@ -77,14 +87,12 @@ impl Component for Root {
             }
             RootMsg::AddText(TextType::Meds, text) => {
                 self.storage_state.meds.push(TextSubmission::new(text));
-                repo::save_text(TextType::Meds, &self.storage_state.meds)
-                    .expect("save meds");
+                repo::save_text(TextType::Meds, &self.storage_state.meds).expect("save meds");
                 true
             }
             RootMsg::AddText(TextType::Notes, text) => {
                 self.storage_state.notes.push(TextSubmission::new(text));
-                repo::save_text(TextType::Notes, &self.storage_state.notes)
-                    .expect("save notes");
+                repo::save_text(TextType::Notes, &self.storage_state.notes).expect("save notes");
                 true
             }
             RootMsg::AddMoodReading(value) => {
@@ -95,8 +103,7 @@ impl Component for Root {
             }
             RootMsg::ReplaceMoodReadings(readings) => {
                 self.storage_state.mood_readings = readings.clone();
-                repo::save_mood_readings(&readings)
-                    .expect("replace mood readings");
+                repo::save_mood_readings(&readings).expect("replace mood readings");
                 true
             }
             RootMsg::ReplaceTexts(text_type, all) => {
@@ -105,8 +112,7 @@ impl Component for Root {
                     TextType::Notes => self.storage_state.notes = all.clone(),
                     TextType::Sleep => self.storage_state.sleep_entries = all.clone(),
                 };
-                repo::save_text(text_type, &all)
-                    .expect("replace text entries");
+                repo::save_text(text_type, &all).expect("replace text entries");
                 true
             }
         }

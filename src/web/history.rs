@@ -4,7 +4,7 @@ use crate::*;
 pub struct History {
     text_area: String,
     top_view: HistoryTopView,
-    show_history: bool
+    show_history: bool,
 }
 
 pub enum HistoryTopView {
@@ -40,11 +40,11 @@ impl Component for History {
         Self {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
-            show_history: true
+            show_history: true,
         }
     }
 
-    fn update(&mut self, ctx: &yew::Context<Self>,msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             HistoryMsg::AddReading(r) => {
                 self.top_view = HistoryTopView::MoodButtons;
@@ -116,8 +116,7 @@ impl Component for History {
         }
     }
 
-
-    fn view(&self,ctx: &yew::Context<History>) -> Html {
+    fn view(&self, ctx: &yew::Context<History>) -> Html {
         html! {
             <div>
                 { self.render_top_view(ctx) }
@@ -223,7 +222,6 @@ impl History {
         }
     }
 }
-    
 
 const TEXT_ENTRY_BUTTON_FOCUSED: &str = "fancy-button";
 const TEXT_ENTRY_BUTTON_DEFAULT: &str = "fancy-button";
