@@ -4,7 +4,6 @@ pub mod logs;
 pub mod time;
 
 use crate::*;
-use gloo_storage::LocalStorage;
 use history::History;
 use logs::Logs;
 pub struct Root {
