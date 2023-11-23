@@ -126,13 +126,6 @@ textarea {
   height: 50%;
 }
 
-.thick {
-  display: inline-block;
-  width: 85%;
-  height: 100%;
-  text-align: center;
-  font-size: 4vw;
-}
 
 .nocolor {
   background-color: transparent;
@@ -198,10 +191,6 @@ textarea {
   box-sizing: border-box;
   color: #FFFFFF;
   cursor: pointer;
-  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 24px;
   opacity: 1;
   outline: 0 solid transparent;
   padding: 8px 18px;
@@ -211,4 +200,13 @@ textarea {
   width: fit-content;
   word-break: break-word;
   border: 0;
+}
+
+
+.thick {
+  display: inline-block;
+  width: 85%;
+  height: 100%;
+  text-align: center;
+  font-size: 4vw;
 }
