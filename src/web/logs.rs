@@ -77,7 +77,8 @@ impl Component for Logs {
 
         Self {
             entries,
-            mode
+            mode,
+            storage_state: ctx.props().storage_state.clone()
         }
     }
     fn update(&mut self,ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
@@ -203,12 +204,12 @@ impl Component for Logs {
             let callback = ctx.link().callback(|_| LogsMsg::ToggleAboutMode);
             about::section(callback)
         } else {
-            let export_button = export_button(
+            let export_button: VNode = export_button(
                 &ctx.props().storage_state,
                 ButtonOpts {
-                    a_class: EXPORT_LINK_CSS_CLASS,
-                    button_id: EXPORT_BUTTON_CSS_ID,
-                    file_prefix: EXPORT_FILE_PREFIX,
+                    a_class: EXPORT_LINK_CSS_CLASS.to_string(),
+                    button_id: EXPORT_BUTTON_CSS_ID.to_string(),
+                    file_prefix: EXPORT_FILE_PREFIX.to_string(),
                     utc_millis: utc_now(),
                 },
             );
