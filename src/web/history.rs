@@ -5,6 +5,7 @@ pub struct History {
     text_area: String,
     top_view: HistoryTopView,
     show_history: bool,
+    storage_state: StorageState,
 }
 
 pub enum HistoryTopView {
@@ -41,6 +42,7 @@ impl Component for History {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
             show_history: true,
+            storage_state: StorageState::load()
         }
     }
 
@@ -113,6 +115,15 @@ impl Component for History {
                 self.top_view = HistoryTopView::FocusedOnText;
                 true
             }
+        }
+    }
+
+    fn changed(&mut self, ctx: &yew::Context<Self>) -> bool {
+        if self.storage_state != ctx.props().storage_state {
+            self.storage_state = ctx.props().storage_state.clone();
+            true
+        } else {
+            false
         }
     }
 

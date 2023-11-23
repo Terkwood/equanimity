@@ -68,7 +68,7 @@ impl Component for Root {
             replace_mood_readings,
         }
     }
-    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             RootMsg::SwitchMode(new_mode) => {
                 let old = self.mode;
@@ -118,7 +118,7 @@ impl Component for Root {
         }
     }
 
-    fn view(&self, ctx: &yew::Context<Self>) -> Html {
+    fn view(&self, _ctx: &yew::Context<Self>) -> Html {
         match self.mode {
             Mode::Logs => html! {
                 <Logs
