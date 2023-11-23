@@ -1,6 +1,8 @@
 use crate::{MoodReading, TextSubmission, TextType};
-use yew::format::Json;
-use yew::services::storage::{Area, StorageService};
+//use yew::format::Json;
+use gloo::storage::LocalStorage;
+// use yew StorageService
+
 
 const MOOD_READINGS_KEY: &str = "mood_readings";
 const NOTES_KEY: &str = "notes";
