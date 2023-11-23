@@ -63,8 +63,8 @@ impl Ord for Entry {
     }
 }
 
-const EXPORT_BUTTON_CSS_ID: &str = "exportbutton";
-const EXPORT_LINK_CSS_CLASS: &str = "download";
+const EXPORT_BUTTON_CSS_ID: &str = "export-button";
+const EXPORT_LINK_CSS_CLASS: &str = "fancy-button thick";
 const EXPORT_FILE_PREFIX: &str = "equanimity";
 
 impl Component for Logs {
