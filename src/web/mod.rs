@@ -4,14 +4,12 @@ pub mod logs;
 pub mod time;
 
 use crate::*;
+use gloo_storage::LocalStorage;
 use history::History;
 use logs::Logs;
-use repo::YewRepo;
-
 pub struct Root {
     mode: Mode,
-    repo: YewRepo,
-    storage_state: StorageState,
+    storage_state: LocalStorage,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
@@ -49,12 +47,10 @@ impl Component for Root {
         let replace_mood_readings =
             Some(ctx.link().callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
 
-        let repo = YewRepo::new();
-        let storage_state = StorageState::load(&repo);
+        
 
         Self {
             mode: Mode::History,
-            repo,
             storage_state,
             show_logs,
             show_history,
@@ -76,8 +72,7 @@ impl Component for Root {
                     .sleep_entries
                     .push(TextSubmission::new(text));
 
-                self.repo
-                    .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
+                repo::save_text(TextType::Sleep, &self.storage_state.sleep_entries)
                     .expect("save sleep");
 
                 true
