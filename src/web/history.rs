@@ -192,10 +192,10 @@ impl History {
                     </div>
                     <div id="belowmoodbuttongrid">
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
+                            <button class="button-11 thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ToggleTopView)>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="button-11" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
+                            <button class="button-11 thick" role="button" onclick=self.link.callback(|_| HistoryMsg::ShowLogs)>{ "View Log 📚"}</button>
                         </div>
                     </div>
                 </>
