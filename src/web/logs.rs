@@ -2,6 +2,7 @@ use super::about;
 use super::time::js_utc_datetime;
 use super::StorageState;
 use crate::*;
+use yew::virtual_dom::VNode;
 use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
@@ -214,6 +215,8 @@ impl Component for Logs {
                     utc_millis: utc_now(),
                 },
             );
+
+            let v: VNode = export_button.into();
             html! { <>
                 <div id="logs-button-grid">
                     <div class="center">
@@ -223,7 +226,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        { export_button }
+                        {  v }
                     </div>
                     <div class="center">
                         <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>

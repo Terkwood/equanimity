@@ -207,7 +207,7 @@ impl History {
                         <div id="bigtextgrid">
                             <textarea
                                 rows=6
-                                value=self.text_area
+                                value=self.text_area.clone()
                                 onfocus=self.link.callback(|_| HistoryMsg::FocusInput)
                                 onchange=self.link.callback(|_| HistoryMsg::ShowHistory)
                                 oninput=self.link.callback(|e: InputData| HistoryMsg::TextAreaUpdated(e.value))

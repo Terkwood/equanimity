@@ -135,7 +135,7 @@ impl Component for Root {
             Mode::Logs => html! {
                 <Logs
                     storage_state={self.storage_state.clone()}
-                    show_history={self.show_history.as_ref().expect("history cb")},
+                    show_history={self.show_history.as_ref().expect("history cb")}
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
@@ -144,7 +144,7 @@ impl Component for Root {
                 <History
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
-                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")},
+                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
             },
