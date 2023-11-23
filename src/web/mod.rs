@@ -46,10 +46,11 @@ impl Component for Root {
         let replace_mood_readings =
             Some(ctx.link().callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
 
-        
+        let storage_state = StorageState::load();
 
         Self {
             mode: Mode::History,
+            storage_state,
             show_logs,
             show_history,
             add_mood_reading,
