@@ -189,4 +189,15 @@ textarea {
   text-align: center;
   display: inline-block;
   vertical-align: top;
+  margin: auto;
+  width: 100%;
+}
+
+.backdate-child {
+  padding: 8px 18px; 
+}
+
+.backdate-child table {
+  margin: auto;
+  width: 100%;
 }
