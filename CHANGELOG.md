@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/Terkwood/equanimity/compare/v1.2.2...v1.2.3) (2023-11-24)
+
+
+### Bug Fixes
+
+* simplify props ([4223ccd](https://github.com/Terkwood/equanimity/commit/4223ccde0f5ce15e0c832fc26b3eb40c34b5a9f2))
+* upgrade to yew 0.20.0 ([e49e70d](https://github.com/Terkwood/equanimity/commit/e49e70dd394aea697300e8b4618159604c43992b))
+
 ### [1.2.2](https://github.com/Terkwood/equanimity/compare/v1.2.1...v1.2.2) (2023-11-24)
 
 
