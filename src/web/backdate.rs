@@ -62,11 +62,12 @@ impl Component for BackdateMoodReadings {
             </div> 
  
             <div id="backdate">
+                <div class="backdate-child">
                 <Datepicker on_select={ ctx.link()
                     .callback(|naive_date| 
                         BackdateMsg::DateSelected(naive_date))}/>
-
-                <p>
+                </div>
+                <div class="backdate-child">
                 { 
                     if let Some(d) =  self.current_date {
                         format!("Date selected: {:?}",d)
@@ -74,13 +75,11 @@ impl Component for BackdateMoodReadings {
                         "No date selected".to_string() 
                     } 
                 }
-                </p>
-                    
+                </div>    
                      
-
                 { 
                     if self.request_user_pick_date {
-                        html! { <p> {"Please pick a date."} </p> } 
+                        html! { <div class="backdate-child"> {"Please pick a date."} </div> } 
                     } else { 
                         html! { <> </> } 
                     } 

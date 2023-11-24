@@ -187,4 +187,6 @@ textarea {
   justify-content: center;
   align-items: center;
   text-align: center;
+  display: inline-block;
+  vertical-align: top;
 }
