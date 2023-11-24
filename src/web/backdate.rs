@@ -3,14 +3,17 @@ use yew::Component;
 use crate::*;
 use yew_datepicker::Datepicker;
 
+use super::storage_state::StorageState;
+
 pub struct BackdateMoodReadings {
+    pub mood_reading: Option<MoodReading>,
     pub current_date: Option<NaiveDate>,
-    pub request_user_pick_date: bool,
 }
 
 pub enum BackdateMsg {
     DateSelected(NaiveDate),
-    BackdateReading(MoodReading),
+    MoodReadingSelected(MoodReading),
+    BackdateReading(NaiveDate, MoodReading),
 }
 
 impl Component for BackdateMoodReadings {
@@ -18,16 +21,19 @@ impl Component for BackdateMoodReadings {
     type Properties = ();
 
     fn create(_: &Context<Self>) -> Self {
-        Self { current_date: None, request_user_pick_date: false }
+        Self { mood_reading: None, current_date: None, }
     }
 
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
+            BackdateMsg::MoodReadingSelected(mood_reading) => {
+                self.mood_reading = Some(mood_reading);
+            }
             BackdateMsg::DateSelected(naive_date) => {
                 self.current_date = Some(naive_date);
             }
-            BackdateMsg::BackdateReading(reading) => {
-                unimplemented!("Backdate reading");
+            BackdateMsg::BackdateReading(date, reading) => {
+                web_sys::console::log_1(&format!("Backdating mood reading {:?} to {:?}", reading, date).into());
             }
         }
         
@@ -39,25 +45,25 @@ impl Component for BackdateMoodReadings {
             <>
             <div id="mood-button-grid">
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-3)))}>{ "🏥 3️⃣ 🏥" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(-3)))}>{ "🏥 3️⃣ 🏥" }</button>
                 </div>
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-2)))}>{ "😭 2️⃣ 😭" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(-2)))}>{ "😭 2️⃣ 😭" }</button>
                 </div>
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-1)))}>{ "😢 1️⃣ 😢" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(-1)))}>{ "😢 1️⃣ 😢" }</button>
                 </div>
                 <div class="center">
-                    <button id="equanimity-button" class="fancy-button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(0)))}>{ "☯" }</button>
+                    <button id="equanimity-button" class="fancy-button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(0)))}>{ "☯" }</button>
                 </div>
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(1)))}>{ "⚡ 1️⃣ ⚡" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(1)))}>{ "⚡ 1️⃣ ⚡" }</button>
                 </div>
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(2)))}>{ "🔥 2️⃣ 🔥" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(2)))}>{ "🔥 2️⃣ 🔥" }</button>
                 </div>
                 <div class="center">
-                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(3)))}>{ "🤯 3️⃣ 🤯" }</button>
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(3)))}>{ "🤯 3️⃣ 🤯" }</button>
                 </div>
             </div> 
  
@@ -72,18 +78,38 @@ impl Component for BackdateMoodReadings {
                     if let Some(d) =  self.current_date {
                         format!("Date selected: {:?}",d)
                     } else { 
-                        "No date selected".to_string() 
+                        "Please, select a date.".to_string() 
                     } 
                 }
                 </div>    
                      
-                { 
-                    if self.request_user_pick_date {
-                        html! { <div class="backdate-child"> {"Please pick a date."} </div> } 
+
+                {
+                    if let Some(mr) = &self.mood_reading {
+                        if let Some(d) = &self.current_date {
+                            let mood_reading = mr.clone();
+                            let date = d.clone();
+                            html!{
+                                <div class="backdate-child">
+                                <button 
+                                    class="fancy-button" 
+                                    role="button" 
+                                    onclick={
+                                        ctx
+                                            .link()
+                                            .callback(move |_| BackdateMsg::BackdateReading(date.clone(), mood_reading.clone()))}>
+                                    { "Backdate" }
+                                </button>
+                            </div>
+                            }
+                        } else {
+                            html! { <> </> }
+                        }
                     } else { 
                         html! { <> </> } 
-                    } 
-                } 
+                    }
+                }
+                
             </div>
             </>
         }
