@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.5](https://github.com/Terkwood/equanimity/compare/v1.2.4...v1.2.5) (2023-11-24)
+
+
+### Bug Fixes
+
+* text area input supports autocorrect ([#105](https://github.com/Terkwood/equanimity/issues/105)) ([3bff774](https://github.com/Terkwood/equanimity/commit/3bff77492d8eabec074a06bb6883e4c23ec08203))
+
 ### [1.2.4](https://github.com/Terkwood/equanimity/compare/v1.2.3...v1.2.4) (2023-11-24)
 
 
