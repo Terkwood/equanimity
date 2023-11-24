@@ -20,4 +20,5 @@ serde_json = "1.0.108"
 wasm-bindgen = "0.2.88"
 web-sys = {version = "0.3.65", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
 yew = {version = "0.21.0", features = ["csr"]}
+yew-datepicker = "0.1.0"
 yew-export-button = {git = "https://github.com/Terkwood/yew-export-button", tag = "v3.0.0" }
