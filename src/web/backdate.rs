@@ -35,22 +35,43 @@ impl Component for BackdateMoodReadings {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html { 
-        html! { 
+        html! {  
+            <>
+            <div id="mood-button-grid">
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-3)))}>{ "🏥 3️⃣ 🏥" }</button>
+                </div>
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-2)))}>{ "😭 2️⃣ 😭" }</button>
+                </div>
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(-1)))}>{ "😢 1️⃣ 😢" }</button>
+                </div>
+                <div class="center">
+                    <button id="equanimity-button" class="fancy-button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(0)))}>{ "☯" }</button>
+                </div>
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(1)))}>{ "⚡ 1️⃣ ⚡" }</button>
+                </div>
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(2)))}>{ "🔥 2️⃣ 🔥" }</button>
+                </div>
+                <div class="center">
+                    <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::BackdateReading(MoodReading::new(3)))}>{ "🤯 3️⃣ 🤯" }</button>
+                </div>
+            </div> 
+ 
             <div id="backdate">
-            <h1> {"Backdate Mood Readings"} </h1>
-            <Datepicker on_select={ ctx.link()
-                .callback(|naive_date| 
-                    BackdateMsg::DateSelected(naive_date))}/>
+                <Datepicker on_select={ ctx.link()
+                    .callback(|naive_date| 
+                        BackdateMsg::DateSelected(naive_date))}/>
 
-            { 
-              if self.request_user_pick_date {
-                html! { <p> {"Please pick a date."} </p> } 
-              } else { 
-                html! { <> </> } 
-              }
-            }
-
+                { if self.request_user_pick_date {
+                    html! { <p> {"Please pick a date."} </p> } 
+                } else { 
+                    html! { <> </> } } } 
             </div>
+            </>
         }
     }
 }
