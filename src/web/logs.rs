@@ -2,13 +2,13 @@ use super::about;
 use super::time::js_utc_datetime;
 use super::StorageState;
 use crate::*;
+use yew::virtual_dom::VNode;
 use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
-    link: ComponentLink<Self>,
     entries: Vec<Entry>,
     mode: LogsMode,
-    props: LogsProps,
+    storage_state: StorageState,
 }
 
 pub enum LogsMsg {
@@ -70,22 +70,21 @@ const EXPORT_FILE_PREFIX: &str = "equanimity";
 impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let entries = derive_entries(&props.storage_state);
+    fn create(ctx: &yew::Context<Self>) -> Self {
+        let entries = derive_entries(&ctx.props().storage_state);
 
         let mode = LogsMode::View;
 
         Self {
-            link,
             entries,
             mode,
-            props,
+            storage_state: ctx.props().storage_state.clone(),
         }
     }
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             LogsMsg::ShowHistory => {
-                self.props.show_history.emit(());
+                ctx.props().show_history.emit(());
                 false
             }
             LogsMsg::ToggleDeleteMode => {
@@ -110,7 +109,7 @@ impl Component for Logs {
                     epoch_millis,
                     value,
                 }));
-                self.props.replace_mood_readings.emit(
+                ctx.props().replace_mood_readings.emit(
                     self.entries
                         .iter()
                         .filter_map(|e| match e {
@@ -129,7 +128,7 @@ impl Component for Logs {
             }
             LogsMsg::Delete(Entry::Meds(m)) => {
                 self.delete_entry(Entry::Meds(m));
-                self.props.replace_texts.emit((
+                ctx.props().replace_texts.emit((
                     TextType::Meds,
                     self.entries
                         .iter()
@@ -150,7 +149,7 @@ impl Component for Logs {
             LogsMsg::Delete(Entry::Note(m)) => {
                 self.delete_entry(Entry::Note(m));
 
-                self.props.replace_texts.emit((
+                ctx.props().replace_texts.emit((
                     TextType::Notes,
                     self.entries
                         .iter()
@@ -170,7 +169,7 @@ impl Component for Logs {
             }
             LogsMsg::Delete(Entry::Sleep(m)) => {
                 self.delete_entry(Entry::Sleep(m));
-                self.props.replace_texts.emit((
+                ctx.props().replace_texts.emit((
                     TextType::Sleep,
                     self.entries
                         .iter()
@@ -191,46 +190,46 @@ impl Component for Logs {
         }
     }
 
-    fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            self.entries = derive_entries(&self.props.storage_state);
+    fn changed(&mut self, ctx: &yew::Context<Self>) -> bool {
+        if self.storage_state != ctx.props().storage_state {
+            self.storage_state = ctx.props().storage_state.clone();
+            self.entries = derive_entries(&self.storage_state);
             true
         } else {
             false
         }
     }
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &yew::Context<Self>) -> Html {
         if self.mode == LogsMode::About {
-            let callback = self.link.callback(|_| LogsMsg::ToggleAboutMode);
+            let callback = ctx.link().callback(|_| LogsMsg::ToggleAboutMode);
             about::section(callback)
         } else {
-            let export_button = export_button(
-                &self.props.storage_state,
+            let export_button: VNode = export_button(
+                &ctx.props().storage_state,
                 ButtonOpts {
-                    a_class: EXPORT_LINK_CSS_CLASS,
-                    button_id: EXPORT_BUTTON_CSS_ID,
-                    file_prefix: EXPORT_FILE_PREFIX,
+                    a_class: EXPORT_LINK_CSS_CLASS.to_string(),
+                    button_id: EXPORT_BUTTON_CSS_ID.to_string(),
+                    file_prefix: EXPORT_FILE_PREFIX.to_string(),
                     utc_millis: utc_now(),
                 },
             );
             html! { <>
                 <div id="logs-button-grid">
                     <div class="center">
-                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleAboutMode)>{ "About 🤔" }</button>
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ToggleAboutMode)}>{ "About 🤔" }</button>
                     </div>
                     <div class="center">
-                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ToggleDeleteMode )>{ "Delete 🗑" }</button>
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ToggleDeleteMode )}>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        { export_button }
+                        {  export_button }
                     </div>
                     <div class="center">
-                        <button class="fancy-button thick" role="button" onclick=self.link.callback(|_| LogsMsg::ShowHistory)>{ "Hist 🔴" }</button>
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHistory)}>{ "Hist 🔴" }</button>
                     </div>
                 </div>
                 <ul id="log-entries">
-                    { self.entries.iter().map(|e| self.render_entry(e.clone(), self.mode)).collect::<Html>() }
+                    { self.entries.iter().map(|e| self.render_entry(ctx,e.clone(),  self.mode)).collect::<Html>() }
                 </ul>
             </> }
         }
@@ -238,7 +237,7 @@ impl Component for Logs {
 }
 
 impl Logs {
-    fn render_entry(&self, e: Entry, logs_mode: LogsMode) -> Html {
+    fn render_entry(&self, ctx: &yew::Context<Self>, e: Entry, logs_mode: LogsMode) -> Html {
         let dt = js_utc_datetime(e.timestamp());
         let date_string = dt.format("%m/%d %R").to_string();
         match e {
@@ -250,10 +249,10 @@ impl Logs {
                     { format!("[{} mood] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
                                 value,
                                 epoch_millis,
-                            })))>{ "DELETE" }</button> },
+                            })))}>{ "DELETE" }</button> },
                             _ => html! { }
                         }
                     }
@@ -267,10 +266,10 @@ impl Logs {
                     { format!("[{} sleep] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
-                            })))>{ "DELETE" }</button> },
+                            })))}>{ "DELETE" }</button> },
                             _ => html! { }
                         }
                     }
@@ -284,10 +283,10 @@ impl Logs {
                     { format!("[{} meds] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
-                            })))>{ "DELETE" }</button> },
+                            })))}>{ "DELETE" }</button> },
                             _ => html! { }
                         }
                     }
@@ -301,10 +300,10 @@ impl Logs {
                     { format!("[{} note] {}", date_string, value) }
                     {
                         match logs_mode {
-                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick=self.link.callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
+                            LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
                                 value: value.clone(),
                                 epoch_millis,
-                            })))>{ "DELETE" }</button> },
+                            })))}>{ "DELETE" }</button> },
                             _ => html! { }
                         }
                     }

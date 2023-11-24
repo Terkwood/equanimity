@@ -1,17 +1,16 @@
 mod about;
 mod history;
 pub mod logs;
+pub mod storage_state;
 pub mod time;
 
 use crate::*;
 use history::History;
 use logs::Logs;
-use repo::YewRepo;
-
+use storage_state::StorageState;
 pub struct Root {
     mode: Mode,
-    repo: YewRepo,
-    storage_state: StorageState,
+    storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
@@ -37,24 +36,31 @@ pub enum RootMsg {
 impl Component for Root {
     type Message = RootMsg;
     type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let show_logs = Some(link.callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+    fn create(ctx: &yew::Context<Self>) -> Self {
+        let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
 
-        let show_history = Some(link.callback(|()| RootMsg::SwitchMode(Mode::History)));
-        let add_text = Some(link.callback(|(text_type, text)| RootMsg::AddText(text_type, text)));
-        let add_mood_reading =
-            Some(link.callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)));
-        let replace_texts =
-            Some(link.callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)));
-        let replace_mood_readings =
-            Some(link.callback(|readings| RootMsg::ReplaceMoodReadings(readings)));
+        let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
+        let add_text = Some(
+            ctx.link()
+                .callback(|(text_type, text)| RootMsg::AddText(text_type, text)),
+        );
+        let add_mood_reading = Some(
+            ctx.link()
+                .callback(|mood_reading| RootMsg::AddMoodReading(mood_reading)),
+        );
+        let replace_texts = Some(
+            ctx.link()
+                .callback(|(text_type, text)| RootMsg::ReplaceTexts(text_type, text)),
+        );
+        let replace_mood_readings = Some(
+            ctx.link()
+                .callback(|readings| RootMsg::ReplaceMoodReadings(readings)),
+        );
 
-        let repo = YewRepo::new();
-        let storage_state = StorageState::load(&repo);
+        let storage_state = StorageState::load();
 
         Self {
             mode: Mode::History,
-            repo,
             storage_state,
             show_logs,
             show_history,
@@ -64,7 +70,7 @@ impl Component for Root {
             replace_mood_readings,
         }
     }
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             RootMsg::SwitchMode(new_mode) => {
                 let old = self.mode;
@@ -76,39 +82,30 @@ impl Component for Root {
                     .sleep_entries
                     .push(TextSubmission::new(text));
 
-                self.repo
-                    .save_text(TextType::Sleep, &self.storage_state.sleep_entries)
+                repo::save_text(TextType::Sleep, &self.storage_state.sleep_entries)
                     .expect("save sleep");
 
                 true
             }
             RootMsg::AddText(TextType::Meds, text) => {
                 self.storage_state.meds.push(TextSubmission::new(text));
-                self.repo
-                    .save_text(TextType::Meds, &self.storage_state.meds)
-                    .expect("save meds");
+                repo::save_text(TextType::Meds, &self.storage_state.meds).expect("save meds");
                 true
             }
             RootMsg::AddText(TextType::Notes, text) => {
                 self.storage_state.notes.push(TextSubmission::new(text));
-
-                self.repo
-                    .save_text(TextType::Notes, &self.storage_state.notes)
-                    .expect("save notes");
+                repo::save_text(TextType::Notes, &self.storage_state.notes).expect("save notes");
                 true
             }
             RootMsg::AddMoodReading(value) => {
                 self.storage_state.mood_readings.push(value);
-                self.repo
-                    .save_mood_readings(&self.storage_state.mood_readings)
+                repo::save_mood_readings(&self.storage_state.mood_readings)
                     .expect("save mood readings");
                 true
             }
             RootMsg::ReplaceMoodReadings(readings) => {
                 self.storage_state.mood_readings = readings.clone();
-                self.repo
-                    .save_mood_readings(&readings)
-                    .expect("replace mood readings");
+                repo::save_mood_readings(&readings).expect("replace mood readings");
                 true
             }
             RootMsg::ReplaceTexts(text_type, all) => {
@@ -117,25 +114,18 @@ impl Component for Root {
                     TextType::Notes => self.storage_state.notes = all.clone(),
                     TextType::Sleep => self.storage_state.sleep_entries = all.clone(),
                 };
-                self.repo
-                    .save_text(text_type, &all)
-                    .expect("replace text entries");
+                repo::save_text(text_type, &all).expect("replace text entries");
                 true
             }
         }
     }
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        // Should only return "true" if new properties are different to
-        // previously received properties.
-        // This component has no properties so we will always return "false".
-        false
-    }
-    fn view(&self) -> Html {
+
+    fn view(&self, _ctx: &yew::Context<Self>) -> Html {
         match self.mode {
             Mode::Logs => html! {
                 <Logs
                     storage_state={self.storage_state.clone()}
-                    show_history={self.show_history.as_ref().expect("history cb")},
+                    show_history={self.show_history.as_ref().expect("history cb")}
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
@@ -144,29 +134,10 @@ impl Component for Root {
                 <History
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
-                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")},
+                    add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
             },
-        }
-    }
-}
-
-#[derive(Clone, Serialize, Debug, PartialEq)]
-pub struct StorageState {
-    mood_readings: Vec<MoodReading>,
-    meds: Vec<TextSubmission>,
-    sleep_entries: Vec<TextSubmission>,
-    notes: Vec<TextSubmission>,
-}
-
-impl StorageState {
-    pub fn load(repo: &YewRepo) -> Self {
-        Self {
-            mood_readings: repo.load_mood_readings().unwrap_or_default(),
-            meds: repo.load_text(TextType::Meds).unwrap_or_default(),
-            sleep_entries: repo.load_text(TextType::Sleep).unwrap_or_default(),
-            notes: repo.load_text(TextType::Notes).unwrap_or_default(),
         }
     }
 }
