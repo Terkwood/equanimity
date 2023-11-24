@@ -11,7 +11,7 @@ pub struct BackdateMoodReadings {
 pub enum BackdateMsg {
     DateSelected(NaiveDate),
     MoodReadingSelected(MoodReading),
-    BackdateReading(NaiveDate, MoodReading),
+    BackdateReading,
     ShowHistory,
 }
 
@@ -46,7 +46,7 @@ impl Component for BackdateMoodReadings {
                 self.current_date = Some(naive_date);
                 true
             }
-            BackdateMsg::BackdateReading(date, reading) => {
+            BackdateMsg::BackdateReading => {
                 if let Some(mood_reading) = self.mood_reading {
                     if let Some(date) = self.current_date {
                         let naive_datetime =
@@ -121,10 +121,7 @@ impl Component for BackdateMoodReadings {
 
 
                 {
-                    if let Some(mr) = &self.mood_reading {
-                        if let Some(d) = &self.current_date {
-                            let mood_reading = mr.clone();
-                            let date = d.clone();
+                    if  self.mood_reading.is_some() && self.current_date.is_some(){
                             html!{
                                 <div class="backdate-child">
                                 <button
@@ -133,14 +130,11 @@ impl Component for BackdateMoodReadings {
                                     onclick={
                                         ctx
                                             .link()
-                                            .callback(move |_| BackdateMsg::BackdateReading(date.clone(), mood_reading.clone()))}>
+                                            .callback(move |_| BackdateMsg::BackdateReading)}>
                                     { "Backdate" }
                                 </button>
                             </div>
                             }
-                        } else {
-                            html! { <> </> }
-                        }
                     } else {
                         html! { <> { "Please, select a mood." }  </> }
                     }
