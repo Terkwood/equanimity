@@ -10,6 +10,10 @@ use history::History;
 use backdate::BackdateMoodReadings;
 use logs::Logs;
 use storage_state::StorageState;
+
+
+const INITIAL_MODE: Mode = Mode::BackdateMoodReadings;
+
 pub struct Root {
     mode: Mode,
     storage_state: storage_state::StorageState,
@@ -63,7 +67,7 @@ impl Component for Root {
         let storage_state = StorageState::load();
 
         Self {
-            mode: Mode::History,
+            mode: INITIAL_MODE,
             storage_state,
             show_logs,
             show_history,

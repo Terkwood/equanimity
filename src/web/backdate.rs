@@ -20,7 +20,11 @@ impl Component for BackdateMoodReadings {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <Datepicker on_select={ ctx.link().callback(|naive_date| unimplemented!())}/>
+            <Datepicker on_select={ ctx.link()
+                .callback(|naive_date| 
+                // emit date using web_sys console.log
+                web_sys::console::log_1(&format!("Date selected: {}", naive_date).into()
+  )               )}/>
         }
     }
 }
