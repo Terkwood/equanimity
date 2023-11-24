@@ -1,7 +1,6 @@
-use yew::html::onchange;
-
 use super::StorageState;
 use crate::*;
+use yew::html::onchange;
 
 pub struct History {
     text_area: String,
@@ -105,10 +104,10 @@ impl Component for History {
                 ctx.props().show_logs.emit(());
                 false
             }
-            HistoryMsg::ShowHistory => {
-                self.show_history = true;
-                true
-            }
+            // HistoryMsg::ShowHistory => {
+            //     self.show_history = true;
+            //     true
+            // }
             HistoryMsg::FocusInput => {
                 self.show_history = false;
                 self.top_view = HistoryTopView::FocusedOnText;
@@ -205,7 +204,7 @@ impl History {
                                 rows=6
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
-                                onchange={ctx.link().callback(|e: onchange::Event| HistoryMsg::TextAreaUpdated(e.target().map(textarea::Element::value).unwrap_o+r("".to_string()))}
+                                onchange={ctx.link().callback(|e: onchange::Event| HistoryMsg::TextAreaUpdated(e.target().map(|t|t.value_of()).map(|o|o.to_string()).map(|jsstr|jsstr.into()).unwrap_or_default()))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
