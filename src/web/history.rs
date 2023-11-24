@@ -105,10 +105,6 @@ impl Component for History {
                 ctx.props().show_logs.emit(());
                 false
             }
-            // HistoryMsg::ShowHistory => {
-            //     self.show_history = true;
-            //     true
-            // }
             HistoryMsg::FocusInput => {
                 self.show_history = false;
                 self.top_view = HistoryTopView::FocusedOnText;
@@ -205,14 +201,7 @@ impl History {
                                 rows=6
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
-                                onchange={ctx.link().
-                                    callback(|e: onchange::Event|
-                                        HistoryMsg::TextAreaUpdated(e
-                                            .target()
-                                            .map(|t|t.value_of())
-                                            .map(|o|o.dyn_into::<HtmlTextAreaElement>())
-                                            .map(|text_area_elem|  text_area_elem.unwrap().value())
-                                            .unwrap_or_default()))}
+                                onchange={on_change_callback(ctx)}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
@@ -245,4 +234,16 @@ fn text_entry_button_class(top_view: &HistoryTopView) -> &'static str {
         HistoryTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,
         _ => TEXT_ENTRY_BUTTON_DEFAULT,
     }
+}
+
+fn on_change_callback(ctx: &yew::Context<History>) -> Callback<Event> {
+    ctx.link().callback(|e: onchange::Event| {
+        HistoryMsg::TextAreaUpdated(
+            e.target()
+                .map(|t| t.value_of())
+                .map(|o| o.dyn_into::<HtmlTextAreaElement>())
+                .map(|text_area_elem| text_area_elem.unwrap().value())
+                .unwrap_or_default(),
+        )
+    })
 }
