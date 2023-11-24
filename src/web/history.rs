@@ -1,6 +1,8 @@
 use super::StorageState;
 use crate::*;
+use web_sys::HtmlTextAreaElement;
 use yew::html::onchange;
+use js_sys::{JsString, Object};
 
 pub struct History {
     text_area: String,
@@ -204,7 +206,14 @@ impl History {
                                 rows=6
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
-                                onchange={ctx.link().callback(|e: onchange::Event| HistoryMsg::TextAreaUpdated(e.target().map(|t|t.value_of()).map(|o|o.to_string()).map(|jsstr|jsstr.into()).unwrap_or_default()))}
+                                onchange={ctx.link().
+                                    callback(|e: onchange::Event| 
+                                        HistoryMsg::TextAreaUpdated(e
+                                            .target()
+                                            .map(|t|t.value_of())
+                                            .map(|o|o.dyn_into::<HtmlTextAreaElement>())
+                                            .map(|text_area_elem|  text_area_elem.unwrap().value())
+                                            .unwrap_or_default()))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
