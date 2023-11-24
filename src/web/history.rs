@@ -42,7 +42,7 @@ impl Component for History {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
             show_history: true,
-            storage_state: StorageState::load(),
+            storage_state:  ctx.props().storage_state.clone()
         }
     }
 
@@ -121,6 +121,7 @@ impl Component for History {
     fn changed(&mut self, ctx: &yew::Context<Self>) -> bool {
         if self.storage_state != ctx.props().storage_state {
             self.storage_state = ctx.props().storage_state.clone();
+            web_sys::console::log_1(&"changed".into());
             true
         } else {
             false

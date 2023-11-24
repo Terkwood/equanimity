@@ -11,7 +11,7 @@ const SLEEP_KEY: &str = "sleep";
 pub fn save_mood_readings(all: &Vec<MoodReading>) -> Result<(), StorageError> {
     LocalStorage::set(
         MOOD_READINGS_KEY,
-        serde_json::to_string(all).expect("readings to string"),
+        all,
     )
 }
 
@@ -25,8 +25,10 @@ pub fn save_text(text_type: TextType, all: &Vec<TextSubmission>) -> Result<(), S
 pub fn load_mood_readings() -> Result<Vec<MoodReading>, LoadErr> {
     Ok(
         if let Ok(restored_model) = LocalStorage::get(MOOD_READINGS_KEY) {
+            web_sys::console::log_1(&"got mood readings".into());
             restored_model
         } else {
+            web_sys::console::log_1(&"no mood readings".into());
             Vec::new()
         },
     )
