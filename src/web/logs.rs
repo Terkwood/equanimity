@@ -190,7 +190,7 @@ impl Component for Logs {
         }
     }
 
-    fn changed(&mut self, ctx: &yew::Context<Self>) -> bool {
+    fn changed(&mut self, ctx: &yew::Context<Self>, _old_props: &Self::Properties) -> bool {
         if self.storage_state != ctx.props().storage_state {
             self.storage_state = ctx.props().storage_state.clone();
             self.entries = derive_entries(&self.storage_state);
