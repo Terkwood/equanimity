@@ -55,7 +55,7 @@ impl Component for History {
                 true
             }
             HistoryMsg::TextAreaUpdated(s) => {
-                self.text_area = s;
+                self.text_area.push_str(&s);
                 true
             }
             HistoryMsg::SubmitSleep => {
