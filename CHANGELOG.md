@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Terkwood/equanimity/compare/v1.2.5...v1.3.0) (2023-11-24)
+
+
+### Features
+
+* backdate mood readings ([#106](https://github.com/Terkwood/equanimity/issues/106)) ([0f78ae1](https://github.com/Terkwood/equanimity/commit/0f78ae10c369a3c3b552dd0b9758f89dd1a8c576))
+
 ### [1.2.5](https://github.com/Terkwood/equanimity/compare/v1.2.4...v1.2.5) (2023-11-24)
 
 
