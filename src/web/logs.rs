@@ -7,7 +7,7 @@ use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
     entries: Vec<Entry>,
-    mode: LogsMode
+    mode: LogsMode,
 }
 
 pub enum LogsMsg {
@@ -74,10 +74,7 @@ impl Component for Logs {
 
         let mode = LogsMode::View;
 
-        Self {
-            entries,
-            mode
-        }
+        Self { entries, mode }
     }
     fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {

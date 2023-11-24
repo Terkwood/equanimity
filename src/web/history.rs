@@ -4,7 +4,7 @@ use crate::*;
 pub struct History {
     text_area: String,
     top_view: HistoryTopView,
-    show_history: bool
+    show_history: bool,
 }
 
 pub enum HistoryTopView {
@@ -40,7 +40,7 @@ impl Component for History {
         Self {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
-            show_history: true
+            show_history: true,
         }
     }
 
