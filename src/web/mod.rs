@@ -130,7 +130,9 @@ impl Component for Root {
     fn view(&self, _ctx: &yew::Context<Self>) -> Html {
         match self.mode {
             Mode::BackdateMoodReadings => html!{
-                <BackdateMoodReadings/>
+                <BackdateMoodReadings
+                    add_mood_reading={self.add_mood_reading.as_ref().expect("add mood reading cb backdate")}
+                />
             },
             Mode::Logs => html! {
                 <Logs

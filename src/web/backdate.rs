@@ -1,9 +1,8 @@
-use chrono::NaiveDate;
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use yew::Component; 
 use crate::*;
 use yew_datepicker::Datepicker;
 
-use super::storage_state::StorageState;
 
 pub struct BackdateMoodReadings {
     pub mood_reading: Option<MoodReading>,
@@ -16,15 +15,20 @@ pub enum BackdateMsg {
     BackdateReading(NaiveDate, MoodReading),
 }
 
+#[derive(Properties, Clone, PartialEq)]
+pub struct BackdateProps {
+    pub add_mood_reading: Callback<MoodReading>,
+}
+
 impl Component for BackdateMoodReadings {
     type Message = BackdateMsg;
-    type Properties = ();
+    type Properties = BackdateProps;
 
     fn create(_: &Context<Self>) -> Self {
         Self { mood_reading: None, current_date: None, }
     }
 
-    fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             BackdateMsg::MoodReadingSelected(mood_reading) => {
                 self.mood_reading = Some(mood_reading);
@@ -34,6 +38,17 @@ impl Component for BackdateMoodReadings {
             }
             BackdateMsg::BackdateReading(date, reading) => {
                 web_sys::console::log_1(&format!("Backdating mood reading {:?} to {:?}", reading, date).into());
+            
+                if let Some(mood_reading) = self.mood_reading {
+                   if let Some(date) = self.current_date {
+                        let naive_datetime = NaiveDateTime::new(date, NaiveTime::from_hms_opt(0, 0, 0).unwrap());
+                        ctx.props().add_mood_reading.emit(
+                            MoodReading {
+                                value: mood_reading.value, 
+                                epoch_millis: naive_datetime.timestamp_millis() as u64,
+                            } );
+                    }
+                }
             }
         }
         
