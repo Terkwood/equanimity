@@ -34,21 +34,23 @@ impl Component for BackdateMoodReadings {
         true
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        html! {
-            <>
-                <Datepicker on_select={ ctx.link()
-                    .callback(|naive_date| 
-                        BackdateMsg::DateSelected(naive_date))}/>
+    fn view(&self, ctx: &Context<Self>) -> Html { 
+        html! { 
+            <div id="backdate">
+            <h1> {"Backdate Mood Readings"} </h1>
+            <Datepicker on_select={ ctx.link()
+                .callback(|naive_date| 
+                    BackdateMsg::DateSelected(naive_date))}/>
 
-                { if self.request_user_pick_date {
-                    html! {
-                        <p> {"Please pick a date."} </p>
-                    }
-                } else {
-                    html! {</>}
-                }
-            </>
+            { 
+              if self.request_user_pick_date {
+                html! { <p> {"Please pick a date."} </p> } 
+              } else { 
+                html! { <> </> } 
+              }
+            }
+
+            </div>
         }
     }
 }
