@@ -2,7 +2,6 @@ use super::StorageState;
 use crate::*;
 use web_sys::HtmlTextAreaElement;
 use yew::html::onchange;
-use js_sys::{JsString, Object};
 
 pub struct History {
     text_area: String,
