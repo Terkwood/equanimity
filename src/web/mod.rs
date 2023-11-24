@@ -11,13 +11,14 @@ use history::History;
 use logs::Logs;
 use storage_state::StorageState;
 
-const INITIAL_MODE: Mode = Mode::BackdateMoodReadings;
+const INITIAL_MODE: Mode = Mode::History;
 
 pub struct Root {
     mode: Mode,
     storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
+    show_backdate: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
@@ -45,6 +46,10 @@ impl Component for Root {
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
         let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
+        let show_backdate = Some(
+            ctx.link()
+                .callback(|()| RootMsg::SwitchMode(Mode::BackdateMoodReadings)),
+        );
 
         let add_text = Some(
             ctx.link()
@@ -70,6 +75,7 @@ impl Component for Root {
             storage_state,
             show_logs,
             show_history,
+            show_backdate,
             add_mood_reading,
             add_text,
             replace_texts,
@@ -138,6 +144,7 @@ impl Component for Root {
                 <Logs
                     storage_state={self.storage_state.clone()}
                     show_history={self.show_history.as_ref().expect("history cb")}
+                    show_backdate={self.show_backdate.as_ref().expect("backdate cb")}
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
