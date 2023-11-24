@@ -179,3 +179,25 @@ textarea {
   grid-template: repeat(1, 1fr) / repeat(2, 1fr);
   grid-auto-flow: column;
 }
+
+
+
+#backdate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  margin: auto;
+  width: 100%;
+}
+
+.backdate-child {
+  padding: 8px 18px; 
+}
+
+.backdate-child table {
+  margin: auto;
+  width: 100%;
+}

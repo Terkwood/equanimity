@@ -3,7 +3,7 @@ authors = ["Terkwood <38859656+Terkwood@users.noreply.github.com>"]
 description = "mood tracking web application"
 edition = "2021"
 name = "equanimity"
-version = "1.2.5"
+version = "1.3.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -20,4 +20,5 @@ serde_json = "1.0.108"
 wasm-bindgen = "0.2.88"
 web-sys = {version = "0.3.65", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
 yew = {version = "0.21.0", features = ["csr"]}
+yew-datepicker = {git = "https://github.com/Terkwood/yew-datepicker",  branch = "hack/english" }
 yew-export-button = {git = "https://github.com/Terkwood/yew-export-button", tag = "v3.0.0" }

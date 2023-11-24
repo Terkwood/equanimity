@@ -2,8 +2,6 @@ use super::about;
 use super::time::js_utc_datetime;
 use super::StorageState;
 use crate::*;
-use yew::virtual_dom::VNode;
-use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
     entries: Vec<Entry>,
@@ -12,6 +10,7 @@ pub struct Logs {
 
 pub enum LogsMsg {
     ShowHistory,
+    ShowBackdate,
     ToggleDeleteMode,
     ToggleAboutMode,
     Delete(Entry),
@@ -27,6 +26,7 @@ pub enum LogsMode {
 #[derive(Properties, Clone, PartialEq)]
 pub struct LogsProps {
     pub show_history: Callback<()>,
+    pub show_backdate: Callback<()>,
     pub storage_state: StorageState,
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
     pub replace_mood_readings: Callback<Vec<MoodReading>>,
@@ -62,10 +62,6 @@ impl Ord for Entry {
     }
 }
 
-const EXPORT_BUTTON_CSS_ID: &str = "export-button";
-const EXPORT_LINK_CSS_CLASS: &str = "fancy-button thick";
-const EXPORT_FILE_PREFIX: &str = "equanimity";
-
 impl Component for Logs {
     type Message = LogsMsg;
     type Properties = LogsProps;
@@ -78,6 +74,10 @@ impl Component for Logs {
     }
     fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
         match msg {
+            LogsMsg::ShowBackdate => {
+                ctx.props().show_backdate.emit(());
+                false
+            }
             LogsMsg::ShowHistory => {
                 ctx.props().show_history.emit(());
                 false
@@ -196,17 +196,8 @@ impl Component for Logs {
     fn view(&self, ctx: &yew::Context<Self>) -> Html {
         if self.mode == LogsMode::About {
             let callback = ctx.link().callback(|_| LogsMsg::ToggleAboutMode);
-            about::section(callback)
+            about::section(callback, ctx)
         } else {
-            let export_button: VNode = export_button(
-                &ctx.props().storage_state,
-                ButtonOpts {
-                    a_class: EXPORT_LINK_CSS_CLASS.to_string(),
-                    button_id: EXPORT_BUTTON_CSS_ID.to_string(),
-                    file_prefix: EXPORT_FILE_PREFIX.to_string(),
-                    utc_millis: utc_now(),
-                },
-            );
             html! { <>
                 <div id="logs-button-grid">
                     <div class="center">
@@ -216,7 +207,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ToggleDeleteMode )}>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        {  export_button }
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowBackdate)}>{ "Backdate 🗓️" }</button>
                     </div>
                     <div class="center">
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHistory)}>{ "Hist 🔴" }</button>
