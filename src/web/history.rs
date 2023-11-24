@@ -1,3 +1,5 @@
+use yew::html::onchange;
+
 use super::StorageState;
 use crate::*;
 
@@ -21,7 +23,6 @@ pub enum HistoryMsg {
     SubmitNotes,
     ShowLogs,
     ToggleTopView,
-    ShowHistory,
     FocusInput,
 }
 
@@ -204,10 +205,7 @@ impl History {
                                 rows=6
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
-                                onchange={ctx.link().callback(|_| HistoryMsg::ShowHistory)}
-                                oninput={ctx.link().callback(|e: InputEvent |
-                                        HistoryMsg::TextAreaUpdated(e.data().unwrap_or_default())
-                                    )}
+                                onchange={ctx.link().callback(|e: onchange::Event| HistoryMsg::TextAreaUpdated(e.target().map(textarea::Element::value).unwrap_o+r("".to_string()))}
                                 placeholder="Greetings.">
                             </textarea>
                         </div>
