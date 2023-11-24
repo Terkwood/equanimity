@@ -2,13 +2,15 @@ mod about;
 mod history;
 pub mod logs;
 pub mod time;
+pub mod storage_state;
 
 use crate::*;
+use storage_state::StorageState;
 use history::History;
 use logs::Logs;
 pub struct Root {
     mode: Mode,
-    storage_state: StorageState,
+    storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
     show_history: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
@@ -140,21 +142,4 @@ impl Component for Root {
     }
 }
 
-#[derive(Clone, Serialize, Debug, PartialEq)]
-pub struct StorageState {
-    mood_readings: Vec<MoodReading>,
-    meds: Vec<TextSubmission>,
-    sleep_entries: Vec<TextSubmission>,
-    notes: Vec<TextSubmission>,
-}
 
-impl StorageState {
-    pub fn load() -> Self {
-        Self {
-            mood_readings: repo::load_mood_readings().unwrap_or_default(),
-            meds: repo::load_text(TextType::Meds).unwrap_or_default(),
-            sleep_entries: repo::load_text(TextType::Sleep).unwrap_or_default(),
-            notes: repo::load_text(TextType::Notes).unwrap_or_default(),
-        }
-    }
-}
