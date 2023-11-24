@@ -4,8 +4,7 @@ use crate::*;
 pub struct History {
     text_area: String,
     top_view: HistoryTopView,
-    show_history: bool,
-    storage_state: StorageState,
+    show_history: bool
 }
 
 pub enum HistoryTopView {
@@ -37,12 +36,11 @@ pub struct HistoryProps {
 impl Component for History {
     type Message = HistoryMsg;
     type Properties = HistoryProps;
-    fn create(ctx: &yew::Context<Self>) -> Self {
+    fn create(_ctx: &yew::Context<Self>) -> Self {
         Self {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
-            show_history: true,
-            storage_state: ctx.props().storage_state.clone(),
+            show_history: true
         }
     }
 
@@ -118,9 +116,8 @@ impl Component for History {
         }
     }
 
-    fn changed(&mut self, ctx: &yew::Context<Self>, _old_props: &Self::Properties) -> bool {
-        if self.storage_state != ctx.props().storage_state {
-            self.storage_state = ctx.props().storage_state.clone();
+    fn changed(&mut self, ctx: &yew::Context<Self>, old_props: &Self::Properties) -> bool {
+        if old_props.storage_state != ctx.props().storage_state {
             true
         } else {
             false

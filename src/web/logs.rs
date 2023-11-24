@@ -7,8 +7,7 @@ use yew_export_button::{export_button, ButtonOpts};
 
 pub struct Logs {
     entries: Vec<Entry>,
-    mode: LogsMode,
-    storage_state: StorageState,
+    mode: LogsMode
 }
 
 pub enum LogsMsg {
@@ -77,8 +76,7 @@ impl Component for Logs {
 
         Self {
             entries,
-            mode,
-            storage_state: ctx.props().storage_state.clone(),
+            mode
         }
     }
     fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
@@ -190,10 +188,9 @@ impl Component for Logs {
         }
     }
 
-    fn changed(&mut self, ctx: &yew::Context<Self>, _old_props: &Self::Properties) -> bool {
-        if self.storage_state != ctx.props().storage_state {
-            self.storage_state = ctx.props().storage_state.clone();
-            self.entries = derive_entries(&self.storage_state);
+    fn changed(&mut self, ctx: &yew::Context<Self>, old_props: &Self::Properties) -> bool {
+        if old_props.storage_state != ctx.props().storage_state {
+            self.entries = derive_entries(&ctx.props().storage_state);
             true
         } else {
             false
