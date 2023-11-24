@@ -121,7 +121,6 @@ impl Component for History {
     fn changed(&mut self, ctx: &yew::Context<Self>) -> bool {
         if self.storage_state != ctx.props().storage_state {
             self.storage_state = ctx.props().storage_state.clone();
-            web_sys::console::log_1(&"changed".into());
             true
         } else {
             false

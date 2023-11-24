@@ -18,17 +18,16 @@ pub fn save_mood_readings(all: &Vec<MoodReading>) -> Result<(), StorageError> {
 pub fn save_text(text_type: TextType, all: &Vec<TextSubmission>) -> Result<(), StorageError> {
     LocalStorage::set(
         text_key(text_type),
-        serde_json::to_string(all).expect("text subs to string"),
+        all,
     )
 }
 
 pub fn load_mood_readings() -> Result<Vec<MoodReading>, LoadErr> {
     Ok(
         if let Ok(restored_model) = LocalStorage::get(MOOD_READINGS_KEY) {
-            web_sys::console::log_1(&"got mood readings".into());
+          
             restored_model
         } else {
-            web_sys::console::log_1(&"no mood readings".into());
             Vec::new()
         },
     )
