@@ -1,13 +1,13 @@
 mod about;
 mod history;
 pub mod logs;
-pub mod time;
 pub mod storage_state;
+pub mod time;
 
 use crate::*;
-use storage_state::StorageState;
 use history::History;
 use logs::Logs;
+use storage_state::StorageState;
 pub struct Root {
     mode: Mode,
     storage_state: storage_state::StorageState,
@@ -141,5 +141,3 @@ impl Component for Root {
         }
     }
 }
-
-

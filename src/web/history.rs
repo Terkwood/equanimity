@@ -42,7 +42,7 @@ impl Component for History {
             top_view: HistoryTopView::MoodButtons,
             text_area: "".to_string(),
             show_history: true,
-            storage_state:  ctx.props().storage_state.clone()
+            storage_state: ctx.props().storage_state.clone(),
         }
     }
 
