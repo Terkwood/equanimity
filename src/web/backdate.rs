@@ -66,10 +66,25 @@ impl Component for BackdateMoodReadings {
                     .callback(|naive_date| 
                         BackdateMsg::DateSelected(naive_date))}/>
 
-                { if self.request_user_pick_date {
-                    html! { <p> {"Please pick a date."} </p> } 
-                } else { 
-                    html! { <> </> } } } 
+                <p>
+                { 
+                    if let Some(d) =  self.current_date {
+                        format!("Date selected: {:?}",d)
+                    } else { 
+                        "No date selected".to_string() 
+                    } 
+                }
+                </p>
+                    
+                     
+
+                { 
+                    if self.request_user_pick_date {
+                        html! { <p> {"Please pick a date."} </p> } 
+                    } else { 
+                        html! { <> </> } 
+                    } 
+                } 
             </div>
             </>
         }
