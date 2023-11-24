@@ -13,11 +13,13 @@ pub enum BackdateMsg {
     DateSelected(NaiveDate),
     MoodReadingSelected(MoodReading),
     BackdateReading(NaiveDate, MoodReading),
+    ShowHistory,
 }
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct BackdateProps {
     pub add_mood_reading: Callback<MoodReading>,
+    pub show_history: Callback<()>,
 }
 
 impl Component for BackdateMoodReadings {
@@ -30,11 +32,17 @@ impl Component for BackdateMoodReadings {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
+            BackdateMsg::ShowHistory => {
+                ctx.props().show_history.emit(());
+                false
+            }
             BackdateMsg::MoodReadingSelected(mood_reading) => {
                 self.mood_reading = Some(mood_reading);
+                true
             }
             BackdateMsg::DateSelected(naive_date) => {
                 self.current_date = Some(naive_date);
+                true
             }
             BackdateMsg::BackdateReading(date, reading) => {
                 web_sys::console::log_1(&format!("Backdating mood reading {:?} to {:?}", reading, date).into());
@@ -49,10 +57,10 @@ impl Component for BackdateMoodReadings {
                             } );
                     }
                 }
+
+                true
             }
-        }
-        
-        true
+        } 
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html { 
@@ -107,7 +115,7 @@ impl Component for BackdateMoodReadings {
                             html!{
                                 <div class="backdate-child">
                                 <button 
-                                    class="fancy-button" 
+                                    class="fancy-button thick" 
                                     role="button" 
                                     onclick={
                                         ctx
@@ -121,9 +129,17 @@ impl Component for BackdateMoodReadings {
                             html! { <> </> }
                         }
                     } else { 
-                        html! { <> </> } 
+                        html! { <> { "Please, select a mood." }  </> } 
                     }
                 }
+
+                <div class="backdate-child">
+                    <button class="fancy-button thick"
+                        role="button"
+                        onclick={ctx.link().callback(|_| BackdateMsg::ShowHistory) }>
+                        { "Show History" }
+                    </button>
+                </div>
                 
             </div>
             </>

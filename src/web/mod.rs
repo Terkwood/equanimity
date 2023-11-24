@@ -45,8 +45,8 @@ impl Component for Root {
     type Properties = ();
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
-
         let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
+
         let add_text = Some(
             ctx.link()
                 .callback(|(text_type, text)| RootMsg::AddText(text_type, text)),
@@ -132,6 +132,7 @@ impl Component for Root {
             Mode::BackdateMoodReadings => html!{
                 <BackdateMoodReadings
                     add_mood_reading={self.add_mood_reading.as_ref().expect("add mood reading cb backdate")}
+                    show_history={self.show_history.as_ref().expect("history cb")}
                 />
             },
             Mode::Logs => html! {
