@@ -3,7 +3,7 @@ authors = ["Terkwood <38859656+Terkwood@users.noreply.github.com>"]
 description = "mood tracking web application"
 edition = "2021"
 name = "equanimity"
-version = "1.2.4"
+version = "1.2.5-b"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -18,6 +18,6 @@ serde = "1.0.192"
 serde_derive = "1.0.192"
 serde_json = "1.0.108"
 wasm-bindgen = "0.2.88"
-web-sys = {version = "0.3.65", features = ["Window", "Storage"]}
+web-sys = {version = "0.3.65", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
 yew = {version = "0.21.0", features = ["csr"]}
 yew-export-button = {git = "https://github.com/Terkwood/yew-export-button", tag = "v3.0.0" }
