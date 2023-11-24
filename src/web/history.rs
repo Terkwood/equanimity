@@ -99,6 +99,7 @@ impl Component for History {
                     HistoryTopView::MoodButtons => HistoryTopView::WaitingForText,
                     _ => HistoryTopView::MoodButtons,
                 };
+                self.show_history = !self.show_history;
                 true
             }
             HistoryMsg::ShowLogs => {
