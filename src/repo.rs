@@ -11,7 +11,6 @@ pub fn save_mood_readings(all: &Vec<MoodReading>) -> Result<(), StorageError> {
     LocalStorage::set(MOOD_READINGS_KEY, all)
 }
 
-
 pub fn save_text(text_type: TextType, all: &Vec<TextSubmission>) -> Result<(), StorageError> {
     LocalStorage::set(text_key(text_type), all)
 }

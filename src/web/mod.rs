@@ -1,16 +1,15 @@
 mod about;
+mod backdate;
 mod history;
 pub mod logs;
 pub mod storage_state;
 pub mod time;
-mod backdate;
 
 use crate::*;
-use history::History;
 use backdate::BackdateMoodReadings;
+use history::History;
 use logs::Logs;
 use storage_state::StorageState;
-
 
 const INITIAL_MODE: Mode = Mode::BackdateMoodReadings;
 
@@ -29,7 +28,7 @@ pub struct Root {
 pub enum Mode {
     Logs,
     History,
-    BackdateMoodReadings
+    BackdateMoodReadings,
 }
 
 pub enum RootMsg {
@@ -129,7 +128,7 @@ impl Component for Root {
 
     fn view(&self, _ctx: &yew::Context<Self>) -> Html {
         match self.mode {
-            Mode::BackdateMoodReadings => html!{
+            Mode::BackdateMoodReadings => html! {
                 <BackdateMoodReadings
                     add_mood_reading={self.add_mood_reading.as_ref().expect("add mood reading cb backdate")}
                     show_history={self.show_history.as_ref().expect("history cb")}

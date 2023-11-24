@@ -1,8 +1,7 @@
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use yew::Component; 
 use crate::*;
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use yew::Component;
 use yew_datepicker::Datepicker;
-
 
 pub struct BackdateMoodReadings {
     pub mood_reading: Option<MoodReading>,
@@ -27,7 +26,10 @@ impl Component for BackdateMoodReadings {
     type Properties = BackdateProps;
 
     fn create(_: &Context<Self>) -> Self {
-        Self { mood_reading: None, current_date: None, }
+        Self {
+            mood_reading: None,
+            current_date: None,
+        }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
@@ -45,26 +47,28 @@ impl Component for BackdateMoodReadings {
                 true
             }
             BackdateMsg::BackdateReading(date, reading) => {
-                web_sys::console::log_1(&format!("Backdating mood reading {:?} to {:?}", reading, date).into());
-            
+                web_sys::console::log_1(
+                    &format!("Backdating mood reading {:?} to {:?}", reading, date).into(),
+                );
+
                 if let Some(mood_reading) = self.mood_reading {
-                   if let Some(date) = self.current_date {
-                        let naive_datetime = NaiveDateTime::new(date, NaiveTime::from_hms_opt(0, 0, 0).unwrap());
-                        ctx.props().add_mood_reading.emit(
-                            MoodReading {
-                                value: mood_reading.value, 
-                                epoch_millis: naive_datetime.timestamp_millis() as u64,
-                            } );
+                    if let Some(date) = self.current_date {
+                        let naive_datetime =
+                            NaiveDateTime::new(date, NaiveTime::from_hms_opt(0, 0, 0).unwrap());
+                        ctx.props().add_mood_reading.emit(MoodReading {
+                            value: mood_reading.value,
+                            epoch_millis: naive_datetime.timestamp_millis() as u64,
+                        });
                     }
                 }
 
                 true
             }
-        } 
+        }
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html { 
-        html! {  
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        html! {
             <>
             <div id="mood-button-grid">
                 <div class="center">
@@ -88,24 +92,24 @@ impl Component for BackdateMoodReadings {
                 <div class="center">
                     <button class="fancy-button mood-button" role="button" onclick={ctx.link().callback(|_| BackdateMsg::MoodReadingSelected(MoodReading::new(3)))}>{ "🤯 3️⃣ 🤯" }</button>
                 </div>
-            </div> 
- 
+            </div>
+
             <div id="backdate">
                 <div class="backdate-child">
                 <Datepicker on_select={ ctx.link()
-                    .callback(|naive_date| 
+                    .callback(|naive_date|
                         BackdateMsg::DateSelected(naive_date))}/>
                 </div>
                 <div class="backdate-child">
-                { 
+                {
                     if let Some(d) =  self.current_date {
                         format!("Date selected: {:?}",d)
-                    } else { 
-                        "Please, select a date.".to_string() 
-                    } 
+                    } else {
+                        "Please, select a date.".to_string()
+                    }
                 }
-                </div>    
-                     
+                </div>
+
 
                 {
                     if let Some(mr) = &self.mood_reading {
@@ -114,9 +118,9 @@ impl Component for BackdateMoodReadings {
                             let date = d.clone();
                             html!{
                                 <div class="backdate-child">
-                                <button 
-                                    class="fancy-button thick" 
-                                    role="button" 
+                                <button
+                                    class="fancy-button thick"
+                                    role="button"
                                     onclick={
                                         ctx
                                             .link()
@@ -128,8 +132,8 @@ impl Component for BackdateMoodReadings {
                         } else {
                             html! { <> </> }
                         }
-                    } else { 
-                        html! { <> { "Please, select a mood." }  </> } 
+                    } else {
+                        html! { <> { "Please, select a mood." }  </> }
                     }
                 }
 
@@ -140,7 +144,7 @@ impl Component for BackdateMoodReadings {
                         { "Show History" }
                     </button>
                 </div>
-                
+
             </div>
             </>
         }
