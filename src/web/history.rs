@@ -206,7 +206,7 @@ impl History {
                                 value={self.text_area.clone()}
                                 onfocus={ctx.link().callback(|_| HistoryMsg::FocusInput)}
                                 onchange={ctx.link().
-                                    callback(|e: onchange::Event| 
+                                    callback(|e: onchange::Event|
                                         HistoryMsg::TextAreaUpdated(e
                                             .target()
                                             .map(|t|t.value_of())
