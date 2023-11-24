@@ -47,10 +47,6 @@ impl Component for BackdateMoodReadings {
                 true
             }
             BackdateMsg::BackdateReading(date, reading) => {
-                web_sys::console::log_1(
-                    &format!("Backdating mood reading {:?} to {:?}", reading, date).into(),
-                );
-
                 if let Some(mood_reading) = self.mood_reading {
                     if let Some(date) = self.current_date {
                         let naive_datetime =
@@ -100,6 +96,19 @@ impl Component for BackdateMoodReadings {
                     .callback(|naive_date|
                         BackdateMsg::DateSelected(naive_date))}/>
                 </div>
+                {
+                    if let Some(mr) = self.mood_reading {
+                        html! {
+                            <div class="day-container backdate-child">
+                                <div class="piplabel">{ pips::blank_label() }</div>
+                                <div class="pips">{ pips::circles(&[mr.value]) }</div>
+                                <div class="piplabel">{ pips::blank_label() }</div>
+                            </div>
+                        }
+                    } else { html! { <></> } }
+                }
+
+
                 <div class="backdate-child">
                 {
                     if let Some(d) =  self.current_date {

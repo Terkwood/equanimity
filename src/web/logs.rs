@@ -207,7 +207,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ToggleDeleteMode )}>{ "Delete 🗑" }</button>
                     </div>
                     <div class="center">
-                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHistory)}>{ "Backdate 🗓️" }</button>
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowBackdate)}>{ "Backdate 🗓️" }</button>
                     </div>
                     <div class="center">
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHistory)}>{ "Hist 🔴" }</button>
