@@ -4,9 +4,18 @@ mood charting utility with a focus on privacy
 
 ## build and run
 
+For development
+
 ```sh
-MYIP=$(ip addr|grep 192|awk '{ print $2 }'|sed 's;\/[0-9]*;;')
-sh build.sh && miniserve --port 9999 -i $MYIP ./dist --index index.html
+./run_dev.sh
+```
+
+## deploy to firebase
+
+It will do a production build, then `firebase deploy`
+
+```sh
+sh deploy.sh
 ```
 
 ## papers and articles
