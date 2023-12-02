@@ -15,19 +15,6 @@ pub fn circles(moods: &[i8]) -> String {
     let blue = deepest_blue(moods);
     let equanimity = had_equanimity(moods);
 
-    let red_circles = format!(
-        "{}{}",
-        MANIC_CIRCLE.to_string().repeat(red as usize),
-        EMPTY_CIRCLE.to_string().repeat(3 - red as usize)
-    );
-    let blue_circles = format!(
-        "{}{}",
-        EMPTY_CIRCLE
-            .to_string()
-            .repeat(3 - (i8::abs(blue) as usize)),
-        DEPRESSED_CIRCLE.to_string().repeat(i8::abs(blue) as usize)
-    );
-
     // define a string which shows EQUANIMITY_CIRCLE if equanimity is true, otherwise EMPTY_CIRCLE
     let equanimity_circle = if equanimity {
         EQUANIMITY_CIRCLE
@@ -35,7 +22,29 @@ pub fn circles(moods: &[i8]) -> String {
         EMPTY_CIRCLE
     };
 
-    format!("{}{}{}", blue_circles, equanimity_circle, red_circles)
+    format!(
+        "{}{}{}",
+        blue_circles(blue),
+        equanimity_circle,
+        red_circles(red)
+    )
+}
+
+pub fn red_circles(red: i8) -> String {
+    format!(
+        "{}{}",
+        MANIC_CIRCLE.to_string().repeat(red as usize),
+        EMPTY_CIRCLE.to_string().repeat(3 - red as usize)
+    )
+}
+pub fn blue_circles(blue: i8) -> String {
+    format!(
+        "{}{}",
+        EMPTY_CIRCLE
+            .to_string()
+            .repeat(3 - (i8::abs(blue) as usize)),
+        DEPRESSED_CIRCLE.to_string().repeat(i8::abs(blue) as usize)
+    )
 }
 
 pub fn day_label(day: &chrono::NaiveDate) -> String {

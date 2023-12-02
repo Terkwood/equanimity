@@ -1,6 +1,7 @@
 use super::about;
-use super::time:: formatted_js_date;
+use super::time::formatted_js_date;
 use super::StorageState;
+use crate::pips::{blue_circles, red_circles};
 use crate::*;
 
 pub struct Logs {
@@ -230,7 +231,15 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <li>
-                    { format!("[{} mood] {}", date_string, value) }
+                    { format!("{} {}", date_string,
+                        if value == 0 { "⚪".to_string() }
+                        else {
+                            if value > 0 {
+                                red_circles(value).replace("⚫", "")
+                            } else {
+                                blue_circles(value).replace("⚫", "")
+                                 .chars().rev().collect()
+                            }}) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
@@ -247,7 +256,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <li>
-                    { format!("[{} sleep] {}", date_string, value) }
+                    { format!("{} 😴 {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
@@ -264,7 +273,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <li>
-                    { format!("[{} meds] {}", date_string, value) }
+                    { format!("{} 💊 {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
@@ -281,7 +290,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <li>
-                    { format!("[{} note] {}", date_string, value) }
+                    { format!("{} 🗒️ {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
