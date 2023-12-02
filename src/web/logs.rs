@@ -233,7 +233,7 @@ impl Component for Logs {
     }
 }
 
-fn sort_days(entries: &HashMap<NaiveDate,Vec<Entry>>) -> Vec<(NaiveDate, Vec<Entry>)> {
+fn sort_days(entries: &HashMap<NaiveDate, Vec<Entry>>) -> Vec<(NaiveDate, Vec<Entry>)> {
     let mut out = vec![];
     for (date, entries) in entries.iter() {
         out.push((*date, entries.clone()));
@@ -252,11 +252,10 @@ impl Logs {
     ) -> Html {
         // Format date as "Monday, January 1st 2023"
         let date_string: String = date.format("%A, %B %-d, %Y").to_string();
-        
+
         let mut out = day_entries.clone();
         out.sort_by(|a, b| b.timestamp().cmp(&a.timestamp()));
 
-        web_sys::console::log_1(&format!("sorted: {:?}", out).into());
         html! {
             <>
                 <div class="date">{ date_string }</div>
@@ -272,7 +271,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {} {}", date_string, e.timestamp(),
+                    { format!("{} {}", date_string,
                         if value == 0 { "⚪".to_string() }
                         else {
                             if value > 0 {
@@ -297,7 +296,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {} 😴 {}", date_string, epoch_millis, value) }
+                    { format!("{} 😴 {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
@@ -314,7 +313,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {} 💊 {}", date_string,epoch_millis, value) }
+                    { format!("{} 💊 {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
@@ -331,7 +330,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {} 🗒️ {}", date_string,epoch_millis, value) }
+                    { format!("{} 🗒️ {}", date_string, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
@@ -361,15 +360,15 @@ fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>
     let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
         let d = entry_date(&Entry::Mood(m.clone()));
-        if let Some(e) = entries.get_mut( &d) {
+        if let Some(e) = entries.get_mut(&d) {
             e.push(Entry::Mood(m.clone()))
         } else {
-            entries.insert( d, vec![Entry::Mood(m.clone())]);
+            entries.insert(d, vec![Entry::Mood(m.clone())]);
         }
     }
     for s in &storage_state.sleep_entries {
         let d = entry_date(&Entry::Sleep(s.clone()));
-        if let Some(e) = entries.get_mut( &d) {
+        if let Some(e) = entries.get_mut(&d) {
             e.push(Entry::Sleep(s.clone()))
         } else {
             entries.insert(d, vec![Entry::Sleep(s.clone())]);
@@ -377,7 +376,7 @@ fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>
     }
     for m in &storage_state.meds {
         let d = entry_date(&Entry::Meds(m.clone()));
-        if let Some(e) = entries.get_mut( &d) {
+        if let Some(e) = entries.get_mut(&d) {
             e.push(Entry::Meds(m.clone()))
         } else {
             entries.insert(d, vec![Entry::Meds(m.clone())]);
@@ -385,7 +384,7 @@ fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>
     }
     for n in &storage_state.notes {
         let d = entry_date(&Entry::Note(n.clone()));
-        if let Some(e) = entries.get_mut(&d ) {
+        if let Some(e) = entries.get_mut(&d) {
             e.push(Entry::Note(n.clone()))
         } else {
             entries.insert(d, vec![Entry::Note(n.clone())]);
@@ -398,18 +397,12 @@ fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>
 fn entry_date(e: &Entry) -> NaiveDate {
     let date = js_sys::Date::new(&JsValue::from_f64(e.timestamp() as f64));
 
-    let out = NaiveDate::from_ymd_opt(
+    NaiveDate::from_ymd_opt(
         date.get_full_year() as i32,
         date.get_month() as u32 + 1,
         date.get_date() as u32,
     )
-    .unwrap();
-
-    web_sys::console::log_1(&format!("entry_date: {:?}", out).into());
-    
-    web_sys::console::log_1(&format!("{}", e.timestamp()).into());
-
-    out
+    .unwrap()
 }
 
 const NBSP: char = '\u{00a0}';
