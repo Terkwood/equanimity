@@ -334,19 +334,14 @@ impl Logs {
 
     fn delete_entry(&mut self, entry: Entry) {
         let date = match entry {
-            Entry::Mood(ref m) => entry_date(&m),
-            Entry::Sleep(ref s) => entry_date_text(&s),
-            Entry::Meds(ref m) => entry_date_text(&m),
-            Entry::Note(ref n) => entry_date_text(&n),
+            Entry::Mood(ref m) => mood_reading_date(&m),
+            Entry::Sleep(ref s) => text_submission_date(&s),
+            Entry::Meds(ref m) => text_submission_date(&m),
+            Entry::Note(ref n) => text_submission_date(&n),
         };
-        // get the entries for that date, from self.entries
+        
         self.entries.get_mut(&date).map(|day_entries: &mut Vec<Entry>| {
-            // remove the entry from the entries
             day_entries.retain(|e| e != &entry);
-            // // if there are no entries left, remove the date from self.entries
-            // if entries.is_empty() {
-            //     self.entries.remove(&date);
-            // }
         });
 
     }
@@ -355,31 +350,31 @@ impl Logs {
 fn derive_entries_vec(storage_state: &StorageState) -> Vec<(NaiveDate, Vec<Entry>)> {
     let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
-        if let Some(e) = entries.get_mut(&entry_date(m)) {
+        if let Some(e) = entries.get_mut(&mood_reading_date(m)) {
             e.push(Entry::Mood(m.clone()))
         } else {
-            entries.insert(entry_date(m), vec![Entry::Mood(m.clone())]);
+            entries.insert(mood_reading_date(m), vec![Entry::Mood(m.clone())]);
         }
     }
     for s in &storage_state.sleep_entries {
-        if let Some(e) = entries.get_mut(&entry_date_text(s)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(s)) {
             e.push(Entry::Sleep(s.clone()))
         } else {
-            entries.insert(entry_date_text(s), vec![Entry::Sleep(s.clone())]);
+            entries.insert(text_submission_date(s), vec![Entry::Sleep(s.clone())]);
         }
     }
     for m in &storage_state.meds {
-        if let Some(e) = entries.get_mut(&entry_date_text(m)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(m)) {
             e.push(Entry::Meds(m.clone()))
         } else {
-            entries.insert(entry_date_text(m), vec![Entry::Meds(m.clone())]);
+            entries.insert(text_submission_date(m), vec![Entry::Meds(m.clone())]);
         }
     }
     for n in &storage_state.notes {
-        if let Some(e) = entries.get_mut(&entry_date_text(n)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(n)) {
             e.push(Entry::Note(n.clone()))
         } else {
-            entries.insert(entry_date_text(n), vec![Entry::Note(n.clone())]);
+            entries.insert(text_submission_date(n), vec![Entry::Note(n.clone())]);
         }
     }
 
@@ -392,37 +387,37 @@ fn derive_entries_vec(storage_state: &StorageState) -> Vec<(NaiveDate, Vec<Entry
 fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>> {
     let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
-        if let Some(e) = entries.get_mut(&entry_date(m)) {
+        if let Some(e) = entries.get_mut(&mood_reading_date(m)) {
             e.push(Entry::Mood(m.clone()))
         } else {
-            entries.insert(entry_date(m), vec![Entry::Mood(m.clone())]);
+            entries.insert(mood_reading_date(m), vec![Entry::Mood(m.clone())]);
         }
     }
     for s in &storage_state.sleep_entries {
-        if let Some(e) = entries.get_mut(&entry_date_text(s)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(s)) {
             e.push(Entry::Sleep(s.clone()))
         } else {
-            entries.insert(entry_date_text(s), vec![Entry::Sleep(s.clone())]);
+            entries.insert(text_submission_date(s), vec![Entry::Sleep(s.clone())]);
         }
     }
     for m in &storage_state.meds {
-        if let Some(e) = entries.get_mut(&entry_date_text(m)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(m)) {
             e.push(Entry::Meds(m.clone()))
         } else {
-            entries.insert(entry_date_text(m), vec![Entry::Meds(m.clone())]);
+            entries.insert(text_submission_date(m), vec![Entry::Meds(m.clone())]);
         }
     }
     for n in &storage_state.notes {
-        if let Some(e) = entries.get_mut(&entry_date_text(n)) {
+        if let Some(e) = entries.get_mut(&text_submission_date(n)) {
             e.push(Entry::Note(n.clone()))
         } else {
-            entries.insert(entry_date_text(n), vec![Entry::Note(n.clone())]);
+            entries.insert(text_submission_date(n), vec![Entry::Note(n.clone())]);
         }
     }
 
     entries
 }
-fn entry_date(mr: &MoodReading) -> NaiveDate {
+fn mood_reading_date(mr: &MoodReading) -> NaiveDate {
     let date = js_sys::Date::new(&JsValue::from_f64(mr.epoch_millis as f64));
 
     NaiveDate::from_ymd_opt(
@@ -432,7 +427,7 @@ fn entry_date(mr: &MoodReading) -> NaiveDate {
     )
     .unwrap()
 }
-fn entry_date_text(text: &TextSubmission) -> NaiveDate {
+fn text_submission_date(text: &TextSubmission) -> NaiveDate {
     let date = js_sys::Date::new(&JsValue::from_f64(text.epoch_millis as f64));
 
     NaiveDate::from_ymd_opt(
