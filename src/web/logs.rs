@@ -1,11 +1,14 @@
+use std::collections::HashMap;
+
+use chrono::NaiveDate;
+
 use super::about;
-use super::time::formatted_js_date;
 use super::StorageState;
 use crate::pips::{blue_circles, red_circles};
 use crate::*;
 
 pub struct Logs {
-    entries: Vec<Entry>,
+    entries: HashMap<NaiveDate, Vec<Entry>>,
     mode: LogsMode,
 }
 
@@ -108,6 +111,8 @@ impl Component for Logs {
                 ctx.props().replace_mood_readings.emit(
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Mood(MoodReading {
                                 epoch_millis,
@@ -128,6 +133,8 @@ impl Component for Logs {
                     TextType::Meds,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Meds(TextSubmission {
                                 epoch_millis,
@@ -149,6 +156,8 @@ impl Component for Logs {
                     TextType::Notes,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Note(TextSubmission {
                                 epoch_millis,
@@ -169,6 +178,8 @@ impl Component for Logs {
                     TextType::Sleep,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Sleep(TextSubmission {
                                 epoch_millis,
@@ -214,23 +225,52 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHome)}>{ "Home 🔵🔴" }</button>
                     </div>
                 </div>
-                <ul id="log-entries">
-                    { self.entries.iter().map(|e| self.render_entry(ctx,e.clone(),  self.mode)).collect::<Html>() }
-                </ul>
+                <div id="log-entries">
+                    { sort_days(&self.entries).iter().map(|(date, entries)| self.render_day_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
+                </div>
             </> }
         }
     }
 }
 
+fn sort_days(entries: &HashMap<NaiveDate, Vec<Entry>>) -> Vec<(NaiveDate, Vec<Entry>)> {
+    let mut out = vec![];
+    for (date, entries) in entries.iter() {
+        out.push((*date, entries.clone()));
+    }
+    out.sort_by(|a, b| b.0.cmp(&a.0));
+    out
+}
+
 impl Logs {
+    fn render_day_entries(
+        &self,
+        ctx: &yew::Context<Self>,
+        date: &NaiveDate,
+        day_entries: Vec<Entry>,
+        logs_mode: LogsMode,
+    ) -> Html {
+        // Format date as "Monday, January 1st 2023"
+        let date_string: String = date.format("%A, %B %-d, %Y").to_string();
+
+        let mut out = day_entries.clone();
+        out.sort_by(|a, b| b.timestamp().cmp(&a.timestamp()));
+
+        html! {
+            <>
+                <div class="date">{ date_string }</div>
+                { out.iter().map(|e| self.render_entry(ctx, e.clone(), logs_mode)).collect::<Html>() }
+            </>
+        }
+    }
     fn render_entry(&self, ctx: &yew::Context<Self>, e: Entry, logs_mode: LogsMode) -> Html {
-        let date_string: String = formatted_js_date(e.timestamp());
+        let date_string: String = format_timestamp(e.timestamp());
         match e {
             Entry::Mood(MoodReading {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} {}", date_string,
                         if value == 0 { "⚪".to_string() }
                         else {
@@ -249,13 +289,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Sleep(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 😴 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -266,13 +306,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Meds(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 💊 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -283,13 +323,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Note(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 🗒️ {}", date_string, value) }
                     {
                         match logs_mode {
@@ -300,34 +340,79 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
         }
     }
 
     fn delete_entry(&mut self, entry: Entry) {
-        self.entries.retain(|e| e != &entry)
+        let date = entry_date(&entry);
+
+        self.entries
+            .get_mut(&date)
+            .map(|day_entries: &mut Vec<Entry>| {
+                day_entries.retain(|e| e != &entry);
+            });
     }
 }
 
-fn derive_entries(storage_state: &StorageState) -> Vec<Entry> {
-    let mut entries = vec![];
+fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>> {
+    let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
-        entries.push(Entry::Mood(*m))
+        let d = entry_date(&Entry::Mood(m.clone()));
+        if let Some(e) = entries.get_mut(&d) {
+            e.push(Entry::Mood(m.clone()))
+        } else {
+            entries.insert(d, vec![Entry::Mood(m.clone())]);
+        }
     }
     for s in &storage_state.sleep_entries {
-        entries.push(Entry::Sleep(s.clone()))
+        let d = entry_date(&Entry::Sleep(s.clone()));
+        if let Some(e) = entries.get_mut(&d) {
+            e.push(Entry::Sleep(s.clone()))
+        } else {
+            entries.insert(d, vec![Entry::Sleep(s.clone())]);
+        }
     }
     for m in &storage_state.meds {
-        entries.push(Entry::Meds(m.clone()))
+        let d = entry_date(&Entry::Meds(m.clone()));
+        if let Some(e) = entries.get_mut(&d) {
+            e.push(Entry::Meds(m.clone()))
+        } else {
+            entries.insert(d, vec![Entry::Meds(m.clone())]);
+        }
     }
     for n in &storage_state.notes {
-        entries.push(Entry::Note(n.clone()))
+        let d = entry_date(&Entry::Note(n.clone()));
+        if let Some(e) = entries.get_mut(&d) {
+            e.push(Entry::Note(n.clone()))
+        } else {
+            entries.insert(d, vec![Entry::Note(n.clone())]);
+        }
     }
-    entries.sort();
-    entries.reverse();
 
     entries
+}
+
+fn entry_date(e: &Entry) -> NaiveDate {
+    let date = js_sys::Date::new(&JsValue::from_f64(e.timestamp() as f64));
+
+    NaiveDate::from_ymd_opt(
+        date.get_full_year() as i32,
+        date.get_month() as u32 + 1,
+        date.get_date() as u32,
+    )
+    .unwrap()
+}
+
+const NBSP: char = '\u{00a0}';
+fn format_timestamp(epoch_millis_utc: u64) -> String {
+    let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));
+
+    let hrs = date.get_hours();
+    let min = date.get_minutes();
+
+    format!("{}{:02}:{:02}", NBSP, hrs, min)
 }
 
 #[cfg(test)]

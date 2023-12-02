@@ -57,9 +57,7 @@ textarea {
 }
 
 .date {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: 3.555vmin;
+  margin-top: 1em;
 }
 
 #log-entries {
