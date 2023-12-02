@@ -393,6 +393,13 @@ fn entry_date_text(text: &TextSubmission) -> NaiveDate {
     )
     .unwrap()
 }
+fn formatted_js_date(epoch_millis_utc: u64) -> String {
+    let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));
+
+    date.to_locale_time_string("en-US")
+        .as_string()
+        .unwrap_or_default()
+}
 
 #[cfg(test)]
 mod tests {
