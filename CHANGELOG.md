@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Terkwood/equanimity/compare/v1.6.2...v1.7.0) (2023-12-02)
+
+
+### Features
+
+* rework log listings ([#109](https://github.com/Terkwood/equanimity/issues/109)) ([b40d8ee](https://github.com/Terkwood/equanimity/commit/b40d8ee9c1aa4fecf5720efa228eb7a70af83986))
+
 ### [1.6.2](https://github.com/Terkwood/equanimity/compare/v1.6.1...v1.6.2) (2023-12-02)
 
 
