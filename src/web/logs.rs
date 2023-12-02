@@ -251,7 +251,7 @@ impl Logs {
         }
     }
     fn render_entry(&self, ctx: &yew::Context<Self>, e: Entry, logs_mode: LogsMode) -> Html {
-        let date_string: String = formatted_js_date(e.timestamp());
+        let date_string: String = format_timestamp(e.timestamp());
         match e {
             Entry::Mood(MoodReading {
                 value,
@@ -392,12 +392,29 @@ fn entry_date_text(text: &TextSubmission) -> NaiveDate {
     )
     .unwrap()
 }
-fn formatted_js_date(epoch_millis_utc: u64) -> String {
+fn format_timestamp(epoch_millis_utc: u64) -> String {
     let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));
-
-    date.to_locale_time_string("en-US")
+/* 
+    let out = date.to_locale_time_string("en-US")
         .as_string()
-        .unwrap_or_default()
+        .unwrap_or_default();
+
+    // pad to 12 characters with char '\u{00a0}' as padding on the left
+    let pad_size = 12 - out.len();
+    let padding = if pad_size > 0 {
+        std::iter::repeat('\u{00a0}').take(pad_size).collect::<String>()
+    } else {
+        "".to_string()
+    };
+    format!("{}{}", padding, out); */
+
+
+    let hrs = date.get_hours();
+    let min = date.get_minutes();
+
+
+    format!("{}{:02}:{:02}", '\u{00a0}',  hrs, min)
+
 }
 
 #[cfg(test)]
