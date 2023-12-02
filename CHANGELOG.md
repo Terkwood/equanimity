@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/Terkwood/equanimity/compare/v1.6.1...v1.6.2) (2023-12-02)
+
+
+### Bug Fixes
+
+* bigger write buttons ([450d2c0](https://github.com/Terkwood/equanimity/commit/450d2c089fa88a66462c19e3879abdb5d4f78970))
+
 ### [1.6.1](https://github.com/Terkwood/equanimity/compare/v1.6.0...v1.6.1) (2023-12-02)
 
 
