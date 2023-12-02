@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use chrono::NaiveDate;
 
 use super::about;
-use super::time::formatted_js_date;
 use super::StorageState;
 use crate::pips::{blue_circles, red_circles};
 use crate::*;
