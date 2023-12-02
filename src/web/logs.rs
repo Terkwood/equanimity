@@ -226,11 +226,20 @@ impl Component for Logs {
                     </div>
                 </div>
                 <div id="log-entries">
-                    { self.entries.iter().map(|(date, entries)| self.render_day_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
+                    { sort_days(&self.entries).iter().map(|(date, entries)| self.render_day_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
                 </div>
             </> }
         }
     }
+}
+
+fn sort_days(entries: &HashMap<NaiveDate,Vec<Entry>>) -> Vec<(NaiveDate, Vec<Entry>)> {
+    let mut out = vec![];
+    for (date, entries) in entries.iter() {
+        out.push((*date, entries.clone()));
+    }
+    out.sort_by(|a, b| b.0.cmp(&a.0));
+    out
 }
 
 impl Logs {
