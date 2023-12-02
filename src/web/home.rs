@@ -228,8 +228,8 @@ impl Home {
     }
 }
 
-const TEXT_ENTRY_BUTTON_FOCUSED: &str = "fancy-button";
-const TEXT_ENTRY_BUTTON_DEFAULT: &str = "fancy-button";
+const TEXT_ENTRY_BUTTON_FOCUSED: &str = "fancy-button write-button";
+const TEXT_ENTRY_BUTTON_DEFAULT: &str = "fancy-button write-button";
 fn text_entry_button_class(top_view: &HomeTopView) -> &'static str {
     match top_view {
         HomeTopView::FocusedOnText => TEXT_ENTRY_BUTTON_FOCUSED,

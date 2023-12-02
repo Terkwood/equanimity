@@ -201,3 +201,7 @@ textarea {
   margin: auto;
   width: 100%;
 }
+
+.write-button {
+  height: 3.3em;
+}
