@@ -394,7 +394,7 @@ fn entry_date_text(text: &TextSubmission) -> NaiveDate {
 }
 fn format_timestamp(epoch_millis_utc: u64) -> String {
     let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));
-/* 
+    /*
     let out = date.to_locale_time_string("en-US")
         .as_string()
         .unwrap_or_default();
@@ -408,13 +408,10 @@ fn format_timestamp(epoch_millis_utc: u64) -> String {
     };
     format!("{}{}", padding, out); */
 
-
     let hrs = date.get_hours();
     let min = date.get_minutes();
 
-
-    format!("{}{:02}:{:02}", '\u{00a0}',  hrs, min)
-
+    format!("{}{:02}:{:02}", '\u{00a0}', hrs, min)
 }
 
 #[cfg(test)]
