@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/Terkwood/equanimity/compare/v1.5.0...v1.6.0) (2023-12-02)
+
+
+### Features
+
+* home screen time in local ([a8e28fe](https://github.com/Terkwood/equanimity/commit/a8e28fee6251457bb0a73b3bf54df1bcdd63d75b))
+
 ## [1.5.0](https://github.com/Terkwood/equanimity/compare/v1.4.1...v1.5.0) (2023-12-02)
 
 ### [1.4.1](https://github.com/Terkwood/equanimity/compare/v1.4.0...v1.4.1) (2023-12-02)
