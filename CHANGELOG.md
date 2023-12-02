@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Terkwood/equanimity/compare/v1.3.2...v1.4.0) (2023-12-02)
+
+
+### Features
+
+* bring back local time ([56d1b79](https://github.com/Terkwood/equanimity/commit/56d1b79aa0fcd1740966465bbf88285caf026e07))
+
 ### [1.3.2](https://github.com/Terkwood/equanimity/compare/v1.3.1...v1.3.2) (2023-12-02)
 
 
