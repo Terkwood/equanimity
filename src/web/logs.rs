@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+
+use chrono::NaiveDate;
+
 use super::about;
 use super::time::formatted_js_date;
 use super::StorageState;
@@ -5,7 +9,7 @@ use crate::pips::{blue_circles, red_circles};
 use crate::*;
 
 pub struct Logs {
-    entries: Vec<Entry>,
+    entries: Vec<(NaiveDate, Vec<Entry>)>,
     mode: LogsMode,
 }
 
@@ -108,6 +112,8 @@ impl Component for Logs {
                 ctx.props().replace_mood_readings.emit(
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Mood(MoodReading {
                                 epoch_millis,
@@ -128,6 +134,8 @@ impl Component for Logs {
                     TextType::Meds,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Meds(TextSubmission {
                                 epoch_millis,
@@ -149,6 +157,8 @@ impl Component for Logs {
                     TextType::Notes,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Note(TextSubmission {
                                 epoch_millis,
@@ -169,6 +179,8 @@ impl Component for Logs {
                     TextType::Sleep,
                     self.entries
                         .iter()
+                        .map(|(_, entries)| entries)
+                        .flatten()
                         .filter_map(|e| match e {
                             Entry::Sleep(TextSubmission {
                                 epoch_millis,
@@ -214,15 +226,31 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHome)}>{ "Home 🔵🔴" }</button>
                     </div>
                 </div>
-                <ul id="log-entries">
-                    { self.entries.iter().map(|e| self.render_entry(ctx,e.clone(),  self.mode)).collect::<Html>() }
-                </ul>
+                <div id="log-entries">
+                    { self.entries.iter().map(|(date, entries)| self.render_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
+                </div>
             </> }
         }
     }
 }
 
 impl Logs {
+    fn render_entries(
+        &self,
+        ctx: &yew::Context<Self>,
+        date: &NaiveDate,
+        entries: Vec<Entry>,
+        logs_mode: LogsMode,
+    ) -> Html {
+        // Format date as "Monday, January 1st 2023"
+        let date_string: String = date.format("%A, %B %-d, %Y").to_string();
+        html! {
+            <>
+                <div class="date">{ date_string }</div>
+                { entries.iter().map(|e| self.render_entry(ctx, e.clone(), logs_mode)).collect::<Html>() }
+            </>
+        }
+    }
     fn render_entry(&self, ctx: &yew::Context<Self>, e: Entry, logs_mode: LogsMode) -> Html {
         let date_string: String = formatted_js_date(e.timestamp());
         match e {
@@ -230,7 +258,7 @@ impl Logs {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} {}", date_string,
                         if value == 0 { "⚪".to_string() }
                         else {
@@ -249,13 +277,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Sleep(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 😴 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -266,13 +294,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Meds(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 💊 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -283,13 +311,13 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
             Entry::Note(TextSubmission {
                 value,
                 epoch_millis,
             }) => html! {
-                <li>
+                <div>
                     { format!("{} 🗒️ {}", date_string, value) }
                     {
                         match logs_mode {
@@ -300,34 +328,70 @@ impl Logs {
                             _ => html! { }
                         }
                     }
-                </li>
+                </div>
             },
         }
     }
 
     fn delete_entry(&mut self, entry: Entry) {
-        self.entries.retain(|e| e != &entry)
+        unimplemented!() //self.entries.retain(|e| e != &entry)
     }
 }
 
-fn derive_entries(storage_state: &StorageState) -> Vec<Entry> {
-    let mut entries = vec![];
+fn derive_entries(storage_state: &StorageState) -> Vec<(NaiveDate, Vec<Entry>)> {
+    let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
-        entries.push(Entry::Mood(*m))
+        if let Some(e) = entries.get_mut(&entry_date(m)) {
+            e.push(Entry::Mood(m.clone()))
+        } else {
+            entries.insert(entry_date(m), vec![Entry::Mood(m.clone())]);
+        }
     }
     for s in &storage_state.sleep_entries {
-        entries.push(Entry::Sleep(s.clone()))
+        if let Some(e) = entries.get_mut(&entry_date_text(s)) {
+            e.push(Entry::Sleep(s.clone()))
+        } else {
+            entries.insert(entry_date_text(s), vec![Entry::Sleep(s.clone())]);
+        }
     }
     for m in &storage_state.meds {
-        entries.push(Entry::Meds(m.clone()))
+        if let Some(e) = entries.get_mut(&entry_date_text(m)) {
+            e.push(Entry::Meds(m.clone()))
+        } else {
+            entries.insert(entry_date_text(m), vec![Entry::Meds(m.clone())]);
+        }
     }
     for n in &storage_state.notes {
-        entries.push(Entry::Note(n.clone()))
+        if let Some(e) = entries.get_mut(&entry_date_text(n)) {
+            e.push(Entry::Note(n.clone()))
+        } else {
+            entries.insert(entry_date_text(n), vec![Entry::Note(n.clone())]);
+        }
     }
-    entries.sort();
-    entries.reverse();
 
-    entries
+    let mut out: Vec<(NaiveDate, Vec<Entry>)> = entries.into_iter().collect();
+    out.sort_by(|a, b| a.0.cmp(&b.0));
+    out
+}
+fn entry_date(mr: &MoodReading) -> NaiveDate {
+    let date = js_sys::Date::new(&JsValue::from_f64(mr.epoch_millis as f64));
+
+    NaiveDate::from_ymd_opt(
+        date.get_utc_full_year() as i32,
+        date.get_utc_month() as u32 + 1,
+        date.get_utc_date() as u32,
+    )
+    .unwrap()
+}
+fn entry_date_text(text: &TextSubmission) -> NaiveDate {
+    let date = js_sys::Date::new(&JsValue::from_f64(text.epoch_millis as f64));
+
+    NaiveDate::from_ymd_opt(
+        date.get_utc_full_year() as i32,
+        date.get_utc_month() as u32 + 1,
+        date.get_utc_date() as u32,
+    )
+    .unwrap()
 }
 
 #[cfg(test)]
