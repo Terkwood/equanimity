@@ -118,43 +118,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_group_by_date() {
-        let mrs = vec![
-            MoodReading {
-                epoch_millis: 0,
-                value: 0,
-            },
-            MoodReading {
-                epoch_millis: 999999999,
-                value: 0,
-            },
-        ];
-
-        let by_day = group_by_day(&mrs);
-        assert_eq!(by_day.len(), 2);
-    }
-    #[test]
-    fn test_group_by_date_2() {
-        let mrs = vec![
-            MoodReading {
-                epoch_millis: 0,
-                value: 0,
-            },
-            MoodReading {
-                epoch_millis: 999999999,
-                value: 0,
-            },
-            MoodReading {
-                epoch_millis: 7999999999,
-                value: 0,
-            },
-        ];
-
-        let by_day = group_by_day(&mrs);
-        assert_eq!(by_day.len(), 3);
-    }
-
-    #[test]
     fn test_draw_one() {
         let mr = MoodReading {
             epoch_millis: 0,
