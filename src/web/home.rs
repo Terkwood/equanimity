@@ -137,7 +137,7 @@ impl Component for Home {
                                     <div class="day-container">
                                         <div class="piplabel">{ pips::blank_label() }</div>
                                         <div class="pips">{ pips::circles(&readings) }</div>
-                                        <div class="piplabel">{ pips::day_label(day) }</div>
+                                        <div class="piplabel">{ day }</div>
                                     </div>
                                 </>
                             }

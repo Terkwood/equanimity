@@ -1,9 +1,9 @@
+use crate::*;
+use chrono::NaiveDate;
+use js_sys::Object;
 use std::cmp::max;
 use std::cmp::min;
 use std::collections::HashMap;
-
-use crate::*;
-use chrono::NaiveDateTime;
 
 const MANIC_CIRCLE: char = '🔴';
 const DEPRESSED_CIRCLE: char = '🔵';
@@ -47,21 +47,22 @@ pub fn blue_circles(blue: i8) -> String {
     )
 }
 
-pub fn day_label(day: &chrono::NaiveDate) -> String {
-    day.format(" %m-%d ").to_string()
-}
-
 const NBSP: char = '\u{00a0}';
 pub fn blank_label() -> String {
     [NBSP; 7].iter().collect::<String>()
 }
 
-pub fn group_by_day(v: &[MoodReading]) -> Vec<(chrono::NaiveDate, Vec<i8>)> {
-    let mut by_day: HashMap<chrono::NaiveDate, Vec<i8>> = HashMap::new();
+pub fn group_by_day(v: &[MoodReading]) -> Vec<(String, Vec<i8>)> {
+    let mut by_day: HashMap<String, Vec<i8>> = HashMap::new();
 
     for mood in v {
-        if let Some(date) =
-            NaiveDateTime::from_timestamp_millis(mood.epoch_millis as i64).map(|t| t.date())
+        let date_not_uniform_length =
+            js_sys::Date::new(&JsValue::from_f64(mood.epoch_millis as f64))
+                .to_locale_date_string("en-US", &Object::new())
+                .as_string()
+                .unwrap();
+        let nd = NaiveDate::parse_from_str(&date_not_uniform_length, "%m/%d/%Y").unwrap();
+        let date = nd.format("%Y-%m-%d").to_string();
         {
             let list = by_day.entry(date).or_default();
             list.push(mood.value);
