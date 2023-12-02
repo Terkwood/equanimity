@@ -226,7 +226,7 @@ impl Component for Logs {
                     </div>
                 </div>
                 <div id="log-entries">
-                    { self.entries.iter().map(|(date, entries)| self.render_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
+                    { self.entries.iter().map(|(date, entries)| self.render_day_entries(ctx, date, entries.clone(),  self.mode)).collect::<Html>() }
                 </div>
             </> }
         }
@@ -234,19 +234,24 @@ impl Component for Logs {
 }
 
 impl Logs {
-    fn render_entries(
+    fn render_day_entries(
         &self,
         ctx: &yew::Context<Self>,
         date: &NaiveDate,
-        entries: Vec<Entry>,
+        day_entries: Vec<Entry>,
         logs_mode: LogsMode,
     ) -> Html {
         // Format date as "Monday, January 1st 2023"
         let date_string: String = date.format("%A, %B %-d, %Y").to_string();
+        
+        let mut out = day_entries.clone();
+        out.sort_by(|a, b| b.timestamp().cmp(&a.timestamp()));
+
+        web_sys::console::log_1(&format!("sorted: {:?}", out).into());
         html! {
             <>
                 <div class="date">{ date_string }</div>
-                { entries.iter().map(|e| self.render_entry(ctx, e.clone(), logs_mode)).collect::<Html>() }
+                { out.iter().map(|e| self.render_entry(ctx, e.clone(), logs_mode)).collect::<Html>() }
             </>
         }
     }
@@ -333,102 +338,56 @@ impl Logs {
     }
 
     fn delete_entry(&mut self, entry: Entry) {
-        let date = match entry {
-            Entry::Mood(ref m) => mood_reading_date(&m),
-            Entry::Sleep(ref s) => text_submission_date(&s),
-            Entry::Meds(ref m) => text_submission_date(&m),
-            Entry::Note(ref n) => text_submission_date(&n),
-        };
-        
-        self.entries.get_mut(&date).map(|day_entries: &mut Vec<Entry>| {
-            day_entries.retain(|e| e != &entry);
-        });
+        let date = entry_date(&entry);
 
+        self.entries
+            .get_mut(&date)
+            .map(|day_entries: &mut Vec<Entry>| {
+                day_entries.retain(|e| e != &entry);
+            });
     }
 }
-
-fn derive_entries_vec(storage_state: &StorageState) -> Vec<(NaiveDate, Vec<Entry>)> {
-    let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
-    for m in &storage_state.mood_readings {
-        if let Some(e) = entries.get_mut(&mood_reading_date(m)) {
-            e.push(Entry::Mood(m.clone()))
-        } else {
-            entries.insert(mood_reading_date(m), vec![Entry::Mood(m.clone())]);
-        }
-    }
-    for s in &storage_state.sleep_entries {
-        if let Some(e) = entries.get_mut(&text_submission_date(s)) {
-            e.push(Entry::Sleep(s.clone()))
-        } else {
-            entries.insert(text_submission_date(s), vec![Entry::Sleep(s.clone())]);
-        }
-    }
-    for m in &storage_state.meds {
-        if let Some(e) = entries.get_mut(&text_submission_date(m)) {
-            e.push(Entry::Meds(m.clone()))
-        } else {
-            entries.insert(text_submission_date(m), vec![Entry::Meds(m.clone())]);
-        }
-    }
-    for n in &storage_state.notes {
-        if let Some(e) = entries.get_mut(&text_submission_date(n)) {
-            e.push(Entry::Note(n.clone()))
-        } else {
-            entries.insert(text_submission_date(n), vec![Entry::Note(n.clone())]);
-        }
-    }
-
-    let mut out: Vec<(NaiveDate, Vec<Entry>)> = entries.into_iter().collect();
-    out.sort_by(|a, b| b.0.cmp(&a.0));
-    out
-}
-
 
 fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>> {
     let mut entries: HashMap<NaiveDate, Vec<Entry>> = HashMap::new();
     for m in &storage_state.mood_readings {
-        if let Some(e) = entries.get_mut(&mood_reading_date(m)) {
+        let d = entry_date(&Entry::Mood(m.clone()));
+        if let Some(e) = entries.get_mut( &d) {
             e.push(Entry::Mood(m.clone()))
         } else {
-            entries.insert(mood_reading_date(m), vec![Entry::Mood(m.clone())]);
+            entries.insert( d, vec![Entry::Mood(m.clone())]);
         }
     }
     for s in &storage_state.sleep_entries {
-        if let Some(e) = entries.get_mut(&text_submission_date(s)) {
+        let d = entry_date(&Entry::Sleep(s.clone()));
+        if let Some(e) = entries.get_mut( &d) {
             e.push(Entry::Sleep(s.clone()))
         } else {
-            entries.insert(text_submission_date(s), vec![Entry::Sleep(s.clone())]);
+            entries.insert(d, vec![Entry::Sleep(s.clone())]);
         }
     }
     for m in &storage_state.meds {
-        if let Some(e) = entries.get_mut(&text_submission_date(m)) {
+        let d = entry_date(&Entry::Meds(m.clone()));
+        if let Some(e) = entries.get_mut( &d) {
             e.push(Entry::Meds(m.clone()))
         } else {
-            entries.insert(text_submission_date(m), vec![Entry::Meds(m.clone())]);
+            entries.insert(d, vec![Entry::Meds(m.clone())]);
         }
     }
     for n in &storage_state.notes {
-        if let Some(e) = entries.get_mut(&text_submission_date(n)) {
+        let d = entry_date(&Entry::Note(n.clone()));
+        if let Some(e) = entries.get_mut(&d ) {
             e.push(Entry::Note(n.clone()))
         } else {
-            entries.insert(text_submission_date(n), vec![Entry::Note(n.clone())]);
+            entries.insert(d, vec![Entry::Note(n.clone())]);
         }
     }
 
     entries
 }
-fn mood_reading_date(mr: &MoodReading) -> NaiveDate {
-    let date = js_sys::Date::new(&JsValue::from_f64(mr.epoch_millis as f64));
 
-    NaiveDate::from_ymd_opt(
-        date.get_utc_full_year() as i32,
-        date.get_utc_month() as u32 + 1,
-        date.get_utc_date() as u32,
-    )
-    .unwrap()
-}
-fn text_submission_date(text: &TextSubmission) -> NaiveDate {
-    let date = js_sys::Date::new(&JsValue::from_f64(text.epoch_millis as f64));
+fn entry_date(e: &Entry) -> NaiveDate {
+    let date = js_sys::Date::new(&JsValue::from_f64(e.timestamp() as f64));
 
     NaiveDate::from_ymd_opt(
         date.get_utc_full_year() as i32,
