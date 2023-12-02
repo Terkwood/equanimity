@@ -1,5 +1,5 @@
 use super::about;
-use super::time::js_utc_datetime;
+use super::time:: formatted_js_date;
 use super::StorageState;
 use crate::*;
 
@@ -223,8 +223,7 @@ impl Component for Logs {
 
 impl Logs {
     fn render_entry(&self, ctx: &yew::Context<Self>, e: Entry, logs_mode: LogsMode) -> Html {
-        let dt = js_utc_datetime(e.timestamp());
-        let date_string = dt.format("%m/%d %R").to_string();
+        let date_string: String = formatted_js_date(e.timestamp());
         match e {
             Entry::Mood(MoodReading {
                 value,
