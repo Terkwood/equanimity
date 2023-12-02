@@ -49,8 +49,17 @@ impl Component for BackdateMoodReadings {
             BackdateMsg::BackdateReading => {
                 if let Some(mood_reading) = self.mood_reading {
                     if let Some(date) = self.current_date {
-                        let naive_datetime =
-                            NaiveDateTime::new(date, NaiveTime::from_hms_opt(0, 0, 0).unwrap());
+                        let draft_offset =
+                            js_sys::Date::new(&JsValue::from_f64(mood_reading.epoch_millis as f64))
+                                .get_timezone_offset() as i64;
+
+                        web_sys::console::log_1(&format!("draft_offset: {}", draft_offset).into());
+
+                        let naive_datetime = NaiveDateTime::new(
+                            date,
+                            NaiveTime::from_hms_opt(draft_offset as u32 / 60, 0, 0).unwrap(),
+                        );
+
                         ctx.props().add_mood_reading.emit(MoodReading {
                             value: mood_reading.value,
                             epoch_millis: naive_datetime.timestamp_millis() as u64,
