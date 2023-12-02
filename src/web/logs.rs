@@ -272,7 +272,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {}", date_string,
+                    { format!("{} {} {}", date_string, e.timestamp(),
                         if value == 0 { "⚪".to_string() }
                         else {
                             if value > 0 {
@@ -297,7 +297,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} 😴 {}", date_string, value) }
+                    { format!("{} {} 😴 {}", date_string, epoch_millis, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Sleep(TextSubmission {
@@ -314,7 +314,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} 💊 {}", date_string, value) }
+                    { format!("{} {} 💊 {}", date_string,epoch_millis, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Meds(TextSubmission {
@@ -331,7 +331,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} 🗒️ {}", date_string, value) }
+                    { format!("{} {} 🗒️ {}", date_string,epoch_millis, value) }
                     {
                         match logs_mode {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button"  onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Note(TextSubmission {
@@ -398,12 +398,18 @@ fn derive_entries(storage_state: &StorageState) -> HashMap<NaiveDate, Vec<Entry>
 fn entry_date(e: &Entry) -> NaiveDate {
     let date = js_sys::Date::new(&JsValue::from_f64(e.timestamp() as f64));
 
-    NaiveDate::from_ymd_opt(
-        date.get_utc_full_year() as i32,
-        date.get_utc_month() as u32 + 1,
-        date.get_utc_date() as u32,
+    let out = NaiveDate::from_ymd_opt(
+        date.get_full_year() as i32,
+        date.get_month() as u32 + 1,
+        date.get_date() as u32,
     )
-    .unwrap()
+    .unwrap();
+
+    web_sys::console::log_1(&format!("entry_date: {:?}", out).into());
+    
+    web_sys::console::log_1(&format!("{}", e.timestamp()).into());
+
+    out
 }
 
 const NBSP: char = '\u{00a0}';
