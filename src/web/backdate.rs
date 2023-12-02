@@ -12,13 +12,13 @@ pub enum BackdateMsg {
     DateSelected(NaiveDate),
     MoodReadingSelected(MoodReading),
     BackdateReading,
-    ShowHistory,
+    ShowHome,
 }
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct BackdateProps {
     pub add_mood_reading: Callback<MoodReading>,
-    pub show_history: Callback<()>,
+    pub show_home: Callback<()>,
 }
 
 impl Component for BackdateMoodReadings {
@@ -34,8 +34,8 @@ impl Component for BackdateMoodReadings {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            BackdateMsg::ShowHistory => {
-                ctx.props().show_history.emit(());
+            BackdateMsg::ShowHome => {
+                ctx.props().show_home.emit(());
                 false
             }
             BackdateMsg::MoodReadingSelected(mood_reading) => {
@@ -143,8 +143,8 @@ impl Component for BackdateMoodReadings {
                 <div class="backdate-child">
                     <button class="fancy-button thick"
                         role="button"
-                        onclick={ctx.link().callback(|_| BackdateMsg::ShowHistory) }>
-                        { "Show History" }
+                        onclick={ctx.link().callback(|_| BackdateMsg::ShowHome) }>
+                        { "Home" }
                     </button>
                 </div>
 

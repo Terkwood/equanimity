@@ -9,7 +9,7 @@ pub struct Logs {
 }
 
 pub enum LogsMsg {
-    ShowHistory,
+    ShowHome,
     ShowBackdate,
     ToggleDeleteMode,
     ToggleAboutMode,
@@ -25,7 +25,7 @@ pub enum LogsMode {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct LogsProps {
-    pub show_history: Callback<()>,
+    pub show_home: Callback<()>,
     pub show_backdate: Callback<()>,
     pub storage_state: StorageState,
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
@@ -78,8 +78,8 @@ impl Component for Logs {
                 ctx.props().show_backdate.emit(());
                 false
             }
-            LogsMsg::ShowHistory => {
-                ctx.props().show_history.emit(());
+            LogsMsg::ShowHome => {
+                ctx.props().show_home.emit(());
                 false
             }
             LogsMsg::ToggleDeleteMode => {
@@ -210,7 +210,7 @@ impl Component for Logs {
                         <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowBackdate)}>{ "Backdate 🗓️" }</button>
                     </div>
                     <div class="center">
-                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHistory)}>{ "Hist 🔴" }</button>
+                        <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| LogsMsg::ShowHome)}>{ "Home 🔵🔴" }</button>
                     </div>
                 </div>
                 <ul id="log-entries">

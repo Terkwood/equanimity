@@ -1,23 +1,23 @@
 mod about;
 mod backdate;
-mod history;
+mod home;
 pub mod logs;
 pub mod storage_state;
 pub mod time;
 
 use crate::*;
 use backdate::BackdateMoodReadings;
-use history::History;
+use home::Home;
 use logs::Logs;
 use storage_state::StorageState;
 
-const INITIAL_MODE: Mode = Mode::History;
+const INITIAL_MODE: Mode = Mode::Home;
 
 pub struct Root {
     mode: Mode,
     storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
-    show_history: Option<Callback<()>>,
+    show_home: Option<Callback<()>>,
     show_backdate: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
@@ -27,8 +27,8 @@ pub struct Root {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Mode {
+    Home,
     Logs,
-    History,
     BackdateMoodReadings,
 }
 
@@ -45,7 +45,7 @@ impl Component for Root {
     type Properties = ();
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
-        let show_history = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::History)));
+        let show_home = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Home)));
         let show_backdate = Some(
             ctx.link()
                 .callback(|()| RootMsg::SwitchMode(Mode::BackdateMoodReadings)),
@@ -74,7 +74,7 @@ impl Component for Root {
             mode: INITIAL_MODE,
             storage_state,
             show_logs,
-            show_history,
+            show_home,
             show_backdate,
             add_mood_reading,
             add_text,
@@ -137,20 +137,20 @@ impl Component for Root {
             Mode::BackdateMoodReadings => html! {
                 <BackdateMoodReadings
                     add_mood_reading={self.add_mood_reading.as_ref().expect("add mood reading cb backdate")}
-                    show_history={self.show_history.as_ref().expect("history cb")}
+                    show_home={self.show_home.as_ref().expect("home cb")}
                 />
             },
             Mode::Logs => html! {
                 <Logs
                     storage_state={self.storage_state.clone()}
-                    show_history={self.show_history.as_ref().expect("history cb")}
+                    show_home={self.show_home.as_ref().expect("home cb")}
                     show_backdate={self.show_backdate.as_ref().expect("backdate cb")}
                     replace_mood_readings={self.replace_mood_readings.as_ref().expect("rmr_cb")}
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
             },
-            Mode::History => html! {
-                <History
+            Mode::Home => html! {
+                <Home
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
                     add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
