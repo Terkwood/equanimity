@@ -370,7 +370,7 @@ fn derive_entries(storage_state: &StorageState) -> Vec<(NaiveDate, Vec<Entry>)> 
     }
 
     let mut out: Vec<(NaiveDate, Vec<Entry>)> = entries.into_iter().collect();
-    out.sort_by(|a, b| a.0.cmp(&b.0));
+    out.sort_by(|a, b| b.0.cmp(&a.0));
     out
 }
 fn entry_date(mr: &MoodReading) -> NaiveDate {
