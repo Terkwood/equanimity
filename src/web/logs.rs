@@ -258,7 +258,7 @@ impl Logs {
 
         html! {
             <>
-                <div class="date">{ date_string }</div>
+                <div class="log-date">{ date_string }</div>
                 { out.iter().map(|e| self.render_entry(ctx, e.clone(), logs_mode)).collect::<Html>() }
             </>
         }
