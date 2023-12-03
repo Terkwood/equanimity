@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/Terkwood/equanimity/compare/v1.8.0...v1.8.1) (2023-12-03)
+
+
+### Bug Fixes
+
+* increase log font size ([9196cae](https://github.com/Terkwood/equanimity/commit/9196caefa6394650fdfef361c8244827c0e2b807))
+
 ## [1.8.0](https://github.com/Terkwood/equanimity/compare/v1.7.5...v1.8.0) (2023-12-03)
 
 
