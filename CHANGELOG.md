@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/Terkwood/equanimity/compare/v1.8.1...v1.8.2) (2023-12-03)
+
+
+### Bug Fixes
+
+* space out log entries ([9ba7b32](https://github.com/Terkwood/equanimity/commit/9ba7b3276318cd8a9ec5cec625a831cc5e2cb456))
+
 ### [1.8.1](https://github.com/Terkwood/equanimity/compare/v1.8.0...v1.8.1) (2023-12-03)
 
 
