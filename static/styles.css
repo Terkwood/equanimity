@@ -2,25 +2,23 @@ body {
   background-color: black;
   color: lightgrey;
   font-size: 5vw;
-  font-family: "Monaspace Argon";
-
+  font-family: 'Roboto', sans-serif;
 }
 
 .pips {
   font-size: 6.5vw;
-  font-family: "Monaspace Argon", monospace !important;
 }
 
 .piplabel {
   font-size: 4vw;
-  font-family: "Monaspace Argon", monospace !important;
+  font-family: 'Roboto Mono', monospace;
 }
 
 textarea {
   width: 100%;
   height: 75%;
   font-size: 4vw;
-  font-family: "Monaspace Argon", monospace !important;
+  font-family: 'Roboto Mono', monospace;
 }
 
 #controlgridmini {
@@ -55,7 +53,7 @@ textarea {
 }
 
 #log-entries {
-  font-family: "Monaspace Argon", monospace !important;
+  font-family: 'Roboto Mono', monospace;
   font-size: 4vw;
 }
 
@@ -94,10 +92,6 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#about {
-  font-family: "Monaspace Argon", monospace !important;
 }
 
 .fancy-button {

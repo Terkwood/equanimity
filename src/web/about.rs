@@ -22,7 +22,7 @@ pub fn section(callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> Html
     );
 
     html! {
-        <div id="about">
+        <div>
             <h1>{ "About" }</h1>
             <p>{ "EQUANIMITY helps you track mood variations." }</p>
             <p>{ "EQUANIMITY is designed with privacy in mind.  Your data will never be transmitted to a third party.  Data is kept in browser local storage, unencypted.  KEEP YOUR DATA SAFE: make sure there is no malware on your system!" }</p>
