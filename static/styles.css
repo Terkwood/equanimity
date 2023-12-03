@@ -57,6 +57,11 @@ textarea {
   font-size: 5vw;
 }
 
+.log-entry {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
 #logs-button-grid {
   height: 5vh;
   display: grid;

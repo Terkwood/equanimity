@@ -270,7 +270,7 @@ impl Logs {
                 value,
                 epoch_millis,
             }) => html! {
-                <div>
+                <div class="log-entry">
                     { format!("{} 🎭 {}", date_string,
                         if value == 0 { "⚪".to_string() }
                         else {
@@ -295,7 +295,7 @@ impl Logs {
                 value,
                 epoch_millis,
             }) => html! {
-                <div>
+                <div class="log-entry">
                     { format!("{} 😴 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -312,7 +312,7 @@ impl Logs {
                 value,
                 epoch_millis,
             }) => html! {
-                <div>
+                <div class="log-entry">
                     { format!("{} 💊 {}", date_string, value) }
                     {
                         match logs_mode {
@@ -329,7 +329,7 @@ impl Logs {
                 value,
                 epoch_millis,
             }) => html! {
-                <div>
+                <div class="log-entry">
                     { format!("{} 🗒️ {}", date_string, value) }
                     {
                         match logs_mode {
