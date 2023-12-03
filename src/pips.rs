@@ -47,7 +47,6 @@ pub fn blue_circles(blue: i8) -> String {
     )
 }
 
-const NBSP: char = '\u{00a0}';
 pub fn blank_label() -> String {
     [NBSP; 7].iter().collect::<String>()
 }

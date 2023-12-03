@@ -137,7 +137,7 @@ impl Component for Home {
                                     <div class="day-container">
                                         <div class="piplabel">{ pips::blank_label() }</div>
                                         <div class="pips">{ pips::circles(&readings) }</div>
-                                        <div class="piplabel">{ day }</div>
+                                        <div class="piplabel">{NBSP} {NBSP} { trim_year_from_date(day) }</div>
                                     </div>
                                 </>
                             }
@@ -153,6 +153,11 @@ impl Component for Home {
             </div>
         }
     }
+}
+
+fn trim_year_from_date(date: &str) -> String {
+    // given a date string like YYYY-MM-DD, return MM-DD
+    date.chars().skip(5).collect()
 }
 
 impl Home {

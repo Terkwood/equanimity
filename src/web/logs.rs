@@ -405,7 +405,6 @@ fn entry_date(e: &Entry) -> NaiveDate {
     .unwrap()
 }
 
-const NBSP: char = '\u{00a0}';
 fn format_timestamp(epoch_millis_utc: u64) -> String {
     let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));
 
