@@ -250,8 +250,8 @@ impl Logs {
         day_entries: Vec<Entry>,
         logs_mode: LogsMode,
     ) -> Html {
-        // Format date as "Monday, January 1st 2023"
-        let date_string: String = date.format("%A, %B %-d, %Y").to_string();
+        // Format date as "Mon Jan 1 2023"
+        let date_string: String = date.format("%a %b %-d %Y").to_string();
 
         let mut out = day_entries.clone();
         out.sort_by(|a, b| b.timestamp().cmp(&a.timestamp()));
