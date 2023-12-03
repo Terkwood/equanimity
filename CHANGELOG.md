@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/Terkwood/equanimity/compare/v1.7.0...v1.7.1) (2023-12-03)
+
+
+### Bug Fixes
+
+* use an emoji for mood log ([f97934e](https://github.com/Terkwood/equanimity/commit/f97934e1b823f2ede3a8bfb06677bf4012ca2982))
+
 ## [1.7.0](https://github.com/Terkwood/equanimity/compare/v1.6.2...v1.7.0) (2023-12-02)
 
 
