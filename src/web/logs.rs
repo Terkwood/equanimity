@@ -271,7 +271,7 @@ impl Logs {
                 epoch_millis,
             }) => html! {
                 <div>
-                    { format!("{} {}", date_string,
+                    { format!("{} 🎭 {}", date_string,
                         if value == 0 { "⚪".to_string() }
                         else {
                             if value > 0 {
