@@ -48,14 +48,6 @@ textarea {
   grid-row: 1 / span 3;
 }
 
-#dategrid {
-  height: 10vh;
-  display: grid;
-  grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(14, 1fr);
-  grid-auto-flow: column;
-}
-
 .date {
   margin-top: 1em;
   font-weight: bold;
@@ -77,20 +69,6 @@ textarea {
 
 .center {
   text-align: center;
-}
-
-.expandheight {
-  height: 100%;
-}
-
-.lookgoodfocused {
-  top: 0;
-  height: 50%;
-}
-
-
-.nocolor {
-  background-color: transparent;
 }
 
 #export-button {
