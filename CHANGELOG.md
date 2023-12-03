@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.5](https://github.com/Terkwood/equanimity/compare/v1.7.4...v1.7.5) (2023-12-03)
+
+
+### Bug Fixes
+
+* trim CSS ([ab2fdbf](https://github.com/Terkwood/equanimity/commit/ab2fdbf35f5b3572e0e15376c45ac749201c2315))
+
 ### [1.7.4](https://github.com/Terkwood/equanimity/compare/v1.7.3...v1.7.4) (2023-12-03)
 
 
