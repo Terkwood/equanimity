@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/Terkwood/equanimity/compare/v1.7.5...v1.8.0) (2023-12-03)
+
+
+### Features
+
+* roboto font ([69b8cba](https://github.com/Terkwood/equanimity/commit/69b8cbaa8bc03c46b1630fce8acbc9fdbc41c319))
+
 ### [1.7.5](https://github.com/Terkwood/equanimity/compare/v1.7.4...v1.7.5) (2023-12-03)
 
 
