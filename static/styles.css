@@ -143,7 +143,7 @@ textarea {
 
 .fancy-button:active {
   background: #e9e2e2;
-  transform: translateX(2px) translateY(5px);
+  transform: translateY(5px);
 }
 
 
