@@ -62,7 +62,7 @@ impl Component for BackdateMoodReadings {
 
                         ctx.props().add_mood_reading.emit(MoodReading {
                             value: mood_reading.value,
-                            epoch_millis: naive_datetime.timestamp_millis() as u64,
+                            epoch_millis: naive_datetime.and_utc().timestamp_millis() as u64,
                         });
                     }
                 }
