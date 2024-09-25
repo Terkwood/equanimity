@@ -43,6 +43,4 @@ fn text_key(text_type: TextType) -> &'static str {
 }
 
 #[derive(Debug)]
-pub struct SaveErr;
-#[derive(Debug)]
 pub struct LoadErr;
