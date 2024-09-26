@@ -1,6 +1,7 @@
 mod about;
 mod backdate;
 mod home;
+mod quick_med;
 pub mod logs;
 pub mod storage_state;
 pub mod time;

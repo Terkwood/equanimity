@@ -3,8 +3,8 @@ use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use yew::Component;
 
 pub struct LogQuickMed {
-    pub choice: QuickMedChoice,
-    pub current_time: NaiveDateTime,
+    pub choice: Option<QuickMedChoice>,
+    pub current_time: Option<NaiveDateTime>,
 }
 
 pub struct QuickMedMsg {}
@@ -15,4 +15,11 @@ pub struct QuickMedProps {}
 impl Component for LogQuickMed {
     type Message = QuickMedMsg;
     type Properties = QuickMedProps;
+
+    fn create(_: &Context<Self>) -> Self {
+        Self {
+            choice: None,
+            current_time: None,
+        }
+    }
 }
