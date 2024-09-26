@@ -10,6 +10,8 @@ pub struct LogQuickMed {
 pub struct QuickMedMsg {}
 
 pub struct QuickMedChoice {}
+
+#[derive(Properties, Clone, PartialEq)]
 pub struct QuickMedProps {}
 
 impl Component for LogQuickMed {
@@ -20,6 +22,12 @@ impl Component for LogQuickMed {
         Self {
             choice: None,
             current_time: None,
+        }
+    }
+
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        html! {
+            <></>
         }
     }
 }
