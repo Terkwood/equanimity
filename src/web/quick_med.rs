@@ -7,4 +7,12 @@ pub struct LogQuickMed {
     pub current_time: NaiveDateTime,
 }
 
+pub struct QuickMedMsg {}
+
 pub struct QuickMedChoice {}
+pub struct QuickMedProps {}
+
+impl Component for LogQuickMed {
+    type Message = QuickMedMsg;
+    type Properties = QuickMedProps;
+}
