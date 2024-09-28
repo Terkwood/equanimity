@@ -7,12 +7,16 @@ pub struct QuickMeds {
     pub current_time: Option<NaiveDateTime>,
 }
 
-pub struct QuickMedMsg {}
+pub enum QuickMedMsg {
+    ShowHome
+}
 
 pub struct QuickMedChoice {}
 
 #[derive(Properties, Clone, PartialEq)]
-pub struct QuickMedProps {}
+pub struct QuickMedProps {
+    pub show_home: Callback<()>
+}
 
 impl Component for QuickMeds {
     type Message = QuickMedMsg;

@@ -165,7 +165,9 @@ impl Component for Root {
                 />
             },
             Mode::QuickMeds => html! {
-                <QuickMeds/>
+                <QuickMeds
+                    show_home={self.show_home.as_ref().expect("show home cb")}
+                />
             }
         }
     }
