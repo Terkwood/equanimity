@@ -10,6 +10,7 @@ use crate::*;
 use backdate::BackdateMoodReadings;
 use home::Home;
 use logs::Logs;
+use quick_med::QuickMeds;
 use storage_state::StorageState;
 
 const INITIAL_MODE: Mode = Mode::Home;
@@ -163,6 +164,9 @@ impl Component for Root {
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
             },
+            Mode::QuickMeds => html! {
+                <QuickMeds/>
+            }
         }
     }
 }

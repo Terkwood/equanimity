@@ -196,13 +196,13 @@ impl Home {
                     </div>
                     <div id="below-mood-button-grid">
                         <div class="center">
-                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ToggleTopView)}>{ "Write 🖊"}</button>
+                            <button class="home-nav-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ToggleTopView)}>{ "Write 🖊"}</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowQuickMeds)}>{ "Quick 💊"}</button>
+                            <button class="home-nav-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowQuickMeds)}>{ "Quick 💊"}</button>
                         </div>
                         <div class="center">
-                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowLogs)}>{ "View Log 📚"}</button>
+                            <button class="home-nav-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowLogs)}>{ "Logs 📚"}</button>
                         </div>
                     </div>
                 </>
