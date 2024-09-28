@@ -198,5 +198,38 @@ textarea {
   text-align: center;
   display: inline-block;
   vertical-align: top;
-  margin: auto;
+  margin: 1vh;
+}
+
+
+#quick-meds-container {
+  position: absolute;
+    top: 5%;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+#quick-meds-left {
+  position: absolute;
+  top: 5%;
+  right: 50%;
+  left: 0;
+  bottom: 0;
+}
+
+#quick-meds-right {
+  position: absolute;
+  top: 5%;
+  right: 0;
+  left: 50%;
+  bottom: 0;
+}
+
+#quick-meds-grid-inner {
+  height: 5vh;
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(15, 1fr) / repeat(1, 1fr);
+  grid-auto-flow: column;
 }

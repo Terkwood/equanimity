@@ -46,11 +46,32 @@ impl Component for QuickMeds {
                 <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ShowHome)}>{ "Home 🔵🔴"}</button>
             </div>
             </div>
-            <div id="quick-meds">
-                <div id="quick-meds-selection">
+            <div id="quick-meds-container">
+            <div id="quick-meds-left">
+            <div id="quick-meds-grid-outer">
+                <div id="quick-meds-grid-inner">
+                    <div class="log-entry">
+                    <button class="fancy-button thick center" role="button"/>
+                    </div>
                 </div>
-                <div id="quick-meds-log">
+            </div>
+            </div>
+            <div id="quick-meds-right">
+                <div id="quick-meds-grid-inner">
+                    <div class="log-entry">
+                        { "💊 Lamotrgn 200mg" }
+                    </div>
+                    <div class="log-entry">
+                        { "💊 Latuda 20mg" }
+                    </div>
+                    <div class="log-entry">
+                        { "💊 Lamotrgn 200mg" }
+                    </div>
+                    <div class="log-entry">
+                        { "💊 Latuda 20mg" }
+                    </div>
                 </div>
+            </div>
             </div>
             </>
         }
