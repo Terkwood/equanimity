@@ -29,9 +29,25 @@ impl Component for QuickMeds {
         }
     }
 
+    fn update(&mut self, ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
+        match msg {
+            QuickMedMsg::ShowHome =>  {
+                ctx.props().show_home.emit(());
+                false
+            }
+        }
+    }
+
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <>
+            <div class="quick-meds-nav-container">
+            <div class="center">
+            <div class="quick-meds-nav">
+                <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ShowHome)}>{ "Home 🔵🔴"}</button>
+            </div>
+            </div>
+            </div>
             <div id="quick-meds">
                 <div id="quick-meds-selection">
                 </div>

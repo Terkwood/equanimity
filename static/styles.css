@@ -120,27 +120,6 @@ textarea {
   border: 0;
 }
 
-.home-nav-button {
-  /* android blue emoji is ~ #027dfd */
-  /* android red emoji is ~ #ff0000 */
-  background: #868585;
-  border-radius: 999px;
-  box-shadow: #868585 0 10px 20px -10px;
-  box-sizing: border-box;
-  color: #FFFFFF;
-  cursor: pointer;
-  font-size: 4vw;
-  opacity: 1;
-  outline: 0 solid transparent;
-  padding: 8px 18px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: fit-content;
-  word-break: break-word;
-  border: 0;
-}
-
 .fancy-button:active {
   background: #e9e2e2;
   transform: translateY(5px);
@@ -207,4 +186,28 @@ textarea {
 
 .write-button {
   height: 3.3em;
+}
+
+.quick-meds-nav-container {
+  height: 5vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  margin: auto;
+}
+
+.quick-meds-nav {
+  height: 5vh;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  margin: auto;
 }
