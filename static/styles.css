@@ -188,17 +188,6 @@ textarea {
   height: 3.3em;
 }
 
-.quick-meds-nav-container {
-  height: 5vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  display: inline-block;
-  vertical-align: top;
-  margin: auto;
-}
 
 .quick-meds-nav {
   height: 5vh;

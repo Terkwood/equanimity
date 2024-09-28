@@ -41,11 +41,9 @@ impl Component for QuickMeds {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <>
-            <div class="quick-meds-nav-container">
             <div class="center">
             <div class="quick-meds-nav">
                 <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ShowHome)}>{ "Home 🔵🔴"}</button>
-            </div>
             </div>
             </div>
             <div id="quick-meds">
