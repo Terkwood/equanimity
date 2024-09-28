@@ -22,6 +22,7 @@ pub enum HomeMsg {
     SubmitMeds,
     SubmitNotes,
     ShowLogs,
+    ShowQuickMeds,
     ToggleTopView,
     FocusInput,
 }
@@ -29,6 +30,7 @@ pub enum HomeMsg {
 #[derive(Properties, Clone, PartialEq)]
 pub struct HomeProps {
     pub show_logs: Callback<()>,
+    pub show_quick_meds: Callback<()>,
     pub add_mood_reading: Callback<MoodReading>,
     pub add_text: Callback<(TextType, String)>,
     pub storage_state: StorageState,
@@ -104,6 +106,10 @@ impl Component for Home {
             }
             HomeMsg::ShowLogs => {
                 ctx.props().show_logs.emit(());
+                false
+            }
+            HomeMsg::ShowQuickMeds => {
+                ctx.props().show_quick_meds.emit(());
                 false
             }
             HomeMsg::FocusInput => {
@@ -191,6 +197,9 @@ impl Home {
                     <div id="below-mood-button-grid">
                         <div class="center">
                             <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ToggleTopView)}>{ "Write 🖊"}</button>
+                        </div>
+                        <div class="center">
+                            <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowQuickMeds)}>{ "Quick 💊"}</button>
                         </div>
                         <div class="center">
                             <button class="fancy-button thick" role="button" onclick={ctx.link().callback(|_| HomeMsg::ShowLogs)}>{ "View Log 📚"}</button>

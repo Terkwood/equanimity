@@ -27,7 +27,14 @@ impl Component for LogQuickMed {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <></>
+            <>
+            <div id="quick-meds">
+                <div id="quick-meds-selection">
+                </div>
+                <div id="quick-meds-log">
+                </div>
+            </div>
+            </>
         }
     }
 }

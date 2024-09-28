@@ -19,6 +19,7 @@ pub struct Root {
     storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
     show_home: Option<Callback<()>>,
+    show_quick_meds: Option<Callback<()>>,
     show_backdate: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
@@ -30,6 +31,7 @@ pub struct Root {
 pub enum Mode {
     Home,
     Logs,
+    QuickMeds,
     BackdateMoodReadings,
 }
 
@@ -46,6 +48,7 @@ impl Component for Root {
     type Properties = ();
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+        let show_quick_meds = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::QuickMeds)));
         let show_home = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Home)));
         let show_backdate = Some(
             ctx.link()
@@ -154,6 +157,7 @@ impl Component for Root {
                 <Home
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
+                    show_quick_meds={self.show_quick_meds.as_ref().expect("quick meds cb")}
                     add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
