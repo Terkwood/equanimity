@@ -79,6 +79,7 @@ impl Component for Root {
             storage_state,
             show_logs,
             show_home,
+            show_quick_meds,
             show_backdate,
             add_mood_reading,
             add_text,
