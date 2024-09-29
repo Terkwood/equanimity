@@ -1,10 +1,10 @@
-use std::collections::HashMap;
-
 use super::storage_state::*;
 use crate::*;
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
+use chrono::{NaiveDateTime, Utc};
 use web::entry::{derive_entries, Entry};
+use web_sys::HtmlTextAreaElement;
 use yew::Component;
+use yew::html::onchange;
 
 pub struct QuickMeds {
     pub choice: Option<QuickMedChoice>,
@@ -12,12 +12,16 @@ pub struct QuickMeds {
     mode: QuickMedsMode,
     med_entries: Vec<TextSubmission>,
     med_buttons: Vec<QuickMedButton>,
+    text_area: String,
 }
 
 pub enum QuickMedMsg {
     ShowHome,
     ToggleConfig,
-    Delete(QuickMedButton)
+    Delete(QuickMedButton),
+    SubmitQuickMedButton,
+    FocusInput,
+    TextAreaUpdated(String)
 }
 
 #[derive(PartialEq)]
@@ -63,6 +67,7 @@ impl Component for QuickMeds {
             mode: QuickMedsMode::Entry,
             med_entries,
             med_buttons: med_buttons.to_vec(),
+            text_area: "".to_string()
         }
     }
 
@@ -79,9 +84,12 @@ impl Component for QuickMeds {
                 };
                 true
             }
-            QuickMedMsg::Delete(button) => {
+            QuickMedMsg::Delete(_button) => {
                 todo!()
             }
+            QuickMedMsg::FocusInput => todo!(),
+            QuickMedMsg::SubmitQuickMedButton => todo!(),
+            QuickMedMsg::TextAreaUpdated(_s) => todo!()
         }
     }
 
@@ -101,6 +109,20 @@ impl Component for QuickMeds {
                 { if self.mode == QuickMedsMode::Config {
                     html!
                     { <>
+                        <div id="controlgridmini">
+                        <div id="bigtextgrid">
+                            <textarea
+                                rows=6
+                                value={self.text_area.clone()}
+                                onfocus={ctx.link().callback(|_| QuickMedMsg::FocusInput)}
+                                onchange={on_change_callback(ctx)}
+                                placeholder="Add a button.">
+                            </textarea>
+                        </div>
+                        <div class="center">
+                            <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Sleep 😴" }</button>
+                        </div>
+                    </div>  
                       { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
@@ -161,4 +183,17 @@ impl QuickMeds {
             <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
             </>}
     }
+}
+
+
+fn on_change_callback(ctx: &yew::Context<QuickMeds>) -> Callback<Event> {
+    ctx.link().callback(|e: onchange::Event| {
+        QuickMedMsg::TextAreaUpdated(
+            e.target()
+                .map(|t| t.value_of())
+                .map(|o| o.dyn_into::<HtmlTextAreaElement>())
+                .map(|text_area_elem| text_area_elem.unwrap().value())
+                .unwrap_or_default(),
+        )
+    })
 }
