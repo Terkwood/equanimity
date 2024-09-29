@@ -52,12 +52,12 @@ impl Component for QuickMeds {
                 <div id="quick-meds-grid-inner">
                     <div class="quick-meds-button center">
                         <div class="quick-meds-button-inner">
-                            <button class="fancy-button thick center" role="button">{ "Lamotrgn 200mg"}</button>
+                            <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
                         </div>
                     </div>
                     <div class="quick-meds-button center">
                         <div class="quick-meds-button-inner">
-                            <button class="fancy-button thick center" role="button">{ "Lamotrgn 200mg"}</button>
+                            <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
                         </div>
                     </div>
                 </div>
@@ -66,13 +66,13 @@ impl Component for QuickMeds {
             <div id="quick-meds-right">
                 <div id="quick-meds-grid-inner">
                     <div class="quick-meds-log">
-                        { "💊 Lamotrgn 200mg" }
+                        { "💊 Lamotargine 200mg" }
                     </div>
                     <div class="quick-meds-log">
                         { "💊 Latuda 20mg" }
                     </div>
                     <div class="quick-meds-log">
-                        { "💊 Lamotrgn 200mg" }
+                        { "💊 Lamotragine 200mg" }
                     </div>
                     <div class="quick-meds-log">
                         { "💊 Latuda 20mg" }

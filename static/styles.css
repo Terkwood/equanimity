@@ -213,7 +213,7 @@ textarea {
 #quick-meds-left {
   position: absolute;
   top: 5%;
-  right: 50%;
+  right: 62%;
   left: 0;
   bottom: 0;
 }
@@ -222,7 +222,7 @@ textarea {
   position: absolute;
   top: 5%;
   right: 0;
-  left: 50%;
+  left: 38%;
   bottom: 0;
 }
 
@@ -240,7 +240,7 @@ textarea {
 }
 
 .quick-meds-button-inner {
-  width: 80%;
+  width: 90%;
 }
 
 
