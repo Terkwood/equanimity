@@ -137,3 +137,13 @@ impl Component for QuickMeds {
     }
     }
 }
+
+impl QuickMeds {
+    fn render_med_text(&self, ctx: &yew::Context<Self>, t: TextSubmission) -> Html {
+        html!{<>
+            <div class="quick-meds-log">
+                    { format!("💊 {}", t.value) }
+                </div>
+            </>}
+    }
+}
