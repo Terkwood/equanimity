@@ -168,6 +168,7 @@ impl Component for Root {
             Mode::QuickMeds => html! {
                 <QuickMeds
                     show_home={self.show_home.as_ref().expect("show home cb")}
+                    storage_state={self.storage_state.clone()}
                 />
             }
         }

@@ -1,4 +1,5 @@
 use crate::*;
+use super::storage_state::*;
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use yew::Component;
 
@@ -23,7 +24,8 @@ pub struct QuickMedChoice {}
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct QuickMedProps {
-    pub show_home: Callback<()>
+    pub show_home: Callback<()>,
+    pub storage_state: StorageState
 }
 
 impl Component for QuickMeds {
