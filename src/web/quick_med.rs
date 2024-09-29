@@ -17,6 +17,7 @@ pub struct QuickMeds {
 pub enum QuickMedMsg {
     ShowHome,
     ToggleConfig,
+    Delete(QuickMedButton)
 }
 
 #[derive(PartialEq)]
@@ -78,6 +79,9 @@ impl Component for QuickMeds {
                 };
                 true
             }
+            QuickMedMsg::Delete(button) => {
+                todo!()
+            }
         }
     }
 
@@ -97,7 +101,7 @@ impl Component for QuickMeds {
                 { if self.mode == QuickMedsMode::Config {
                     html!
                     { <>
-                      { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b)).collect::<Html>() }
+                      { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
                   } else {
@@ -152,7 +156,9 @@ impl QuickMeds {
         </>}
     }
 
-    fn render_button_config(&self, ctx: &yew::Context<Self>, b: &QuickMedButton) -> Html {
-        html! { <></>}
+    fn render_button_config(&self, ctx: &yew::Context<Self>, b: QuickMedButton) -> Html {
+        html! { <>
+            <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
+            </>}
     }
 }
