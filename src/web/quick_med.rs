@@ -37,23 +37,28 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let all_today_entries: Vec<Entry>= 
+        let med_entries: Vec<TextSubmission>= 
             derive_entries(&ctx.props().storage_state).into_iter()
-            .filter(|(k,v)| k == &Utc::now().naive_utc().date() )
-            .map(|(k,v)|v).flatten().collect();
-            // .map(|(k, v)| v)
-            // .filter(|v| match v {
-            //     Entry::Meds(_) => true,
-            //     _ => false
-            // })
-            // .collect();
+            .filter(|(k,_)| k == &Utc::now().naive_utc().date() )
+            .map(|(_,v)|v)
+            .flatten()
+            .filter(|e| match e {
+                 Entry::Meds(_) => true,
+                 _ => false
+                })
+            .map(|e| match e {
+                Entry::Meds(v) => v,
+                _ => unreachable!()
+            })
+            .collect();
+           
         
 
         Self {
             choice: None,
             current_time: None,
             mode: QuickMedsMode::Entry,
-            med_entries: vec!()
+            med_entries
         }
     }
 
