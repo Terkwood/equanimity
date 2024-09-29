@@ -12,7 +12,7 @@ pub struct QuickMeds {
     mode: QuickMedsMode,
     med_entries: Vec<TextSubmission>,
     med_buttons: Vec<QuickMedButton>,
-    text_area: String,
+    text_area: String
 }
 
 pub enum QuickMedMsg {
@@ -35,7 +35,7 @@ pub struct QuickMedChoice {}
 #[derive(Properties, Clone, PartialEq)]
 pub struct QuickMedProps {
     pub show_home: Callback<()>,
-    pub storage_state: StorageState,
+    pub storage_state: StorageState
 }
 
 impl Component for QuickMeds {
@@ -88,8 +88,18 @@ impl Component for QuickMeds {
                 todo!()
             }
             QuickMedMsg::FocusInput => todo!(),
-            QuickMedMsg::SubmitQuickMedButton => todo!(),
-            QuickMedMsg::TextAreaUpdated(_s) => todo!()
+            QuickMedMsg::SubmitQuickMedButton => {
+                if !self.text_area.is_empty() {
+                    self.add_button(self.text_area.clone());
+                    self.text_area = "".to_string();
+                }
+
+                true
+            }
+            QuickMedMsg::TextAreaUpdated(s) => {
+                self.text_area.push_str(&s);
+                true
+            }
         }
     }
 
@@ -182,6 +192,10 @@ impl QuickMeds {
         html! { <>
             <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
             </>}
+    }
+    
+    fn add_button(&self, _button_text: String) {
+        todo!()
     }
 }
 
