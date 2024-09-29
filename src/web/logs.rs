@@ -6,6 +6,7 @@ use super::about;
 use super::StorageState;
 use crate::pips::{blue_circles, red_circles};
 use crate::*;
+use super::entry::*;
 
 pub struct Logs {
     entries: HashMap<NaiveDate, Vec<Entry>>,
@@ -36,35 +37,6 @@ pub struct LogsProps {
     pub replace_mood_readings: Callback<Vec<MoodReading>>,
 }
 
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub enum Entry {
-    Mood(MoodReading),
-    Sleep(TextSubmission),
-    Meds(TextSubmission),
-    Note(TextSubmission),
-}
-
-impl Entry {
-    pub fn timestamp(&self) -> u64 {
-        match self {
-            Entry::Mood(m) => m.epoch_millis,
-            Entry::Sleep(t) => t.epoch_millis,
-            Entry::Meds(m) => m.epoch_millis,
-            Entry::Note(t) => t.epoch_millis,
-        }
-    }
-}
-impl PartialOrd for Entry {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for Entry {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.timestamp().cmp(&other.timestamp())
-    }
-}
 
 impl Component for Logs {
     type Message = LogsMsg;
@@ -285,7 +257,7 @@ impl Logs {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
                                 value,
                                 epoch_millis,
-                            })))}>{ "DELETE" }</button> },
+                            })))}>{ "🗑️" }</button> },
                             _ => html! { }
                         }
                     }
