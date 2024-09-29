@@ -226,7 +226,7 @@ textarea {
   bottom: 0;
 }
 
-#quick-meds-grid-inner {
+#quick-meds-grid {
   display: grid;
   grid-gap: 5px;
   grid-template: repeat(15, 1fr) / repeat(1, 1fr);
