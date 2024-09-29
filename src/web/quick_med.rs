@@ -55,7 +55,6 @@ impl Component for QuickMeds {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        if self.mode == QuickMedsMode::Config { html! { <></> }} else {
         html! {
             <>
             <div class="center">
@@ -63,45 +62,54 @@ impl Component for QuickMeds {
                 <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ShowHome)}>{ "Home 🔵🔴"}</button>
             </div>
             <div class="quick-meds-nav">
-                <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ToggleConfig)}>{ "Config 🛠️"}</button>
+                <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ToggleConfig)}>{ if self.mode == QuickMedsMode::Entry { "Config 🛠️"} else { "Entries 💊"} }</button>
+            </div>
             </div>
             
-            </div>
-            <div id="quick-meds-container">
-            <div id="quick-meds-left">
-            <div id="quick-meds-grid-outer">
-                <div id="quick-meds-grid">
-                    <div class="quick-meds-button center">
-                        <div class="quick-meds-button-inner">
-                            <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
+
+            { if self.mode == QuickMedsMode::Config { html! { <></> } } 
+              else {
+                html! {
+                    <>
+                    <div id="quick-meds-container">
+                    <div id="quick-meds-left">
+                    <div id="quick-meds-grid-outer">
+                        <div id="quick-meds-grid">
+                            <div class="quick-meds-button center">
+                                <div class="quick-meds-button-inner">
+                                    <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
+                                </div>
+                            </div>
+                            <div class="quick-meds-button center">
+                                <div class="quick-meds-button-inner">
+                                    <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="quick-meds-button center">
-                        <div class="quick-meds-button-inner">
-                            <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
+                    </div>
+                    <div id="quick-meds-right">
+                        <div id="quick-meds-grid">
+                            <div class="quick-meds-log">
+                                { "💊 Lamotargine 200mg" }
+                            </div>
+                            <div class="quick-meds-log">
+                                { "💊 Latuda 20mg" }
+                            </div>
+                            <div class="quick-meds-log">
+                                { "💊 Lamotragine 200mg" }
+                            </div>
+                            <div class="quick-meds-log">
+                                { "💊 Latuda 20mg" }
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            </div>
-            <div id="quick-meds-right">
-                <div id="quick-meds-grid">
-                    <div class="quick-meds-log">
-                        { "💊 Lamotargine 200mg" }
                     </div>
-                    <div class="quick-meds-log">
-                        { "💊 Latuda 20mg" }
-                    </div>
-                    <div class="quick-meds-log">
-                        { "💊 Lamotragine 200mg" }
-                    </div>
-                    <div class="quick-meds-log">
-                        { "💊 Latuda 20mg" }
-                    </div>
-                </div>
-            </div>
-            </div>
-            </>
-        }}
+                </>
+                }
+              } 
+        }
+        </>
+    }
     }
 }
