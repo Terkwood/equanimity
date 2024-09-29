@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::*;
 use super::storage_state::*;
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Utc};
 use web::entry::{derive_entries, Entry};
 use yew::Component;
 
@@ -10,7 +10,7 @@ pub struct QuickMeds {
     pub choice: Option<QuickMedChoice>,
     pub current_time: Option<NaiveDateTime>,
     mode: QuickMedsMode,
-    med_entries: HashMap<NaiveDate, Vec<Entry>>
+    med_entries: Vec<TextSubmission>
 }
 
 pub enum QuickMedMsg {
@@ -37,19 +37,23 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        // TODO filter
-        // TODO filter
-        // TODO filter
-        let med_entries = derive_entries(&ctx.props().storage_state);
-        // TODO filter
-        // TODO filter
-        // TODO filter
+        let all_today_entries: Vec<Vec<Entry>>= 
+            derive_entries(&ctx.props().storage_state).into_iter()
+            .filter(|(k,v)| k == &Utc::now().naive_utc().date() )
+            .map(|(k,v)|v).collect();
+            // .map(|(k, v)| v)
+            // .filter(|v| match v {
+            //     Entry::Meds(_) => true,
+            //     _ => false
+            // })
+            // .collect();
+        
 
         Self {
             choice: None,
             current_time: None,
             mode: QuickMedsMode::Entry,
-            med_entries
+            med_entries: vec!()
         }
     }
 
