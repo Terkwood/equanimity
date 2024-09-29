@@ -37,7 +37,7 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let med_entries: Vec<TextSubmission>= 
+        let mut med_entries: Vec<TextSubmission>= 
             derive_entries(&ctx.props().storage_state).into_iter()
             .filter(|(k,_)| k == &Utc::now().naive_utc().date() )
             .map(|(_,v)|v)
@@ -51,6 +51,7 @@ impl Component for QuickMeds {
                 _ => unreachable!()
             })
             .collect();
+        med_entries.reverse();
            
         
 
@@ -91,8 +92,13 @@ impl Component for QuickMeds {
             </div>
             
 
-            { if self.mode == QuickMedsMode::Config { html! { <></> } } 
-              else {
+            { if self.mode == QuickMedsMode::Config { 
+                html! 
+                { <>
+                  { self.render_button_config(&ctx) }  
+                  </> 
+                } 
+              } else {
                 html! {
                     <>
                     <div id="quick-meds-container">
@@ -147,4 +153,9 @@ impl QuickMeds {
                 </div>
             </>}
     }
+
+    fn render_button_config(&self, 
+        ctx: &yew::Context<Self>) -> Html { 
+            html! { <></>}
+        }
 }
