@@ -90,7 +90,7 @@ impl Component for QuickMeds {
             QuickMedMsg::FocusInput => todo!(),
             QuickMedMsg::SubmitQuickMedButton => {
                 if !self.text_area.is_empty() {
-                    self.add_button(self.text_area.clone());
+                    self.add_quick_med_button(ctx,QuickMedButton(self.text_area.clone()));
                     self.text_area = "".to_string();
                 }
 
@@ -193,11 +193,12 @@ impl QuickMeds {
             <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
             </>}
     }
-    
-    fn add_quick_med_button(&self, _button_text: String) {
-        self.storage_state.quick_med_buttons.push(QuickMedButton::new(text));
-        repo::save_text(TextType::Meds, &self.storage_state.meds).expect("save meds");
-                
+
+    fn add_quick_med_button(&mut self, ctx: &yew::Context<Self>,b: QuickMedButton) {
+        todo!();
+        // TODO TODO
+        // ctx.props().storage_state.quick_med_buttons.push(b);
+        repo::save_quick_med_buttons(&ctx.props().storage_state.quick_med_buttons).expect("save quick med buttons");       
     }
 }
 
