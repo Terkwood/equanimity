@@ -37,10 +37,10 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let all_today_entries: Vec<Vec<Entry>>= 
+        let all_today_entries: Vec<Entry>= 
             derive_entries(&ctx.props().storage_state).into_iter()
             .filter(|(k,v)| k == &Utc::now().naive_utc().date() )
-            .map(|(k,v)|v).collect();
+            .map(|(k,v)|v).flatten().collect();
             // .map(|(k, v)| v)
             // .filter(|v| match v {
             //     Entry::Meds(_) => true,
