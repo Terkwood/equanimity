@@ -1,4 +1,4 @@
-use crate::{MoodReading, TextSubmission, TextType};
+use crate::{MoodReading, TextSubmission, TextType, QuickMedButton};
 use gloo::storage::LocalStorage;
 use gloo_storage::{errors::StorageError, Storage};
 
@@ -6,6 +6,21 @@ const MOOD_READINGS_KEY: &str = "mood_readings";
 const NOTES_KEY: &str = "notes";
 const MEDS_KEY: &str = "meds";
 const SLEEP_KEY: &str = "sleep";
+const QUICK_MED_BUTTONS_KEY: &str = "quick_med_buttons";
+
+pub fn save_quick_med_buttons(all: &Vec<QuickMedButton>) ->  Result<(), StorageError> {
+    LocalStorage::set(QUICK_MED_BUTTONS_KEY, all)
+}
+
+pub fn load_quick_med_buttons() -> Result<Vec<QuickMedButton>, LoadErr> {
+    Ok(
+        if let Ok(restored_model) = LocalStorage::get(QUICK_MED_BUTTONS_KEY) {
+            restored_model
+        } else {
+            Vec::new()
+        },
+    )
+}
 
 pub fn save_mood_readings(all: &Vec<MoodReading>) -> Result<(), StorageError> {
     LocalStorage::set(MOOD_READINGS_KEY, all)
