@@ -114,18 +114,7 @@ impl Component for QuickMeds {
                     </div>
                     <div id="quick-meds-right">
                         <div id="quick-meds-grid">
-                            <div class="quick-meds-log">
-                                { "💊 Lamotargine 200mg" }
-                            </div>
-                            <div class="quick-meds-log">
-                                { "💊 Latuda 20mg" }
-                            </div>
-                            <div class="quick-meds-log">
-                                { "💊 Lamotragine 200mg" }
-                            </div>
-                            <div class="quick-meds-log">
-                                { "💊 Latuda 20mg" }
-                            </div>
+                            { self.render_day_meds(self.med_entries.clone())}
                         </div>
                     </div>
                     </div>
