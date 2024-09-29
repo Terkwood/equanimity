@@ -13,6 +13,7 @@ pub enum QuickMedMsg {
     ToggleConfig
 }
 
+#[derive(PartialEq)]
 pub enum QuickMedsMode {
     Entry,
     Config
@@ -54,13 +55,17 @@ impl Component for QuickMeds {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        if self.mode == QuickMedsMode::Config { html! { <></> }} else {
         html! {
             <>
             <div class="center">
             <div class="quick-meds-nav">
                 <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ShowHome)}>{ "Home 🔵🔴"}</button>
+            </div>
+            <div class="quick-meds-nav">
                 <button class="fancy-button thick center" role="button" onclick={ctx.link().callback(|_| QuickMedMsg::ToggleConfig)}>{ "Config 🛠️"}</button>
             </div>
+            
             </div>
             <div id="quick-meds-container">
             <div id="quick-meds-left">
@@ -97,6 +102,6 @@ impl Component for QuickMeds {
             </div>
             </div>
             </>
-        }
+        }}
     }
 }
