@@ -139,7 +139,19 @@ impl Component for QuickMeds {
 }
 
 impl QuickMeds {
-    fn render_med_text(&self, ctx: &yew::Context<Self>, t: TextSubmission) -> Html {
+    fn render_day_meds(
+        &self,
+        day_entries: Vec<TextSubmission>,
+    ) -> Html {
+        
+        html! {
+            <>
+                { day_entries.iter().map(|t| self.render_med_text( t.clone())).collect::<Html>() }
+            </>
+        }
+    }
+
+    fn render_med_text(&self, t: TextSubmission) -> Html {
         html!{<>
             <div class="quick-meds-log">
                     { format!("💊 {}", t.value) }
