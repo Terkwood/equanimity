@@ -37,7 +37,13 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
+        // TODO filter
+        // TODO filter
+        // TODO filter
         let med_entries = derive_entries(&ctx.props().storage_state);
+        // TODO filter
+        // TODO filter
+        // TODO filter
 
         Self {
             choice: None,
