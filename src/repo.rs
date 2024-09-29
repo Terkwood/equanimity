@@ -1,4 +1,4 @@
-use crate::{MoodReading, TextSubmission, TextType, QuickMedButton};
+use crate::{MoodReading, QuickMedButton, TextSubmission, TextType};
 use gloo::storage::LocalStorage;
 use gloo_storage::{errors::StorageError, Storage};
 
@@ -8,7 +8,7 @@ const MEDS_KEY: &str = "meds";
 const SLEEP_KEY: &str = "sleep";
 const QUICK_MED_BUTTONS_KEY: &str = "quick_med_buttons";
 
-pub fn save_quick_med_buttons(all: &Vec<QuickMedButton>) ->  Result<(), StorageError> {
+pub fn save_quick_med_buttons(all: &Vec<QuickMedButton>) -> Result<(), StorageError> {
     LocalStorage::set(QUICK_MED_BUTTONS_KEY, all)
 }
 

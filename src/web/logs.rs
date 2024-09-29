@@ -1,12 +1,11 @@
-
-use std::collections::HashMap;
 use chrono::NaiveDate;
+use std::collections::HashMap;
 
 use super::about;
+use super::entry::*;
 use super::StorageState;
 use crate::pips::{blue_circles, red_circles};
 use crate::*;
-use super::entry::*;
 
 pub struct Logs {
     entries: HashMap<NaiveDate, Vec<Entry>>,
@@ -36,7 +35,6 @@ pub struct LogsProps {
     pub replace_texts: Callback<(TextType, Vec<TextSubmission>)>,
     pub replace_mood_readings: Callback<Vec<MoodReading>>,
 }
-
 
 impl Component for Logs {
     type Message = LogsMsg;
@@ -327,8 +325,6 @@ impl Logs {
             });
     }
 }
-
-
 
 fn format_timestamp(epoch_millis_utc: u64) -> String {
     let date = js_sys::Date::new(&JsValue::from_f64(epoch_millis_utc as f64));

@@ -15,7 +15,7 @@ pub const NBSP: char = '\u{00a0}';
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct QuickMedButton {
-    pub value: String
+    pub value: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]

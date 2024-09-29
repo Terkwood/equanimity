@@ -1,9 +1,9 @@
 mod about;
 mod backdate;
-mod home;
-mod quick_med;
 mod entry;
+mod home;
 pub mod logs;
+mod quick_med;
 pub mod storage_state;
 pub mod time;
 
@@ -50,7 +50,10 @@ impl Component for Root {
     type Properties = ();
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
-        let show_quick_meds = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::QuickMeds)));
+        let show_quick_meds = Some(
+            ctx.link()
+                .callback(|()| RootMsg::SwitchMode(Mode::QuickMeds)),
+        );
         let show_home = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Home)));
         let show_backdate = Some(
             ctx.link()
@@ -170,7 +173,7 @@ impl Component for Root {
                     show_home={self.show_home.as_ref().expect("show home cb")}
                     storage_state={self.storage_state.clone()}
                 />
-            }
+            },
         }
     }
 }

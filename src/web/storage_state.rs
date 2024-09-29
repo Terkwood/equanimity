@@ -5,7 +5,7 @@ pub struct StorageState {
     pub meds: Vec<TextSubmission>,
     pub sleep_entries: Vec<TextSubmission>,
     pub notes: Vec<TextSubmission>,
-    pub quick_med_buttons: Vec<QuickMedButton>
+    pub quick_med_buttons: Vec<QuickMedButton>,
 }
 
 impl StorageState {
@@ -15,7 +15,7 @@ impl StorageState {
             meds: repo::load_text(TextType::Meds).unwrap_or_default(),
             sleep_entries: repo::load_text(TextType::Sleep).unwrap_or_default(),
             notes: repo::load_text(TextType::Notes).unwrap_or_default(),
-            quick_med_buttons: repo::load_quick_med_buttons().unwrap_or_default()
+            quick_med_buttons: repo::load_quick_med_buttons().unwrap_or_default(),
         }
     }
 }
