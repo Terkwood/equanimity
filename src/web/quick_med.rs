@@ -97,7 +97,7 @@ impl Component for QuickMeds {
             { if self.mode == QuickMedsMode::Config { 
                 html! 
                 { <>
-                  { self.render_button_config(&ctx) }  
+                  { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b)).collect::<Html>() }  
                   </> 
                 } 
               } else {
@@ -157,7 +157,8 @@ impl QuickMeds {
     }
 
     fn render_button_config(&self, 
-        ctx: &yew::Context<Self>) -> Html { 
+        ctx: &yew::Context<Self>,
+    b: &QuickMedButton) -> Html { 
             html! { <></>}
         }
 }
