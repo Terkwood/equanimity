@@ -43,6 +43,7 @@ pub enum RootMsg {
     AddText(TextType, String),
     ReplaceMoodReadings(Vec<MoodReading>),
     ReplaceTexts(TextType, Vec<TextSubmission>),
+    AddQuickMedButton(QuickMedButton)
 }
 
 impl Component for Root {
@@ -137,6 +138,11 @@ impl Component for Root {
                     TextType::Sleep => self.storage_state.sleep_entries = all.clone(),
                 };
                 repo::save_text(text_type, &all).expect("replace text entries");
+                true
+            }
+            RootMsg::AddQuickMedButton(value) => {
+                self.storage_state.quick_med_buttons.push(value);
+                repo::save_quick_med_buttons(&self.storage_state.quick_med_buttons).expect("save quick med buttons");
                 true
             }
         }

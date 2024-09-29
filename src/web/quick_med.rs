@@ -194,8 +194,10 @@ impl QuickMeds {
             </>}
     }
     
-    fn add_button(&self, _button_text: String) {
-        todo!()
+    fn add_quick_med_button(&self, _button_text: String) {
+        self.storage_state.quick_med_buttons.push(QuickMedButton::new(text));
+        repo::save_text(TextType::Meds, &self.storage_state.meds).expect("save meds");
+                
     }
 }
 
