@@ -10,7 +10,8 @@ pub struct QuickMeds {
     pub choice: Option<QuickMedChoice>,
     pub current_time: Option<NaiveDateTime>,
     mode: QuickMedsMode,
-    med_entries: Vec<TextSubmission>
+    med_entries: Vec<TextSubmission>,
+    med_buttons: Vec<QuickMedButton>
 }
 
 pub enum QuickMedMsg {
@@ -52,14 +53,15 @@ impl Component for QuickMeds {
             })
             .collect();
         med_entries.reverse();
-           
-        
 
+        let med_buttons = &ctx.props().storage_state.quick_med_buttons;
+           
         Self {
             choice: None,
             current_time: None,
             mode: QuickMedsMode::Entry,
-            med_entries
+            med_entries,
+            med_buttons: med_buttons.to_vec()
         }
     }
 
