@@ -134,11 +134,13 @@ impl Component for QuickMeds {
                                 placeholder="Add a button.">
                             </textarea>
                         </div>
+                        </div>
                         <div class="center">
+                        <div class="quick-meds-nav">
                             <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::AddButton)}>{ "Add Button 🔤" }</button>
                         </div>
                         </div>
-                      { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
+                        { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
                   } else {
@@ -200,7 +202,7 @@ impl QuickMeds {
     fn render_button_config(&self, ctx: &yew::Context<Self>, b: QuickMedButton) -> Html {
         html! { <>
             { format!("💊 {}", b.0) }
-        <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::DeleteButton(b.clone()))}>{ "🗑️" }</button>
+        <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::DeleteButton(b.clone()))}>{ "DELETE" }</button>
         <br/>
         </>}
     }

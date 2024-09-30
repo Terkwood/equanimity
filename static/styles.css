@@ -248,3 +248,7 @@ textarea {
   margin-top: 0.33em;
   margin-bottom: 0.33em;
 }
+
+.quick-meds-add-button {
+  width: 40%;
+}
