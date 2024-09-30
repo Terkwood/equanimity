@@ -203,6 +203,7 @@ impl Component for Root {
                     storage_state={self.storage_state.clone()}
                     add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
                     delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
+                    log_med={self.add_text.as_ref().expect("log med")}
                 />
             },
         }

@@ -35,6 +35,7 @@ pub struct QuickMedProps {
     pub add_button: Callback<QuickMedButton>,
     pub delete_button: Callback<QuickMedButton>,
     pub storage_state: StorageState,
+    pub log_med: Callback<(TextType, String)>,
 }
 
 impl Component for QuickMeds {
@@ -100,7 +101,10 @@ impl Component for QuickMeds {
                 true
             }
             QuickMedMsg::ClickButton(button) => {
-                todo!()
+                ctx.props()
+                        .log_med
+                        .emit((TextType::Meds, button.0.clone()));
+                true
             }
         }
     }
