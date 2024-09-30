@@ -19,7 +19,6 @@ pub enum QuickMedMsg {
     DeleteButton(QuickMedButton),
     AddButton,
     ClickButton(QuickMedButton),
-    FocusInput,
     TextAreaUpdated(String),
 }
 
@@ -87,7 +86,6 @@ impl Component for QuickMeds {
                 ctx.props().delete_button.emit(button.clone());
                 true
             }
-            QuickMedMsg::FocusInput => todo!(),
             QuickMedMsg::AddButton => {
                 if !self.text_area.is_empty() {
                     self.add_button(QuickMedButton(self.text_area.clone()));
@@ -130,7 +128,6 @@ impl Component for QuickMeds {
                             <textarea
                                 rows=6
                                 value={self.text_area.clone()}
-                                onfocus={ctx.link().callback(|_| QuickMedMsg::FocusInput)}
                                 onchange={on_change_callback(ctx)}
                                 placeholder="Add a button.">
                             </textarea>
