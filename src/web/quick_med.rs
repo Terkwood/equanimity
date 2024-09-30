@@ -8,7 +8,7 @@ use yew::Component;
 
 pub struct QuickMeds {
     mode: QuickMedsMode,
-    entries: Vec<TextSubmission>,
+    entries: Vec<String>,
     buttons: Vec<QuickMedButton>,
     text_area: String,
 }
@@ -42,7 +42,7 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let mut med_entries: Vec<TextSubmission> = derive_entries(&ctx.props().storage_state)
+        let mut med_entries: Vec<String> = derive_entries(&ctx.props().storage_state)
             .into_iter()
             .filter(|(k, _)| k == &Utc::now().naive_utc().date())
             .map(|(_, v)| v)
@@ -52,7 +52,7 @@ impl Component for QuickMeds {
                 _ => false,
             })
             .map(|e| match e {
-                Entry::Meds(v) => v,
+                Entry::Meds(v) => v.value,
                 _ => unreachable!(),
             })
             .collect();
@@ -99,6 +99,7 @@ impl Component for QuickMeds {
                 true
             }
             QuickMedMsg::ClickButton(button) => {
+                self.entries.push(button.0.clone());
                 ctx.props().log_med.emit((TextType::Meds, button.0.clone()));
                 true
             }
@@ -177,7 +178,7 @@ impl QuickMeds {
             .collect::<Vec<QuickMedButton>>();
     }
 
-    fn render_day_meds(&self, day_entries: Vec<TextSubmission>) -> Html {
+    fn render_day_meds(&self, day_entries: Vec<String>) -> Html {
         html! {
             <>
                 { day_entries.iter().map(|t| self.render_med_text( t.clone())).collect::<Html>() }
@@ -185,10 +186,10 @@ impl QuickMeds {
         }
     }
 
-    fn render_med_text(&self, t: TextSubmission) -> Html {
+    fn render_med_text(&self, t: String) -> Html {
         html! {<>
         <div class="quick-meds-log">
-                { format!("💊 {}", t.value) }
+                { format!("💊 {}", t) }
             </div>
         </>}
     }
