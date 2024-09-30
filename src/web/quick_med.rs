@@ -8,8 +8,8 @@ use yew::html::onchange;
 
 pub struct QuickMeds {
     mode: QuickMedsMode,
-    med_entries: Vec<TextSubmission>,
-    med_buttons: Vec<QuickMedButton>,
+    entries: Vec<TextSubmission>,
+    buttons: Vec<QuickMedButton>,
     text_area: String
 }
 
@@ -62,8 +62,8 @@ impl Component for QuickMeds {
 
         Self {
             mode: QuickMedsMode::Entry,
-            med_entries,
-            med_buttons: med_buttons.to_vec(),
+            entries: med_entries,
+            buttons: med_buttons.to_vec(),
             text_area: "".to_string()
         }
     }
@@ -130,7 +130,7 @@ impl Component for QuickMeds {
                             <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Add Button 🔤" }</button>
                         </div>
                     </div>  
-                      { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
+                      { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
                   } else {
@@ -155,7 +155,7 @@ impl Component for QuickMeds {
                         </div>
                         <div id="quick-meds-right">
                             <div id="quick-meds-grid">
-                                { self.render_day_meds(self.med_entries.clone())}
+                                { self.render_day_meds(self.entries.clone())}
                             </div>
                         </div>
                         </div>
@@ -169,6 +169,16 @@ impl Component for QuickMeds {
 }
 
 impl QuickMeds {
+    fn add_button(&mut self, button: QuickMedButton) {
+        self.buttons.push(button);
+    }
+
+    fn delete_button(&mut self, button: QuickMedButton) {
+        self.buttons = self.buttons.clone().into_iter()
+            .filter(|b| *b != button)
+            .collect::<Vec<QuickMedButton>>();
+    }
+
     fn render_day_meds(&self, day_entries: Vec<TextSubmission>) -> Html {
         html! {
             <>
