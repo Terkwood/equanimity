@@ -7,8 +7,6 @@ use yew::Component;
 use yew::html::onchange;
 
 pub struct QuickMeds {
-    pub choice: Option<QuickMedChoice>,
-    pub current_time: Option<NaiveDateTime>,
     mode: QuickMedsMode,
     med_entries: Vec<TextSubmission>,
     med_buttons: Vec<QuickMedButton>,
@@ -30,11 +28,12 @@ pub enum QuickMedsMode {
     Config,
 }
 
-pub struct QuickMedChoice {}
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct QuickMedProps {
     pub show_home: Callback<()>,
+    pub add_button: Callback<QuickMedButton>,
+    pub delete_button: Callback<QuickMedButton>,
     pub storage_state: StorageState
 }
 
@@ -62,8 +61,6 @@ impl Component for QuickMeds {
         let med_buttons = &ctx.props().storage_state.quick_med_buttons;
 
         Self {
-            choice: None,
-            current_time: None,
             mode: QuickMedsMode::Entry,
             med_entries,
             med_buttons: med_buttons.to_vec(),
@@ -130,7 +127,7 @@ impl Component for QuickMeds {
                             </textarea>
                         </div>
                         <div class="center">
-                            <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Sleep 😴" }</button>
+                            <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Add Button 🔤" }</button>
                         </div>
                     </div>  
                       { self.med_buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
@@ -197,6 +194,7 @@ impl QuickMeds {
     fn add_quick_med_button(&mut self, ctx: &yew::Context<Self>,b: QuickMedButton) {
         todo!();
         // TODO TODO
+        // This may all need to be moved to Root component
         // ctx.props().storage_state.quick_med_buttons.push(b);
         repo::save_quick_med_buttons(&ctx.props().storage_state.quick_med_buttons).expect("save quick med buttons");       
     }

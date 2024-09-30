@@ -27,6 +27,8 @@ pub struct Root {
     add_text: Option<Callback<(TextType, String)>>,
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
     replace_mood_readings: Option<Callback<Vec<MoodReading>>>,
+    add_quick_med_button: Option<Callback<QuickMedButton>>,
+    delete_quick_med_button: Option<Callback<QuickMedButton>>
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -42,7 +44,9 @@ pub enum RootMsg {
     AddMoodReading(MoodReading),
     AddText(TextType, String),
     ReplaceMoodReadings(Vec<MoodReading>),
-    ReplaceTexts(TextType, Vec<TextSubmission>)
+    ReplaceTexts(TextType, Vec<TextSubmission>),
+    AddQuickMedButton(QuickMedButton),
+    DeleteQuickMedButton(QuickMedButton)
 }
 
 impl Component for Root {
@@ -76,6 +80,14 @@ impl Component for Root {
             ctx.link()
                 .callback(|readings| RootMsg::ReplaceMoodReadings(readings)),
         );
+        let add_quick_med_button = Some(
+            ctx.link()
+                .callback(|text|RootMsg::AddQuickMedButton(text))
+        );
+        let delete_quick_med_button = Some(
+            ctx.link()
+                .callback(|text|RootMsg::DeleteQuickMedButton(text))
+        );
 
         let storage_state = StorageState::load();
 
@@ -90,6 +102,8 @@ impl Component for Root {
             add_text,
             replace_texts,
             replace_mood_readings,
+            add_quick_med_button,
+            delete_quick_med_button
         }
     }
     fn update(&mut self, _ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
@@ -139,6 +153,19 @@ impl Component for Root {
                 repo::save_text(text_type, &all).expect("replace text entries");
                 true
             }
+            RootMsg::AddQuickMedButton(new) => {
+                self.storage_state.quick_med_buttons.push(new);
+                let all = self.storage_state.quick_med_buttons.clone();
+                repo::save_quick_med_buttons(&all).expect("save quick med buttons");
+                true
+            }
+            RootMsg::DeleteQuickMedButton(to_delete) => {
+                let dropped = self.storage_state.quick_med_buttons.clone().into_iter()
+                    .filter(|b| *b != to_delete)
+                    .collect::<Vec<QuickMedButton>>();
+                repo::save_quick_med_buttons(&dropped).expect("delete quick med button");
+                true
+            }
         }
     }
 
@@ -172,6 +199,8 @@ impl Component for Root {
                 <QuickMeds
                     show_home={self.show_home.as_ref().expect("show home cb")}
                     storage_state={self.storage_state.clone()}
+                    add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
+                    delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
                 />
             },
         }

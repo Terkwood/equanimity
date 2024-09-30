@@ -1,4 +1,7 @@
 use crate::*;
+
+/// This is an in-memory representation of the storage state.
+/// You must still save data using the repo module.
 #[derive(Clone, Serialize, Debug, PartialEq)]
 pub struct StorageState {
     pub mood_readings: Vec<MoodReading>,
