@@ -28,7 +28,7 @@ pub struct Root {
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
     replace_mood_readings: Option<Callback<Vec<MoodReading>>>,
     add_quick_med_button: Option<Callback<QuickMedButton>>,
-    delete_quick_med_button: Option<Callback<QuickMedButton>>
+    delete_quick_med_button: Option<Callback<QuickMedButton>>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -46,7 +46,7 @@ pub enum RootMsg {
     ReplaceMoodReadings(Vec<MoodReading>),
     ReplaceTexts(TextType, Vec<TextSubmission>),
     AddQuickMedButton(QuickMedButton),
-    DeleteQuickMedButton(QuickMedButton)
+    DeleteQuickMedButton(QuickMedButton),
 }
 
 impl Component for Root {
@@ -80,13 +80,11 @@ impl Component for Root {
             ctx.link()
                 .callback(|readings| RootMsg::ReplaceMoodReadings(readings)),
         );
-        let add_quick_med_button = Some(
-            ctx.link()
-                .callback(|text|RootMsg::AddQuickMedButton(text))
-        );
+        let add_quick_med_button =
+            Some(ctx.link().callback(|text| RootMsg::AddQuickMedButton(text)));
         let delete_quick_med_button = Some(
             ctx.link()
-                .callback(|text|RootMsg::DeleteQuickMedButton(text))
+                .callback(|text| RootMsg::DeleteQuickMedButton(text)),
         );
 
         let storage_state = StorageState::load();
@@ -103,7 +101,7 @@ impl Component for Root {
             replace_texts,
             replace_mood_readings,
             add_quick_med_button,
-            delete_quick_med_button
+            delete_quick_med_button,
         }
     }
     fn update(&mut self, _ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
@@ -160,7 +158,11 @@ impl Component for Root {
                 true
             }
             RootMsg::DeleteQuickMedButton(to_delete) => {
-                let dropped = self.storage_state.quick_med_buttons.clone().into_iter()
+                let dropped = self
+                    .storage_state
+                    .quick_med_buttons
+                    .clone()
+                    .into_iter()
                     .filter(|b| *b != to_delete)
                     .collect::<Vec<QuickMedButton>>();
                 repo::save_quick_med_buttons(&dropped).expect("delete quick med button");

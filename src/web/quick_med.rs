@@ -1,16 +1,16 @@
 use super::storage_state::*;
 use crate::*;
-use chrono::{NaiveDateTime, Utc};
+use chrono::Utc;
 use web::entry::{derive_entries, Entry};
 use web_sys::HtmlTextAreaElement;
-use yew::Component;
 use yew::html::onchange;
+use yew::Component;
 
 pub struct QuickMeds {
     mode: QuickMedsMode,
     entries: Vec<TextSubmission>,
     buttons: Vec<QuickMedButton>,
-    text_area: String
+    text_area: String,
 }
 
 pub enum QuickMedMsg {
@@ -19,7 +19,7 @@ pub enum QuickMedMsg {
     Delete(QuickMedButton),
     SubmitQuickMedButton,
     FocusInput,
-    TextAreaUpdated(String)
+    TextAreaUpdated(String),
 }
 
 #[derive(PartialEq)]
@@ -28,13 +28,12 @@ pub enum QuickMedsMode {
     Config,
 }
 
-
 #[derive(Properties, Clone, PartialEq)]
 pub struct QuickMedProps {
     pub show_home: Callback<()>,
     pub add_button: Callback<QuickMedButton>,
     pub delete_button: Callback<QuickMedButton>,
-    pub storage_state: StorageState
+    pub storage_state: StorageState,
 }
 
 impl Component for QuickMeds {
@@ -64,7 +63,7 @@ impl Component for QuickMeds {
             mode: QuickMedsMode::Entry,
             entries: med_entries,
             buttons: med_buttons.to_vec(),
-            text_area: "".to_string()
+            text_area: "".to_string(),
         }
     }
 
@@ -81,13 +80,15 @@ impl Component for QuickMeds {
                 };
                 true
             }
-            QuickMedMsg::Delete(_button) => {
-                todo!()
+            QuickMedMsg::Delete(button) => {
+                self.delete_button(&button);
+                ctx.props().delete_button.emit(button.clone());
+                true
             }
             QuickMedMsg::FocusInput => todo!(),
             QuickMedMsg::SubmitQuickMedButton => {
                 if !self.text_area.is_empty() {
-                    self.add_quick_med_button(ctx,QuickMedButton(self.text_area.clone()));
+                    self.add_button(QuickMedButton(self.text_area.clone()));
                     self.text_area = "".to_string();
                 }
 
@@ -129,7 +130,7 @@ impl Component for QuickMeds {
                         <div class="center">
                             <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Add Button 🔤" }</button>
                         </div>
-                    </div>  
+                    </div>
                       { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
@@ -173,9 +174,12 @@ impl QuickMeds {
         self.buttons.push(button);
     }
 
-    fn delete_button(&mut self, button: QuickMedButton) {
-        self.buttons = self.buttons.clone().into_iter()
-            .filter(|b| *b != button)
+    fn delete_button(&mut self, button: &QuickMedButton) {
+        self.buttons = self
+            .buttons
+            .clone()
+            .into_iter()
+            .filter(|b| b != button)
             .collect::<Vec<QuickMedButton>>();
     }
 
@@ -197,19 +201,10 @@ impl QuickMeds {
 
     fn render_button_config(&self, ctx: &yew::Context<Self>, b: QuickMedButton) -> Html {
         html! { <>
-            <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
-            </>}
-    }
-
-    fn add_quick_med_button(&mut self, ctx: &yew::Context<Self>,b: QuickMedButton) {
-        todo!();
-        // TODO TODO
-        // This may all need to be moved to Root component
-        // ctx.props().storage_state.quick_med_buttons.push(b);
-        repo::save_quick_med_buttons(&ctx.props().storage_state.quick_med_buttons).expect("save quick med buttons");       
+        <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
+        </>}
     }
 }
-
 
 fn on_change_callback(ctx: &yew::Context<QuickMeds>) -> Callback<Event> {
     ctx.link().callback(|e: onchange::Event| {
