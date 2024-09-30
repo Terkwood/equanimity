@@ -255,7 +255,7 @@ impl Logs {
                             LogsMode::Delete => html! { <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| LogsMsg::Delete(Entry::Mood(MoodReading {
                                 value,
                                 epoch_millis,
-                            })))}>{ "🗑️" }</button> },
+                            })))}>{ "DELETE" }</button> },
                             _ => html! { }
                         }
                     }
