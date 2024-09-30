@@ -1,7 +1,4 @@
-use super::storage_state::*;
 use crate::*;
-use chrono::Utc;
-use web::entry::{derive_entries, Entry};
 use web_sys::HtmlTextAreaElement;
 use yew::html::onchange;
 use yew::Component;
