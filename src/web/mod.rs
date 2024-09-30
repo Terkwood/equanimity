@@ -9,6 +9,8 @@ pub mod time;
 
 use crate::*;
 use backdate::BackdateMoodReadings;
+use chrono::Utc;
+use entry::{derive_entries, Entry};
 use home::Home;
 use logs::Logs;
 use quick_med::QuickMeds;
@@ -197,15 +199,30 @@ impl Component for Root {
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
             },
-            Mode::QuickMeds => html! {
-                <QuickMeds
-                    show_home={self.show_home.as_ref().expect("show home cb")}
-                    storage_state={self.storage_state.clone()}
-                    add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
-                    delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
-                    log_med={self.add_text.as_ref().expect("log med")}
-                />
-            },
+            Mode::QuickMeds => {
+                let mut med_entries: Vec<String> = derive_entries(&self.storage_state)
+                    .into_iter()
+                    .filter(|(k, _)| k == &Utc::now().naive_utc().date())
+                    .map(|(_, v)| v)
+                    .flatten()
+                    .map(|e| match e {
+                        Entry::Meds(v) => Some(v.value),
+                        _ => None,
+                    })
+                    .flatten()
+                    .collect();
+                med_entries.reverse();
+                html! {
+                    <QuickMeds
+                        show_home={self.show_home.as_ref().expect("show home cb")}
+                        buttons={self.storage_state.quick_med_buttons.clone()}
+                        today_med_entries={med_entries.clone()}
+                        add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
+                        delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
+                        log_med={self.add_text.as_ref().expect("log med")}
+                    />
+                }
+            }
         }
     }
 }

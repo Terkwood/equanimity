@@ -33,7 +33,8 @@ pub struct QuickMedProps {
     pub show_home: Callback<()>,
     pub add_button: Callback<QuickMedButton>,
     pub delete_button: Callback<QuickMedButton>,
-    pub storage_state: StorageState,
+    pub buttons: Vec<QuickMedButton>,
+    pub today_med_entries: Vec<String>,
     pub log_med: Callback<(TextType, String)>,
 }
 
@@ -42,25 +43,10 @@ impl Component for QuickMeds {
     type Properties = QuickMedProps;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let mut med_entries: Vec<String> = derive_entries(&ctx.props().storage_state)
-            .into_iter()
-            .filter(|(k, _)| k == &Utc::now().naive_utc().date())
-            .map(|(_, v)| v)
-            .flatten()
-            .map(|e| match e {
-                Entry::Meds(v) => Some(v.value),
-                _ => None,
-            })
-            .flatten()
-            .collect();
-        med_entries.reverse();
-
-        let med_buttons = &ctx.props().storage_state.quick_med_buttons;
-
         Self {
             mode: QuickMedsMode::Entry,
-            entries: med_entries,
-            buttons: med_buttons.to_vec(),
+            entries: ctx.props().today_med_entries.clone(),
+            buttons: ctx.props().buttons.to_vec(),
             text_area: "".to_string(),
         }
     }
