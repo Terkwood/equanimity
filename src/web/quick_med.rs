@@ -16,8 +16,9 @@ pub struct QuickMeds {
 pub enum QuickMedMsg {
     ShowHome,
     ToggleConfig,
-    Delete(QuickMedButton),
-    SubmitQuickMedButton,
+    DeleteButton(QuickMedButton),
+    AddButton,
+    ClickButton(QuickMedButton),
     FocusInput,
     TextAreaUpdated(String),
 }
@@ -80,13 +81,13 @@ impl Component for QuickMeds {
                 };
                 true
             }
-            QuickMedMsg::Delete(button) => {
+            QuickMedMsg::DeleteButton(button) => {
                 self.delete_button(&button);
                 ctx.props().delete_button.emit(button.clone());
                 true
             }
             QuickMedMsg::FocusInput => todo!(),
-            QuickMedMsg::SubmitQuickMedButton => {
+            QuickMedMsg::AddButton => {
                 if !self.text_area.is_empty() {
                     self.add_button(QuickMedButton(self.text_area.clone()));
                     self.text_area = "".to_string();
@@ -97,6 +98,9 @@ impl Component for QuickMeds {
             QuickMedMsg::TextAreaUpdated(s) => {
                 self.text_area.push_str(&s);
                 true
+            }
+            QuickMedMsg::ClickButton(button) => {
+                todo!()
             }
         }
     }
@@ -128,7 +132,7 @@ impl Component for QuickMeds {
                             </textarea>
                         </div>
                         <div class="center">
-                            <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::SubmitQuickMedButton)}>{ "Add Button 🔤" }</button>
+                            <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::AddButton)}>{ "Add Button 🔤" }</button>
                         </div>
                     </div>
                       { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
@@ -141,16 +145,7 @@ impl Component for QuickMeds {
                         <div id="quick-meds-left">
                         <div id="quick-meds-grid-outer">
                             <div id="quick-meds-grid">
-                                <div class="quick-meds-button center">
-                                    <div class="quick-meds-button-inner">
-                                        <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
-                                    </div>
-                                </div>
-                                <div class="quick-meds-button center">
-                                    <div class="quick-meds-button-inner">
-                                        <button class="fancy-button thick center" role="button">{ "Lamotragine 200mg"}</button>
-                                    </div>
-                                </div>
+                                {self.buttons.iter().map(|button| self.render_button(ctx, button)).collect::<Html>() }
                             </div>
                         </div>
                         </div>
@@ -201,8 +196,24 @@ impl QuickMeds {
 
     fn render_button_config(&self, ctx: &yew::Context<Self>, b: QuickMedButton) -> Html {
         html! { <>
-        <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::Delete(b.clone()))}>{ "🗑️" }</button>
+        <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::DeleteButton(b.clone()))}>{ "🗑️" }</button>
         </>}
+    }
+
+    fn render_button(&self, ctx: &yew::Context<Self>, button: &QuickMedButton) -> Html {
+        let bc = button.clone();
+        html! {
+         <>
+         <div class="quick-meds-button center">
+             <div class="quick-meds-button-inner">
+                 <button class="fancy-button thick center" role="button"
+                         onclick={ctx.link().callback(move |_| QuickMedMsg::ClickButton(bc.clone()))}>
+                   { button.clone().0 }
+                </button>
+             </div>
+         </div>
+         </>
+        }
     }
 }
 
