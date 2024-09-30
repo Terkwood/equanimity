@@ -89,6 +89,9 @@ impl Component for QuickMeds {
             QuickMedMsg::AddButton => {
                 if !self.text_area.is_empty() {
                     self.add_button(QuickMedButton(self.text_area.clone()));
+                    ctx.props()
+                        .add_button
+                        .emit(QuickMedButton(self.text_area.clone()));
                     self.text_area = "".to_string();
                 }
 
@@ -134,7 +137,7 @@ impl Component for QuickMeds {
                         <div class="center">
                             <button class="fancy-button thick" onclick={ctx.link().callback(|_| QuickMedMsg::AddButton)}>{ "Add Button 🔤" }</button>
                         </div>
-                    </div>
+                        </div>
                       { self.buttons.iter().map(|b|self.render_button_config(&ctx, b.clone())).collect::<Html>() }
                       </>
                     }
