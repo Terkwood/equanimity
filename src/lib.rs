@@ -14,6 +14,9 @@ use yew::prelude::*;
 pub const NBSP: char = '\u{00a0}';
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
+pub struct QuickMedButton(String);
+
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct TextSubmission {
     pub epoch_millis: u64,
     pub value: String,

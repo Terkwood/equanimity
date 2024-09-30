@@ -158,7 +158,7 @@ textarea {
   height: 5vh;
   display: grid;
   grid-gap: 5px;
-  grid-template: repeat(1, 1fr) / repeat(2, 1fr);
+  grid-template: repeat(1, 1fr) / repeat(3, 1fr);
   grid-auto-flow: column;
 }
 
@@ -186,4 +186,69 @@ textarea {
 
 .write-button {
   height: 3.3em;
+}
+
+
+.quick-meds-nav {
+  height: 5vh;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  margin: 1vh;
+}
+
+
+#quick-meds-container {
+  position: absolute;
+    top: 5%;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+#quick-meds-left {
+  position: absolute;
+  top: 5%;
+  right: 62%;
+  left: 0;
+  bottom: 0;
+}
+
+#quick-meds-right {
+  position: absolute;
+  top: 5%;
+  right: 0;
+  left: 38%;
+  bottom: 0;
+}
+
+#quick-meds-grid {
+  display: grid;
+  grid-gap: 5px;
+  grid-template: repeat(15, 1fr) / repeat(1, 1fr);
+  grid-auto-flow: column;
+}
+
+.quick-meds-button {
+  height: 4vh;
+  margin-top: 0.33em;
+  margin-bottom: 0.33em;
+}
+
+.quick-meds-button-inner {
+  width: 90%;
+}
+
+
+.quick-meds-log {
+  margin-top: 0.33em;
+  margin-bottom: 0.33em;
+}
+
+.quick-meds-add-button {
+  width: 40%;
 }

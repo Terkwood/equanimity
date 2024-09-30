@@ -1,7 +1,9 @@
 mod about;
 mod backdate;
+mod entry;
 mod home;
 pub mod logs;
+mod quick_med;
 pub mod storage_state;
 pub mod time;
 
@@ -9,6 +11,7 @@ use crate::*;
 use backdate::BackdateMoodReadings;
 use home::Home;
 use logs::Logs;
+use quick_med::QuickMeds;
 use storage_state::StorageState;
 
 const INITIAL_MODE: Mode = Mode::Home;
@@ -18,17 +21,21 @@ pub struct Root {
     storage_state: storage_state::StorageState,
     show_logs: Option<Callback<()>>,
     show_home: Option<Callback<()>>,
+    show_quick_meds: Option<Callback<()>>,
     show_backdate: Option<Callback<()>>,
     add_mood_reading: Option<Callback<MoodReading>>,
     add_text: Option<Callback<(TextType, String)>>,
     replace_texts: Option<Callback<(TextType, Vec<TextSubmission>)>>,
     replace_mood_readings: Option<Callback<Vec<MoodReading>>>,
+    add_quick_med_button: Option<Callback<QuickMedButton>>,
+    delete_quick_med_button: Option<Callback<QuickMedButton>>,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Mode {
     Home,
     Logs,
+    QuickMeds,
     BackdateMoodReadings,
 }
 
@@ -38,6 +45,8 @@ pub enum RootMsg {
     AddText(TextType, String),
     ReplaceMoodReadings(Vec<MoodReading>),
     ReplaceTexts(TextType, Vec<TextSubmission>),
+    AddQuickMedButton(QuickMedButton),
+    DeleteQuickMedButton(QuickMedButton),
 }
 
 impl Component for Root {
@@ -45,6 +54,10 @@ impl Component for Root {
     type Properties = ();
     fn create(ctx: &yew::Context<Self>) -> Self {
         let show_logs = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Logs)));
+        let show_quick_meds = Some(
+            ctx.link()
+                .callback(|()| RootMsg::SwitchMode(Mode::QuickMeds)),
+        );
         let show_home = Some(ctx.link().callback(|()| RootMsg::SwitchMode(Mode::Home)));
         let show_backdate = Some(
             ctx.link()
@@ -67,6 +80,12 @@ impl Component for Root {
             ctx.link()
                 .callback(|readings| RootMsg::ReplaceMoodReadings(readings)),
         );
+        let add_quick_med_button =
+            Some(ctx.link().callback(|text| RootMsg::AddQuickMedButton(text)));
+        let delete_quick_med_button = Some(
+            ctx.link()
+                .callback(|text| RootMsg::DeleteQuickMedButton(text)),
+        );
 
         let storage_state = StorageState::load();
 
@@ -75,11 +94,14 @@ impl Component for Root {
             storage_state,
             show_logs,
             show_home,
+            show_quick_meds,
             show_backdate,
             add_mood_reading,
             add_text,
             replace_texts,
             replace_mood_readings,
+            add_quick_med_button,
+            delete_quick_med_button,
         }
     }
     fn update(&mut self, _ctx: &yew::Context<Self>, msg: Self::Message) -> bool {
@@ -129,6 +151,23 @@ impl Component for Root {
                 repo::save_text(text_type, &all).expect("replace text entries");
                 true
             }
+            RootMsg::AddQuickMedButton(new) => {
+                self.storage_state.quick_med_buttons.push(new);
+                let all = self.storage_state.quick_med_buttons.clone();
+                repo::save_quick_med_buttons(&all).expect("save quick med buttons");
+                true
+            }
+            RootMsg::DeleteQuickMedButton(to_delete) => {
+                let dropped = self
+                    .storage_state
+                    .quick_med_buttons
+                    .clone()
+                    .into_iter()
+                    .filter(|b| *b != to_delete)
+                    .collect::<Vec<QuickMedButton>>();
+                repo::save_quick_med_buttons(&dropped).expect("delete quick med button");
+                true
+            }
         }
     }
 
@@ -153,8 +192,18 @@ impl Component for Root {
                 <Home
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
+                    show_quick_meds={self.show_quick_meds.as_ref().expect("quick meds cb")}
                     add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
                     add_text={self.add_text.as_ref().expect("smtcb")}
+                />
+            },
+            Mode::QuickMeds => html! {
+                <QuickMeds
+                    show_home={self.show_home.as_ref().expect("show home cb")}
+                    storage_state={self.storage_state.clone()}
+                    add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
+                    delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
+                    log_med={self.add_text.as_ref().expect("log med")}
                 />
             },
         }
