@@ -197,7 +197,9 @@ impl QuickMeds {
 
     fn render_button_config(&self, ctx: &yew::Context<Self>, b: QuickMedButton) -> Html {
         html! { <>
+            { format!("💊 {}", b.0) }
         <button class="fancy-button" role="button" onclick={ctx.link().callback(move |_| QuickMedMsg::DeleteButton(b.clone()))}>{ "🗑️" }</button>
+        <br/>
         </>}
     }
 
