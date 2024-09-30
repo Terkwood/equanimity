@@ -99,9 +99,7 @@ impl Component for QuickMeds {
                 true
             }
             QuickMedMsg::ClickButton(button) => {
-                ctx.props()
-                        .log_med
-                        .emit((TextType::Meds, button.0.clone()));
+                ctx.props().log_med.emit((TextType::Meds, button.0.clone()));
                 true
             }
         }
