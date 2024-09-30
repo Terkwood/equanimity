@@ -47,14 +47,11 @@ impl Component for QuickMeds {
             .filter(|(k, _)| k == &Utc::now().naive_utc().date())
             .map(|(_, v)| v)
             .flatten()
-            .filter(|e| match e {
-                Entry::Meds(_) => true,
-                _ => false,
-            })
             .map(|e| match e {
-                Entry::Meds(v) => v.value,
-                _ => unreachable!(),
+                Entry::Meds(v) => Some(v.value),
+                _ => None,
             })
+            .flatten()
             .collect();
         med_entries.reverse();
 
