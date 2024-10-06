@@ -190,39 +190,50 @@ impl Component for Root {
                     replace_texts={self.replace_texts.as_ref().expect("rt_cb")}
                 />
             },
-            Mode::Home => html! {
-                <Home
+            Mode::Home => self.view_home(),
+            Mode::QuickMeds => {
+                // Hidden -- try to make this thing work!
+                // view_quick_meds()
+
+                self.view_home()
+            }
+        }
+    }
+}
+impl Root {
+    fn view_home(&self) -> Html {
+        html! {
+        <Home
                     storage_state={self.storage_state.clone()}
                     show_logs={self.show_logs.as_ref().expect("logs_cb")}
                     show_quick_meds={self.show_quick_meds.as_ref().expect("quick meds cb")}
                     add_mood_reading={self.add_mood_reading.as_ref().expect("smrcb")}
                     add_text={self.add_text.as_ref().expect("smtcb")}
                 />
-            },
-            Mode::QuickMeds => {
-                let mut med_entries: Vec<String> = derive_entries(&self.storage_state)
-                    .into_iter()
-                    .filter(|(k, _)| k == &Utc::now().naive_utc().date())
-                    .map(|(_, v)| v)
-                    .flatten()
-                    .map(|e| match e {
-                        Entry::Meds(v) => Some(v.value),
-                        _ => None,
-                    })
-                    .flatten()
-                    .collect();
-                med_entries.reverse();
-                html! {
-                    <QuickMeds
-                        show_home={self.show_home.as_ref().expect("show home cb")}
-                        buttons={self.storage_state.quick_med_buttons.clone()}
-                        today_med_entries={med_entries.clone()}
-                        add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
-                        delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
-                        log_med={self.add_text.as_ref().expect("log med")}
-                    />
-                }
-            }
+        }
+    }
+    fn view_quick_meds(&self) -> Html {
+        let mut med_entries: Vec<String> = derive_entries(&self.storage_state)
+            .into_iter()
+            .filter(|(k, _)| k == &Utc::now().naive_utc().date())
+            .map(|(_, v)| v)
+            .flatten()
+            .map(|e| match e {
+                Entry::Meds(v) => Some(v.value),
+                _ => None,
+            })
+            .flatten()
+            .collect();
+        med_entries.reverse();
+        html! {
+            <QuickMeds
+                show_home={self.show_home.as_ref().expect("show home cb")}
+                buttons={self.storage_state.quick_med_buttons.clone()}
+                today_med_entries={med_entries.clone()}
+                add_button={self.add_quick_med_button.as_ref().expect("add button cb")}
+                delete_button={self.delete_quick_med_button.as_ref().expect("delete button cb")}
+                log_med={self.add_text.as_ref().expect("log med")}
+            />
         }
     }
 }
