@@ -13,8 +13,9 @@ pub async fn on_click_import(e: web_sys::MouseEvent) -> Result<JsValue, JsValue>
             let result = wasm_bindgen_futures::JsFuture::from(promise).await?;
             let deser: Result<TestJson, _> = result.into_serde();
             match deser {
-                Err(_e) => { 
+                Err(e) => {
                     console::error_1(&"deser error".into());
+                    console::error_1(&e.to_string().into());
                     Err(js_sys::JsString::from_str("It failed to deser").expect("js str").into())
                 
                  },
