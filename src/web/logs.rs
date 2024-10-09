@@ -27,6 +27,8 @@ pub enum LogsMsg {
     ToggleAboutMode,
     Delete(Entry),
     ClickImport(web_sys::MouseEvent),
+    ImportHappened,
+    ImportFailed,
 }
 
 #[derive(Copy, Clone, PartialEq)]
@@ -174,9 +176,20 @@ impl Component for Logs {
                 true
             }
             LogsMsg::ClickImport(mouse_event) => {
-                ctx.link().send_future(match about::on_click_import(mouse_event) {
-                    
+                ctx.link().send_future(async {
+                    match about::on_click_import(mouse_event).await {
+                        Ok(_) => LogsMsg::ImportHappened,
+                        Err(_) => LogsMsg::ImportHappened,
+                    }
                 });
+                false
+            }
+            LogsMsg::ImportHappened => {
+                web_sys::console::log_1(&"import happened".into());
+                false
+            }
+            LogsMsg::ImportFailed => {
+                web_sys::console::error_1(&"import failed".into());
                 false
             }
         }
@@ -193,7 +206,7 @@ impl Component for Logs {
     fn view(&self, ctx: &yew::Context<Self>) -> Html {
         if self.mode == LogsMode::About {
             let callback = ctx.link().callback(|_| LogsMsg::ToggleAboutMode);
-            about::section(callback, ctx)
+            self.about_section(callback, ctx)
         } else {
             html! { <>
                 <div id="logs-button-grid">
@@ -340,7 +353,47 @@ impl Logs {
             });
     }
 
+    fn about_section(&self, ok_callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> Html {
+        let export_button: VNode = export_button(
+            &ctx.props().storage_state,
+            ButtonOpts {
+                a_class: EXPORT_LINK_CSS_CLASS.to_string(),
+                button_id: EXPORT_BUTTON_CSS_ID.to_string(),
+                file_prefix: EXPORT_FILE_PREFIX.to_string(),
+                utc_millis: utc_now(),
+            },
+        );
 
+        html! {
+            <div>
+                <h1>{ "About" }</h1>
+                <p>{ "EQUANIMITY helps you track mood variations." }</p>
+                <p>{ "EQUANIMITY is designed with privacy in mind.  Your data will never be transmitted to a third party.  Data is kept in browser local storage, unencypted.  KEEP YOUR DATA SAFE: make sure there is no malware on your system!" }</p>
+                <p>{ format!("This is version {}.", VERSION) }</p>
+                <h2>{ "Source Code" }</h2>
+                <p>{ "The source code is available under MIT license." }</p>
+                <p><a href={REPO_URL}>{ REPO_URL }</a></p>
+
+                <div class="center">
+                    {  export_button }
+                </div>
+                <button
+                    class="fancy-button thick"
+                    role="button"
+                    onclick={on_click_import}>
+                    { "Import 📥" }
+                </button>
+
+
+                <button
+                    class="fancy-button thick"
+                    role="button"
+                    onclick={ok_callback}>
+                    { "OK" }
+                </button>
+            </div>
+        }
+    }
 }
 
 fn format_timestamp(epoch_millis_utc: u64) -> String {
