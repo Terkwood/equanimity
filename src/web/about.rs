@@ -3,7 +3,10 @@ use std::future::IntoFuture;
 use super::logs::Logs;
 use crate::*;
 use futures::TryFutureExt;
+use gloo::utils::format::JsValueSerdeExt;
 use js_sys::Promise;
+use web::storage_state::StorageState;
+use web_sys::console;
 use yew::{prelude::*, virtual_dom::VNode};
 use yew_export_button::{export_button, ButtonOpts};
 
@@ -56,16 +59,24 @@ pub fn section(ok_callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> H
     }
 }
 
-fn on_click_import(e: web_sys::MouseEvent) {
-    let r = web_sys::window()
+
+pub async fn on_click_import( e: web_sys::MouseEvent) -> Result<(), ()> {
+    let import_p = web_sys::window()
         .expect("no global window")
         .show_open_file_picker();
-    match r {
+    match import_p {
         Ok(promise) => {
-            let js_fut = wasm_bindgen_futures::JsFuture::from(promise);
-            wasm_bindgen_futures::spawn_local(js_fut);
+            let result = wasm_bindgen_futures::JsFuture::from(promise).await?;
+            let deser: Result<StorageState, _>  = result.into_serde();
+            match deser {
+                Err(e) => console::error_1(&"deser error".into()),
+                Ok(_) => console::log_1(&"IT WORKED".into())
+            }
+            unimplemented!()
         }
-        Err(_j) => web_sys::console::error_1(&"error import".into()),
+        Err(_j) => {
+            web_sys::console::error_1(&"error import".into());
+            Ok(())
+        }
     }
-    web_sys::console::log_1(&"hi".into());
 }
