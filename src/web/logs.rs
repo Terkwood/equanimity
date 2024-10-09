@@ -380,7 +380,7 @@ impl Logs {
                 <button
                     class="fancy-button thick"
                     role="button"
-                    onclick={on_click_import}>
+                    onclick={ctx.link().callback(|e| LogsMsg::ClickImport(e))}>
                     { "Import 📥" }
                 </button>
 
