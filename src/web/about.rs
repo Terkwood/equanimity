@@ -1,5 +1,8 @@
+use std::future::IntoFuture;
+
 use super::logs::Logs;
 use crate::*;
+use futures::TryFutureExt;
 use js_sys::Promise;
 use yew::{prelude::*, virtual_dom::VNode};
 use yew_export_button::{export_button, ButtonOpts};
@@ -41,7 +44,7 @@ pub fn section(ok_callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> H
                 onclick={on_click_import}>
                 { "Import 📥" }
             </button>
-                
+
 
             <button
                 class="fancy-button thick"
@@ -53,8 +56,16 @@ pub fn section(ok_callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> H
     }
 }
 
-
 fn on_click_import(e: web_sys::MouseEvent) {
-    let r = web_sys::window().expect("no global window").show_open_file_picker();
+    let r = web_sys::window()
+        .expect("no global window")
+        .show_open_file_picker();
+    match r {
+        Ok(promise) => {
+            let js_fut = wasm_bindgen_futures::JsFuture::from(promise);
+            wasm_bindgen_futures::spawn_local(js_fut);
+        }
+        Err(_j) => web_sys::console::error_1(&"error import".into()),
+    }
     web_sys::console::log_1(&"hi".into());
 }
