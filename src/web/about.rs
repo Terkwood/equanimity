@@ -1,5 +1,6 @@
 use super::logs::Logs;
 use crate::*;
+use js_sys::Promise;
 use yew::{prelude::*, virtual_dom::VNode};
 use yew_export_button::{export_button, ButtonOpts};
 
@@ -10,7 +11,7 @@ const EXPORT_BUTTON_CSS_ID: &str = "export-button";
 const EXPORT_LINK_CSS_CLASS: &str = "fancy-button thick";
 const EXPORT_FILE_PREFIX: &str = "equanimity";
 
-pub fn section(callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> Html {
+pub fn section(ok_callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> Html {
     let export_button: VNode = export_button(
         &ctx.props().storage_state,
         ButtonOpts {
@@ -34,13 +35,26 @@ pub fn section(callback: Callback<MouseEvent>, ctx: &yew::Context<Logs>) -> Html
             <div class="center">
                 {  export_button }
             </div>
+            <button
+                class="fancy-button thick"
+                role="button"
+                onclick={on_click_import}>
+                { "Import 📥" }
+            </button>
+                
 
             <button
                 class="fancy-button thick"
                 role="button"
-                onclick={callback}>
+                onclick={ok_callback}>
                 { "OK" }
             </button>
         </div>
     }
+}
+
+
+fn on_click_import(e: web_sys::MouseEvent) {
+    let r = web_sys::window().expect("no global window").show_open_file_picker();
+    web_sys::console::log_1(&"hi".into());
 }
