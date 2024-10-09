@@ -11,6 +11,8 @@ pub async fn on_click_import(e: web_sys::MouseEvent) -> Result<JsValue, JsValue>
     match import_p {
         Ok(promise) => {
             let result = wasm_bindgen_futures::JsFuture::from(promise).await?;
+            console::log_1(&"heres what we got".into());
+            console::log_1(&result.clone().into());
             let deser: Result<TestJson, _> = result.into_serde();
             match deser {
                 Err(e) => {
