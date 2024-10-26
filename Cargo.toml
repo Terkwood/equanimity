@@ -13,12 +13,12 @@ chrono = "0.4.38"
 gloo = "0.11.0"
 gloo-storage = "0.3.0"
 group_by = {git = "https://github.com/Terkwood/group_by.rs", tag = "v0.1.0"}
-serde = "1.0.192"
-serde_derive = "1.0.192"
-serde_json = "1.0.108"
+serde = "1.0.213"
+serde_derive = "1.0.213"
+serde_json = "1.0.132"
 wasm-bindgen = "0.2.95"
-js-sys = "0.3.70"
-web-sys = {version = "0.3.70", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
+js-sys = "0.3.72"
+web-sys = {version = "0.3.72", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
 yew = {version = "0.21.0", features = ["csr"]}
 yew-datepicker = {git = "https://github.com/Terkwood/yew-datepicker",  branch = "hack/english" }
 yew-export-button = {git = "https://github.com/Terkwood/yew-export-button", tag = "v3.0.0" }
