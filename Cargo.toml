@@ -9,16 +9,16 @@ version = "1.9.5"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-chrono = "0.4.31"
-gloo = "0.10.0"
+chrono = "0.4.38"
+gloo = "0.11.0"
 gloo-storage = "0.3.0"
 group_by = {git = "https://github.com/Terkwood/group_by.rs", tag = "v0.1.0"}
-js-sys = "0.3.65"
 serde = "1.0.192"
 serde_derive = "1.0.192"
 serde_json = "1.0.108"
 wasm-bindgen = "0.2.95"
-web-sys = {version = "0.3.65", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
+js-sys = "0.3.70"
+web-sys = {version = "0.3.70", features = ["Window", "Storage", "Event", "EventTarget","HtmlTextAreaElement"]}
 yew = {version = "0.21.0", features = ["csr"]}
 yew-datepicker = {git = "https://github.com/Terkwood/yew-datepicker",  branch = "hack/english" }
 yew-export-button = {git = "https://github.com/Terkwood/yew-export-button", tag = "v3.0.0" }
