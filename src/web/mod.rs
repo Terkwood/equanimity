@@ -191,12 +191,7 @@ impl Component for Root {
                 />
             },
             Mode::Home => self.view_home(),
-            Mode::QuickMeds => {
-                // Hidden -- try to make this thing work!
-                // view_quick_meds()
-
-                self.view_home()
-            }
+            Mode::QuickMeds => self.view_quick_meds(),
         }
     }
 }
