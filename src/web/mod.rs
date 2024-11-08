@@ -167,6 +167,7 @@ impl Component for Root {
                     .into_iter()
                     .filter(|b| *b != to_delete)
                     .collect::<Vec<QuickMedButton>>();
+                self.storage_state.quick_med_buttons = dropped.clone();
                 repo::save_quick_med_buttons(&dropped).expect("delete quick med button");
                 true
             }
