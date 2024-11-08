@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/Terkwood/equanimity/compare/v1.8.4...v1.9.0) (2024-11-08)
+
+
+### Features
+
+* quick meds ([#111](https://github.com/Terkwood/equanimity/issues/111)) ([5c0d965](https://github.com/Terkwood/equanimity/commit/5c0d96556a6951a632ec26d1fd781c082994735e))
+
+
+### Bug Fixes
+
+* flatten med entries ([09c76f0](https://github.com/Terkwood/equanimity/commit/09c76f074ed1d2220ea15a2617fc2b7fb0c25a12))
+* hide quick meds ([8664e6b](https://github.com/Terkwood/equanimity/commit/8664e6bdc2758e70ec0c8d26450a410e6866e851))
+* quick med storage state on delete ([12eb52e](https://github.com/Terkwood/equanimity/commit/12eb52ed56cf4850374a2257750f2687ea637eb7))
+* re-enable quick-meds ([a3680c1](https://github.com/Terkwood/equanimity/commit/a3680c1b402450f150545725d08564b7401490b9))
+* reduce memory usage ([c0ff3be](https://github.com/Terkwood/equanimity/commit/c0ff3bef2ffa1abe61f9453577d2a4854e44024f))
+* trim imports ([603fa12](https://github.com/Terkwood/equanimity/commit/603fa12b96745b42dc0de7ac327ede998fca6672))
+* upgrade deps ([523018a](https://github.com/Terkwood/equanimity/commit/523018a93d96bb9f94c948417379b5ba7d49c564))
+* upgrade libs ([53cecaf](https://github.com/Terkwood/equanimity/commit/53cecaf6c4180b493c995bde1b202d53f2418722))
+
 ### [1.8.4](https://github.com/Terkwood/equanimity/compare/v1.8.3...v1.8.4) (2023-12-03)
 
 
